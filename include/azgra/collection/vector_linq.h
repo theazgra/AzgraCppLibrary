@@ -213,7 +213,7 @@ namespace azgra
                     max = src[i];
                 }
             }
-            return make_pair(min, max);
+            return std::make_pair(min, max);
         }
 
         template<typename T>
@@ -284,5 +284,5 @@ namespace azgra
             return (memcmp(a.data(), b.data(), sizeof(T) * a.size()) == 0);
         }
 
-    }; // namespace linq
+    }; // namespace collection
 }; // namespace azgra
