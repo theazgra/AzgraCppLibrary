@@ -10,7 +10,6 @@ template<typename CharType>
 using basic_string_view__ = std::basic_string_view<CharType>;
 #else
 #include <experimental/string_view>
-#error "Not using GCC_CXX17";
 template<typename CharType>
 using basic_string_view__ = std::experimental::basic_string_view<CharType>;
 #endif
