@@ -92,8 +92,6 @@ namespace azgra::collection
                     {
                         subset[index] = pool[indices[index]];
                     }
-//                    for (const size_t index : indices)
-//                        subset[index] = pool[index];
                     subsets.push_back(subset);
                 }
             }
