@@ -26,6 +26,7 @@ namespace azgra::collection
         }
     }
 
+
     template<typename T>
     std::vector<std::vector<T>> generate_powerset(const std::vector<T> &set)
     {
@@ -40,7 +41,7 @@ namespace azgra::collection
     }
 
     template<typename T>
-    std::vector<std::vector<T>> generate_subsets_of_size(const std::set<T> &pool, const int requestedSubsetSize)
+    std::vector<std::vector<T>> generate_subsets_of_size(const std::vector<T> &pool, const int requestedSubsetSize)
     {
         std::vector<std::vector<T>> subsets;
 
@@ -64,7 +65,7 @@ namespace azgra::collection
         while (true)
         {
             bool breakLoopExit = false;
-            int i;
+            int i = requestedSubsetSize - 1;
             for (i = requestedSubsetSize - 1; i >= 0; --i)
             {
                 if (indices[i] != (i + n - requestedSubsetSize))
@@ -87,11 +88,23 @@ namespace azgra::collection
 
                 {
                     std::vector<T> subset(requestedSubsetSize);
-                    for (const size_t i : indices)
-                        subset[i] = pool[i];
+                    for (size_t index = 0; index < indices.size(); ++index)
+                    {
+                        subset[index] = pool[indices[index]];
+                    }
+//                    for (const size_t index : indices)
+//                        subset[index] = pool[index];
                     subsets.push_back(subset);
                 }
             }
         }
     }
+
+    template <typename T>
+    std::set<T> vector_as_set(const std::vector<T> &vec)
+    {
+        std::set<T> result(vec.begin(), vec.end());
+        return result;
+    }
+
 }
