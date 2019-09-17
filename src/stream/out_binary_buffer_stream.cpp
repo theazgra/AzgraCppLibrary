@@ -36,7 +36,7 @@ namespace azgra
 	{
 		size_t writeSize = bytes.size();
 		ensure_capacity(writeSize);
-		vecUtil::vector_insert_at(buffer, bytes, bufferPtr, 0, writeSize);
+        azgra::collection::vector_insert_at(buffer, bytes, bufferPtr, 0, writeSize);
 		bufferPtr += writeSize;
 	}
 

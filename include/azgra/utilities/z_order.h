@@ -1,7 +1,7 @@
 #pragma once
 #include <azgra/azgra.h>
 #include <algorithm>
-#include <azgra/utilities/vector_utilities.h>
+#include <azgra/collection/vector_utilities.h>
 /*
     Interleave implementation based on:
         https://lemire.me/blog/2018/01/08/how-fast-can-you-bit-interleave-32-bit-integers/

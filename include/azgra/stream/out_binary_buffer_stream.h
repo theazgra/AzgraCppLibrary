@@ -1,6 +1,6 @@
 #pragma once
 #include <azgra/stream/out_binary_stream_base.h>
-#include <azgra/utilities/vector_utilities.h>
+#include <azgra/collection/vector_utilities.h>
 
 namespace azgra
 {

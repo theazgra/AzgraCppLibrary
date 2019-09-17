@@ -36,7 +36,7 @@ ByteArray reorder_bytes_to_z_order(const ByteArray &bytes, const std::vector<Poi
         from = (index.bufferPosition * componentSize);
         //zOrderedBytes.insert(zOrderedBytes.end(), fromIt, toIt);
         pos = it * componentSize;
-        vecUtil::vector_insert_at(zOrderedBytes, bytes, pos, from, componentSize);
+        azgra::collection::vector_insert_at(zOrderedBytes, bytes, pos, from, componentSize);
         it++;
     }
 
@@ -56,7 +56,7 @@ ByteArray reorder_bytes_from_z_order(const ByteArray &zOrderedBytes, const std::
     {
         insertAt = index.bufferPosition * componentSize;
         copyFrom = it * componentSize;
-        vecUtil::vector_insert_at(bytes, zOrderedBytes, insertAt, copyFrom, componentSize);
+        azgra::collection::vector_insert_at(bytes, zOrderedBytes, insertAt, copyFrom, componentSize);
         ++it;
     }
     always_assert(bytes.size() == zOrderedBytes.size());

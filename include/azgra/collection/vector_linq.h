@@ -1,19 +1,18 @@
 #pragma once
 
+#include <azgra/azgra.h>
 #include <vector>
 #include <functional>
 #include <limits>
-#include <azgra/azgra.h>
 
-using namespace std;
 namespace azgra
 {
-    namespace linq
+    namespace collection
     {
         template<typename T>
-        vector<T> where_ref(const std::vector<T> &src, function<bool(const T &)> predicate)
+        std::vector<T> where_ref(const std::vector<T> &src, std::function<bool(const T &)> predicate)
         {
-            vector<T> result;
+            std::vector<T> result;
             for (size_t i = 0; i < src.size(); i++)
             {
                 if (predicate(src[i]))
@@ -25,9 +24,9 @@ namespace azgra
         }
 
         template<typename T>
-        vector<T> where(const std::vector<T> &src, function<bool(const T)> predicate)
+        std::vector<T> where(const std::vector<T> &src, std::function<bool(const T)> predicate)
         {
-            vector<T> result;
+            std::vector<T> result;
             for (size_t i = 0; i < src.size(); i++)
             {
                 if (predicate(src[i]))
@@ -39,7 +38,7 @@ namespace azgra
         }
 
         template<typename T>
-        bool any_ref(const vector<T> &src, function<bool(const T &)> predicate)
+        bool any_ref(const std::vector<T> &src, std::function<bool(const T &)> predicate)
         {
             for (size_t i = 0; i < src.size(); i++)
             {
@@ -52,7 +51,7 @@ namespace azgra
         }
 
         template<typename T>
-        bool any(const vector<T> &src, function<bool(const T)> predicate)
+        bool any(const std::vector<T> &src, std::function<bool(const T)> predicate)
         {
             for (size_t i = 0; i < src.size(); i++)
             {
@@ -65,7 +64,7 @@ namespace azgra
         }
 
         template<typename T>
-        void for_each_ref(const vector<T> &src, function<void(const T &)> work)
+        void for_each_ref(const std::vector<T> &src, std::function<void(const T &)> work)
         {
             for (size_t i = 0; i < src.size(); i++)
             {
@@ -74,7 +73,7 @@ namespace azgra
         }
 
         template<typename T>
-        void for_each(const vector<T> &src, function<void(const T)> work)
+        void for_each(const std::vector<T> &src, std::function<void(const T)> work)
         {
             for (size_t i = 0; i < src.size(); i++)
             {
@@ -83,7 +82,7 @@ namespace azgra
         }
 
         template<typename T>
-        bool all_ref(const vector<T> &src, function<bool(const T &)> predicate)
+        bool all_ref(const std::vector<T> &src, std::function<bool(const T &)> predicate)
         {
             for (size_t i = 0; i < src.size(); i++)
             {
@@ -96,7 +95,7 @@ namespace azgra
         }
 
         template<typename T>
-        bool all(const vector<T> &src, function<bool(const T)> predicate)
+        bool all(const std::vector<T> &src, std::function<bool(const T)> predicate)
         {
             for (size_t i = 0; i < src.size(); i++)
             {
@@ -109,7 +108,7 @@ namespace azgra
         }
 
         template<typename T>
-        bool contains(const vector<T> &src, const T &element)
+        bool contains(const std::vector<T> &src, const T &element)
         {
             for (size_t i = 0; i < src.size(); i++)
             {
@@ -120,7 +119,7 @@ namespace azgra
         }
 
         template<typename T>
-        bool contains(const vector<T> &src, const T &element, std::function<bool(const T &, const T &)> cmp)
+        bool contains(const std::vector<T> &src, const T &element, std::function<bool(const T &, const T &)> cmp)
         {
             for (size_t i = 0; i < src.size(); i++)
             {
@@ -131,7 +130,7 @@ namespace azgra
         }
 
         template<typename T>
-        azgra::i64 get_index(const vector<T> &src, const T &element)
+        azgra::i64 get_index(const std::vector<T> &src, const T &element)
         {
             for (size_t i = 0; i < src.size(); i++)
             {
@@ -142,7 +141,7 @@ namespace azgra
         }
 
         template<typename T>
-        size_t count(const vector<T> &src, const T &element)
+        size_t count(const std::vector<T> &src, const T &element)
         {
             size_t result = 0;
             for (size_t i = 0; i < src.size(); i++)
@@ -154,9 +153,9 @@ namespace azgra
         }
 
         template<typename T>
-        vector<T> except(const vector<T> &src, const vector<T> &except)
+        std::vector<T> except(const std::vector<T> &src, const std::vector<T> &except)
         {
-            vector<T> result;
+            std::vector<T> result;
             for (size_t i = 0; i < src.size(); i++)
             {
                 if (!contains(except, src[i]))
@@ -168,7 +167,7 @@ namespace azgra
         }
 
         template<typename T>
-        T min(const vector<T> &src)
+        T min(const std::vector<T> &src)
         {
             T min = std::numeric_limits<T>::max();
 
@@ -183,7 +182,7 @@ namespace azgra
         }
 
         template<typename T>
-        T max(const vector<T> &src)
+        T max(const std::vector<T> &src)
         {
             T max = std::numeric_limits<T>::min();
 
@@ -198,7 +197,7 @@ namespace azgra
         }
 
         template<typename T>
-        std::pair<T, T> min_max(const vector<T> &src)
+        std::pair<T, T> min_max(const std::vector<T> &src)
         {
             T min = std::numeric_limits<T>::max();
             T max = std::numeric_limits<T>::min();
@@ -218,7 +217,7 @@ namespace azgra
         }
 
         template<typename T>
-        T sum(const vector<T> &src)
+        T sum(const std::vector<T> &src)
         {
             T sum = 0;
             for (size_t i = 0; i < src.size(); i++)
@@ -229,7 +228,7 @@ namespace azgra
         }
 
         template<typename TargetType, typename SourceType>
-        vector<TargetType> cast_to(const std::vector<SourceType> &src)
+        std::vector<TargetType> cast_to(const std::vector<SourceType> &src)
         {
             std::vector<TargetType> result(src.size());
             for (size_t i = 0; i < src.size(); i++)
