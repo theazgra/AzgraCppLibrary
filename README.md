@@ -4,6 +4,7 @@ azgra C++ library was originally part [another project](https://code.it4i.cz/mor
 I decided to separate this library so I can use it other projects.
 
 You will not find anything `extra` in this library as I am learning while writing it.
+Most of the tools are here to simplify my life and are used in school projects.
 
 ### Build
 - This library is targeted to be build with gcc 7 and newer
