@@ -105,4 +105,11 @@ namespace azgra::collection
         return result;
     }
 
+    template <typename T>
+    std::vector<T> set_as_vector(const std::set<T> &set)
+    {
+        std::vector<T> result (set.begin(), set.end());
+        return result;
+    }
+
 }

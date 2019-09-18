@@ -148,6 +148,11 @@ namespace azgra
                 return (sw == otherSw);
             }
 
+            constexpr bool equals (const basic_string_view__<CharType> &otherSw) const noexcept
+            {
+                return (sw == otherSw);
+            }
+
             constexpr SmartStringView substring(size_t fromIndex) const
             {
                 SmartStringView result(basic_string_view__<CharType>(sw.data() + fromIndex));
