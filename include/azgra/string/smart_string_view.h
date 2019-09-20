@@ -5,7 +5,9 @@
 #endif
 
 #ifdef GCC_CXX17
+
 #include <string_view>
+
 template<typename CharType>
 using basic_string_view__ = std::basic_string_view<CharType>;
 #else
@@ -148,7 +150,7 @@ namespace azgra
                 return (sw == otherSw);
             }
 
-            constexpr bool equals (const basic_string_view__<CharType> &otherSw) const noexcept
+            constexpr bool equals(const basic_string_view__<CharType> &otherSw) const noexcept
             {
                 return (sw == otherSw);
             }
@@ -204,8 +206,10 @@ namespace azgra
                     searchFrom = index + separatorLen;
                     index = index_of(separatorString, searchFrom);
                 }
-                result.push_back(
-                        SmartStringView(basic_string_view__<CharType>(sw.data() + searchFrom)));
+                if (sw.length() != searchFrom)
+                {
+                    result.push_back(SmartStringView(basic_string_view__<CharType>(sw.data() + searchFrom)));
+                }
 
                 return result;
             }
