@@ -118,6 +118,19 @@ namespace azgra
             return false;
         }
 
+        template<typename It, typename T = typename std::iterator_traits<It>::value_type>
+        bool contains(It srcBegin, It srcEnd, const T &element)
+        {
+            for (It iterator = srcBegin; iterator != srcEnd; ++iterator)
+            {
+                if (*iterator == element)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         template<typename T>
         bool contains(const std::vector<T> &src, const T &element, std::function<bool(const T &, const T &)> cmp)
         {
@@ -161,6 +174,21 @@ namespace azgra
                 if (!contains(except, src[i]))
                 {
                     result.push_back(src[i]);
+                }
+            }
+            return result;
+        }
+
+        template<typename It, typename T = typename std::iterator_traits<It>::value_type>
+        std::vector<T> except(It srcBegin, It srcEnd, It exceptBegin, It exceptEnd)
+        {
+            std::vector<T> result;
+
+            for (It iterator = srcBegin; iterator != srcEnd; ++iterator)
+            {
+                if (!contains(exceptBegin, exceptEnd, *iterator))
+                {
+                    result.push_back(*iterator);
                 }
             }
             return result;
