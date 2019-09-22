@@ -41,7 +41,7 @@ namespace azgra::collection
     }
 
     template<typename T>
-    std::vector<std::vector<T>> generate_subsets_of_size(const std::vector<T> &pool, const int requestedSubsetSize)
+    std::vector<std::vector<T>> generate_subsets_of_size(const std::vector<T> &pool, const size_t requestedSubsetSize)
     {
         std::vector<std::vector<T>> subsets;
 
@@ -81,7 +81,7 @@ namespace azgra::collection
             else
             {
                 indices[i] += 1;
-                for (int j = i + 1; j < requestedSubsetSize; ++j)
+                for (size_t j = i + 1; j < requestedSubsetSize; ++j)
                 {
                     indices[j] = indices[j - 1] + 1;
                 }
