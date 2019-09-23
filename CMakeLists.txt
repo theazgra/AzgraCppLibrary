@@ -28,6 +28,7 @@ set(OBJECTS_TO_BUILD src/stream/binary_converter.cpp
         include/azgra/collection/vector_linq.h
         include/azgra/collection/vector_utilities.h
         include/azgra/io/text_file_functions.h
+        include/azgra/matrix.h
         )
 
 add_library(azgra STATIC ${OBJECTS_TO_BUILD})
