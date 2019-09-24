@@ -51,3 +51,6 @@ add_library(sub::azgra ALIAS ${PROJECT_NAME})
 
 target_include_directories(azgra PUBLIC ${PROJECT_SOURCE_DIR}/include)
 # target_include_directories(azgraS PUBLIC ${PROJECT_SOURCE_DIR}/include)
+
+add_executable(consoleApp test.cpp)
+target_link_libraries(consoleApp azgra)
