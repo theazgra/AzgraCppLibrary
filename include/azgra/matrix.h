@@ -26,6 +26,14 @@ namespace azgra
     public:
         Matrix() = default;
 
+        explicit Matrix(const Matrix<T> &copySrc)
+        {
+            rowCount = copySrc.rowCount;
+            colCount = copySrc.colCount;
+            data = std::vector<T>(copySrc.data.begin(), copySrc.data.end());
+        }
+
+
         explicit Matrix(size_t dimension)
         {
             rowCount = dimension;
