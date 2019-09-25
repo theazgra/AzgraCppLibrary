@@ -49,6 +49,8 @@ namespace azgra
     static_assert(sizeof(u32) == static_cast<size_t>(4));
     static_assert(sizeof(i64) == static_cast<size_t>(8));
     static_assert(sizeof(u64) == static_cast<size_t>(8));
+    static_assert(sizeof(float) == static_cast<size_t>(4));
+    static_assert(sizeof(double) == static_cast<size_t>(8));
 };
 
 namespace azgra
