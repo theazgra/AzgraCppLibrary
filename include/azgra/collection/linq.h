@@ -1,7 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <set>
 #include <functional>
+#include <algorithm>
 #include <boost/optional.hpp>
 
 #define REQUIRE_NUMERIC_TYPE static_assert(                         \
@@ -22,6 +24,17 @@
 
 namespace azgra::collection::experimental_linq
 {
+    template<typename InputIt, typename InputType=typename std::iterator_traits<InputIt>::value_type, typename ResultType>
+    std::vector<ResultType> map_fn(InputIt begin, InputIt end, std::function<ResultType(const InputType &)> fn)
+    {
+        std::vector<ResultType> result;
+        for (InputIt it = begin; it != end; ++it)
+        {
+            result.push_back(fn(*it));
+        }
+        return result;
+    }
+
     class EnumerableError : public std::runtime_error
     {
     public:
@@ -293,7 +306,7 @@ namespace azgra::collection::experimental_linq
         }
 
 
-        double average() const
+        double average() const noexcept
         {
             REQUIRE_NUMERIC_TYPE;
             double sum = 0.0;
@@ -307,12 +320,101 @@ namespace azgra::collection::experimental_linq
             return (sum / static_cast<double>(count));
         }
 
+        double sum() const noexcept
+        {
+            REQUIRE_NUMERIC_TYPE;
+            double sum = 0.0;
+            for (const T &item : data)
+            {
+                sum += item;
+            }
+            return sum;
+        }
 
+        Enumerable<T> reverse() const noexcept
+        {
+            std::vector<T> reversedData(data.begin(), data.end());
+            std::reverse(reversedData.begin(), reversedData.end());
+            Enumerable<T> result(reversedData);
+            return result;
+        }
+
+        Enumerable<T> take(const size_t count) const noexcept
+        {
+            size_t takeSize = count < data.size() ? count : data.size();
+            Enumerable<T> result;
+            result.data.resize(takeSize);
+            for (size_t i = 0; i < takeSize; ++i)
+            {
+                result.data[i] = data[i];
+            }
+            return result;
+        }
+
+        Enumerable<T> take_while(std::function<bool(const T &)> predicate) const noexcept
+        {
+            Enumerable<T> result;
+            for (const T &item : data)
+            {
+                if (!predicate(item))
+                { break; }
+                result.data.push_back(item);
+            }
+            return result;
+        }
+
+        Enumerable<T> skip(const size_t skipCount) const noexcept
+        {
+            Enumerable<T> result;
+            if (skipCount >= data.size())
+            {
+                return result;
+            }
+
+            for (size_t i = skipCount; i < data.size(); ++i)
+            {
+                result.data.push_back(data[i]);
+            }
+            return result;
+        }
+
+        Enumerable<T> except(const std::vector<T> &exceptSrc) const noexcept
+        {
+            Enumerable<T> result;
+            for (const T &item : data)
+            {
+                // If item is not found in exceptSrc add it to result.
+                if (std::find(exceptSrc.begin(), exceptSrc.end(), item) == exceptSrc.end())
+                {
+                    result.data.push_back(item);
+                }
+            }
+            return result;
+        }
+
+        Enumerable<T> except(const Enumerable<T> &exceptSrc) const noexcept
+        {
+            return except(exceptSrc.data);
+        }
+
+
+        Enumerable<T> distinct() const noexcept
+        {
+            std::set<T> distinctSet(data.begin(), data.end());
+            Enumerable<T> result(distinctSet.begin(), distinctSet.end());
+            return result;
+        }
+
+        template<typename ResultType>
+        Enumerable<ResultType> for_each(std::function<ResultType(const T &)> fn) const noexcept
+        {
+            Enumerable<ResultType> result(map_fn(data.begin(), data.end(), fn));
+            return result;
+        }
 
         // std::function<bool(const T &)> predicate
         // std::function<SelectType(const T &)> selector
-        // TODO:  Distinct, Concat, Except, OrderBy, OrderByDescending, Reverse, Repeat, Sum, Take, Skip, TakeWhile, TakeLast, ForEach,
-        //  Cast?
+        // TODO:  Concat, OrderBy, OrderByDescending, Repeat
     };
 
 

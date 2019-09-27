@@ -29,9 +29,18 @@ int main(int, char **)
 //    { return x.n == 7; }));
 //
 //    always_assert(x[0].n == 7);
+
+    std::function<int(const Number &)> transform = [](const Number &n)
+    {
+        return n.n;
+    };
+
+    Enumerable<Number> en(nums.begin(), nums.end());
+    auto result = en.for_each(transform);
+
+
     std::function<bool(const Number &)> even = [](const Number &n)
     { return (n.n % 2 == 0); };
-    Enumerable<Number> en(nums.begin(), nums.end());
     Enumerable<Number> emptyEn;
 
     try
@@ -43,7 +52,7 @@ int main(int, char **)
     {
         fprintf(stderr, "%s\n", e.what());
     }
-    std::vector<azgra::u16> vec={5,45,89,78,64,21,45,45,4};
+    std::vector<azgra::u16> vec = {5, 45, 89, 78, 64, 21, 45, 45, 4};
     Enumerable<azgra::u16> xxx(vec);
 
     double avg = xxx.average();
