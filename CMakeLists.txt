@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 
 project(azgra)
 
+option(MATPLOTLIB_CPP "Compile with matplotlib-cpp support" ON)
 
 #set(CMAKE_CXX_FLAGS "-Wall -fPIC")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC")
@@ -51,6 +52,15 @@ add_library(sub::azgra ALIAS ${PROJECT_NAME})
 
 target_include_directories(azgra PUBLIC ${PROJECT_SOURCE_DIR}/include)
 # target_include_directories(azgraS PUBLIC ${PROJECT_SOURCE_DIR}/include)
+
+if(MATPLOTLIB_CPP)
+    message("Configuring MATPLOTLIB_CPP")
+    find_package(PythonLibs 2.7 REQUIRED)
+    target_include_directories(azgra PRIVATE ${PYTHON_INCLUDE_DIRS})
+    target_link_libraries(azgra ${PYTHON_LIBRARIES})
+    # Define symbol for C++ code.
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMATPLOTLIB_CPP")
+endif()
 
 add_executable(consoleApp test.cpp)
 target_link_libraries(consoleApp azgra)

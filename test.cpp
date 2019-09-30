@@ -23,6 +23,13 @@ struct Number
 int main(int, char **)
 {
 
+#ifdef MATPLOTLIB_CPP
+    fprintf(stdout,"matplotlib-cpp enabled\n");
+#else
+    fprintf(stdout,"matplotlib-cpp disabled\n");
+#endif
+    return 0;
+
     std::vector<Number> nums = {Number(0), Number(1), Number(2), Number(3), Number(4), Number(5), Number(6), Number(7), Number(8)};
 //    std::set<Number> nums = {Number(0), Number(1), Number(2), Number(3), Number(4), Number(5), Number(6), Number(7), Number(8)};
 //    auto x = where(nums.begin(), nums.end(), static_cast<std::function<bool(const Number &)>>([](const Number &x)

@@ -307,6 +307,11 @@ namespace azgra::collection::experimental_linq
             return (sum / static_cast<double>(count));
         }
 
+	Enumerable<T> take(size_t count) const noexcept
+	{
+	
+	}
+
 
 
         // std::function<bool(const T &)> predicate
