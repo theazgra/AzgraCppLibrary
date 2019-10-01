@@ -1,11 +1,7 @@
 #include <azgra/azgra.h>
 #include <azgra/collection/linq.h>
 #include <set>
-
-#ifdef MATPLOTLIB_CPP
-    #include "matplotlib-cpp/matplotlibcpp.h"
-#endif
-using namespace azgra::collection::experimental_linq;
+#include <azgra/plotting/plot.h>
 
 struct Number
 {
@@ -13,7 +9,7 @@ struct Number
 
     Number() = default;
 
-    Number(int _n) : n(_n)
+    explicit Number(int _n) : n(_n)
     {}
 
     bool operator<(const Number &x) const
@@ -27,27 +23,12 @@ int main(int, char **)
 {
 
 #ifdef MATPLOTLIB_CPP
-    fprintf(stdout,"matplotlib-cpp enabled\n");
-    std::vector<std::vector<double>> x, y, z;
-    for (double i = -5; i <= 5;  i += 0.25) {
-        std::vector<double> x_row, y_row, z_row;
-        for (double j = -5; j <= 5; j += 0.25) {
-            x_row.push_back(i);
-            y_row.push_back(j);
-            z_row.push_back(::std::sin(::std::hypot(i, j)));
-        }
-        x.push_back(x_row);
-        y.push_back(y_row);
-        z.push_back(z_row);
-    }
-
-    matplotlibcpp::plot_surface(x, y, z);
-    matplotlibcpp::save("/mnt/d/tmp/surface.png");
+    azgra::plotting::test_plot();
 #else
     fprintf(stdout,"matplotlib-cpp disabled\n");
 #endif
     return 0;
-
+#if 0
     std::vector<Number> nums = {Number(0), Number(1), Number(2), Number(3), Number(4), Number(5), Number(6), Number(7), Number(8)};
 //    std::set<Number> nums = {Number(0), Number(1), Number(2), Number(3), Number(4), Number(5), Number(6), Number(7), Number(8)};
 //    auto x = where(nums.begin(), nums.end(), static_cast<std::function<bool(const Number &)>>([](const Number &x)
@@ -81,7 +62,7 @@ int main(int, char **)
     Enumerable<azgra::u16> xxx(vec);
 
     double avg = xxx.average();
-
+#endif
 
     return 0;
 }

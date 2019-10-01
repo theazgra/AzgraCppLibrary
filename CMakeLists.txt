@@ -31,6 +31,7 @@ set(OBJECTS_TO_BUILD src/stream/binary_converter.cpp
         include/azgra/io/text_file_functions.h
         include/azgra/matrix.h
         include/azgra/collection/linq.h
+        include/azgra/plotting/plot.h
         )
 
 add_library(azgra STATIC ${OBJECTS_TO_BUILD})
@@ -56,8 +57,10 @@ target_include_directories(azgra PUBLIC ${PROJECT_SOURCE_DIR}/include)
 if(MATPLOTLIB_CPP)
     message("Configuring MATPLOTLIB_CPP")
     find_package(PythonLibs 2.7 REQUIRED)
-    target_include_directories(azgra PRIVATE ${PYTHON_INCLUDE_DIRS})
+
+    target_include_directories(azgra PUBLIC ${PYTHON_INCLUDE_DIRS})
     target_link_libraries(azgra ${PYTHON_LIBRARIES})
+
     # Define symbol for C++ code.
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMATPLOTLIB_CPP")
 endif()
