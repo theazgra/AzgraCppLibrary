@@ -91,12 +91,14 @@ namespace azgra::geometry
     {
         m_xTicks = xTicks;
         m_xTickLabels = xTickLabels;
+        return *this;
     }
 
     Plot Plot::set_y_ticks(const std::vector<f64> &yTicks, const std::vector<std::string> &yTickLabels)
     {
         m_yTicks = yTicks;
         m_yTickLabels = yTickLabels;
+        return *this;
     }
 
     void Plot::prepare_plot()
