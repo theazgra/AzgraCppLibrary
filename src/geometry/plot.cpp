@@ -14,7 +14,7 @@ namespace azgra::geometry
         plt::figure_size(m_plotWidth, m_plotHeight);
     }
 
-    Plot Plot::add_surface_plot(const std::vector<std::vector<Point3D<double>>> &coords, const std::string_view &fileName)
+    Plot Plot::add_surface_plot(const std::vector<std::vector<Point3D<double>>> &coords)
     {
         m_3d = true;
         std::vector<std::vector<double>> x, y, z;

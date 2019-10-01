@@ -38,7 +38,7 @@ namespace azgra::geometry
 
         explicit Plot(azgra::basic_string_view__<char> title, const azgra::u16 plotWidth, const azgra::u16 plotHeight);
 
-        Plot add_surface_plot(const std::vector<std::vector<Point3D<f64>>> &coords, const std::string_view &fileName);
+        Plot add_surface_plot(const std::vector<std::vector<Point3D<f64>>> &coords);
 
         Plot add_line(const std::vector<Point2D<f64>> &coords, const azgra::basic_string_view__<char> &lineName = "");
 
