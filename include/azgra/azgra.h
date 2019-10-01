@@ -58,6 +58,18 @@ namespace azgra
     static_assert(sizeof(f32) == static_cast<size_t>(4));
     static_assert(sizeof(double) == static_cast<size_t>(8));
     static_assert(sizeof(f64) == static_cast<size_t>(8));
+
+    // Since we are using also older GCC than 7 we have to define this.
+#ifdef GCC_CXX17
+#include <string_view>
+    template<typename CharType>
+    using basic_string_view__ = std::basic_string_view<CharType>;
+#else
+    #include <experimental/string_view>
+template<typename CharType>
+using basic_string_view__ = std::experimental::basic_string_view<CharType>;
+#endif
+
 };
 
 namespace azgra

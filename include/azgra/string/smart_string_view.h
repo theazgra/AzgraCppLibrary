@@ -1,23 +1,7 @@
 #pragma once
 
-//#ifndef GCC_CXX17
-//#define GCC_CXX17
-//#endif
+#include <azgra/azgra.h>
 
-#ifdef GCC_CXX17
-
-#include <string_view>
-
-template<typename CharType>
-using basic_string_view__ = std::basic_string_view<CharType>;
-#else
-#include <experimental/string_view>
-template<typename CharType>
-using basic_string_view__ = std::experimental::basic_string_view<CharType>;
-#endif
-
-
-#include <vector>
 
 namespace azgra
 {
