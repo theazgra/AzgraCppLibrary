@@ -40,6 +40,11 @@ namespace azgra
     typedef uint64_t u64;
 #endif
 
+    // Azgra float types
+    typedef float f32;
+    typedef double f64;
+
+
     constexpr size_t int64_t_size = sizeof(int64_t);
 
     static_assert(sizeof(byte) == static_cast<size_t>(1));
@@ -50,7 +55,9 @@ namespace azgra
     static_assert(sizeof(i64) == static_cast<size_t>(8));
     static_assert(sizeof(u64) == static_cast<size_t>(8));
     static_assert(sizeof(float) == static_cast<size_t>(4));
+    static_assert(sizeof(f32) == static_cast<size_t>(4));
     static_assert(sizeof(double) == static_cast<size_t>(8));
+    static_assert(sizeof(f64) == static_cast<size_t>(8));
 };
 
 namespace azgra

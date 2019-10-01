@@ -154,7 +154,7 @@ namespace azgra
         public:
             CliFlagGroup(const string::SmartStringView<char> &name, const std::vector<CliOption *> &flagsInGroup,
                          CliGroupMatchPolicy matchPolicy = CliGroupMatchPolicy_NoPolicy) :
-                    CliOption(name, "", '\0', "", false)
+                    CliOption(name, azgra::string::SmartStringView<char>(""), '\0', azgra::string::SmartStringView<char>(""), false)
             {
                 hasMatchCharacter = false;
                 isRequired = false;

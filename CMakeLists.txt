@@ -31,11 +31,12 @@ set(OBJECTS_TO_BUILD src/stream/binary_converter.cpp
         include/azgra/io/text_file_functions.h
         include/azgra/matrix.h
         include/azgra/collection/linq.h
-        include/azgra/plotting/plot.h
+        src/geometry/plot.cpp
         )
 
 add_library(azgra STATIC ${OBJECTS_TO_BUILD})
 set_property(TARGET azgra PROPERTY CXX_STANDARD 17)
+
 
 # add_library(azgraS SHARED ${OBJECTS_TO_BUILD})
 
@@ -67,3 +68,4 @@ endif()
 
 add_executable(consoleApp test.cpp)
 target_link_libraries(consoleApp azgra)
+set_property(TARGET consoleApp PROPERTY CXX_STANDARD 17)

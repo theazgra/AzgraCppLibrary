@@ -1,8 +1,8 @@
 #pragma once
 
-#ifndef GCC_CXX17
-#define GCC_CXX17
-#endif
+//#ifndef GCC_CXX17
+//#define GCC_CXX17
+//#endif
 
 #ifdef GCC_CXX17
 
@@ -33,19 +33,17 @@ namespace azgra
         private:
             basic_string_view__<CharType> sw;
         public:
-            SmartStringView()
+            SmartStringView() = default;
+
+            explicit SmartStringView(const CharType *cString) : SmartStringView(basic_string_view__<CharType>(cString))
             {}
 
-            SmartStringView(const CharType *cString) : SmartStringView(basic_string_view__<CharType>(cString))
-            {}
-
-            SmartStringView(const basic_string_view__<CharType> stringView)
+            explicit SmartStringView(const basic_string_view__<CharType> stringView)
             {
                 sw = stringView;
             }
 
-            ~SmartStringView()
-            {}
+            ~SmartStringView() = default;
 
             constexpr basic_string_view__<CharType> string_view() const noexcept
             {
