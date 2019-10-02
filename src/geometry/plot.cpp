@@ -139,5 +139,11 @@ namespace azgra::geometry
         prepare_plot();
         plt::show();
     }
+
+    void Plot::test()
+    {
+        plt::plot({1,3,2,4});
+        plt::show();
+    }
 }
 #endif

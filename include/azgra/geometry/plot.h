@@ -53,6 +53,8 @@ namespace azgra::geometry
         void save(azgra::basic_string_view__<char> fileName);
 
         void display_window();
+
+        void test();
     };
 }
 #endif
