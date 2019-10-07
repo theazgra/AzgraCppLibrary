@@ -48,6 +48,7 @@ namespace azgra
             void add_group(CliFlagGroup &flagGroup);
 
             bool parse(const int argc, const char **argv);
+            bool parse(const int argc, char **argv);
 
             void print_help() const;
 

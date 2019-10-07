@@ -235,6 +235,11 @@ namespace azgra
             }
         }
 
+        bool CliArguments::parse(const int argc, char **argv)
+        {
+            return parse(argc, const_cast<const char**>(argv));
+        }
+
         bool CliArguments::parse(const int argc, const char **argv)
         {
             bool failed = false;
