@@ -19,10 +19,10 @@ namespace azgra
         public:
             SmartStringView() = default;
 
-            explicit SmartStringView(const CharType *cString) : SmartStringView(basic_string_view__<CharType>(cString))
+            SmartStringView(const CharType *cString) : SmartStringView(basic_string_view__<CharType>(cString))
             {}
 
-            explicit SmartStringView(const basic_string_view__<CharType> stringView)
+            SmartStringView(const basic_string_view__<CharType> stringView)
             {
                 sw = stringView;
             }
