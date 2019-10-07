@@ -181,36 +181,53 @@ namespace azgra
                 string::AsciiString flagNameDesc({flag->name.data(), " - ", flag->description.data()});
                 flagNameDesc.pad_right(' ', SECOND_COLUMN_WIDTH);
 
-                outStream << flagNameDesc.get_c_string() << " [" << req;;
+                outStream << flagNameDesc.get_c_string() << " [" << req;
 
-
-                auto *intFlag = dynamic_cast<const CliValueFlag<int> *> (flag);
-                if (intFlag)
-                    outStream << ", int";
-
-                auto *uintFlag = dynamic_cast<const CliValueFlag<unsigned int> *> (flag);
-                if (uintFlag)
+                do
                 {
-                    outStream << ", uint";
-                }
+                    auto *intFlag = dynamic_cast<const CliValueFlag<int> *> (flag);
+                    if (intFlag)
+                    {
+                        outStream << ", int";
+                        break;
+                    }
 
-                auto *floatFlag = dynamic_cast<const CliValueFlag<float> *> (flag);
-                if (floatFlag)
-                {
-                    outStream << ", float";
-                }
+                    auto *uintFlag = dynamic_cast<const CliValueFlag<unsigned int> *> (flag);
+                    if (uintFlag)
+                    {
+                        outStream << ", uint";
+                        break;
+                    }
 
-                auto *constCharFlag = dynamic_cast<const CliValueFlag<const char *> *> (flag);
-                if (constCharFlag)
-                {
-                    outStream << ", const char*";
-                }
+                    auto *sizeTFlag = dynamic_cast<const CliValueFlag<size_t> *> (flag);
+                    if (sizeTFlag)
+                    {
+                        outStream << ", size_t";
+                        break;
+                    }
 
-                auto *stringFlag = dynamic_cast<const CliValueFlag<std::string> *> (flag);
-                if (stringFlag)
-                {
-                    outStream << ", std::string";
-                }
+                    auto *floatFlag = dynamic_cast<const CliValueFlag<float> *> (flag);
+                    if (floatFlag)
+                    {
+                        outStream << ", float";
+                        break;
+                    }
+
+                    auto *constCharFlag = dynamic_cast<const CliValueFlag<const char *> *> (flag);
+                    if (constCharFlag)
+                    {
+                        outStream << ", const char*";
+                        break;
+                    }
+
+                    auto *stringFlag = dynamic_cast<const CliValueFlag<std::string> *> (flag);
+                    if (stringFlag)
+                    {
+                        outStream << ", std::string";
+                        break;
+                    }
+                } while (false);
+
                 outStream << "]" << std::endl;
             }
         }
@@ -237,7 +254,7 @@ namespace azgra
 
         bool CliArguments::parse(const int argc, char **argv)
         {
-            return parse(argc, const_cast<const char**>(argv));
+            return parse(argc, const_cast<const char **>(argv));
         }
 
         bool CliArguments::parse(const int argc, const char **argv)
