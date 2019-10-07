@@ -124,13 +124,19 @@ namespace azgra
             friend class CliArguments;
 
         private:
+            bool hasDefaultValue = false;
             ValueType internalValue;
         public:
             CliValueFlag(const string::SmartStringView<char> &flagName, const string::SmartStringView<char> &description, char matchChar,
                          const string::SmartStringView<char> &matchString, bool required = false, ValueType defaultValue = ValueType()) :
                     CliOption(flagName, description, matchChar, matchString, required)
             {
-                internalValue = defaultValue;
+                if (defaultValue != ValueType())
+                {
+                    internalValue = defaultValue;
+                    hasDefaultValue = true;
+                }
+
                 if (matchChar == '\0')
                 {
                     hasMatchCharacter = false;

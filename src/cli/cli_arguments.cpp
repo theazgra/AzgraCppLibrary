@@ -189,6 +189,10 @@ namespace azgra
                     if (intFlag)
                     {
                         outStream << ", int";
+                        if (intFlag->hasDefaultValue)
+                        {
+                            outStream << "=" << intFlag->internalValue;
+                        }
                         break;
                     }
 
@@ -196,6 +200,11 @@ namespace azgra
                     if (uintFlag)
                     {
                         outStream << ", uint";
+                        if (uintFlag->hasDefaultValue)
+                        {
+                            outStream << "=" << uintFlag->internalValue;
+                        }
+
                         break;
                     }
 
@@ -203,6 +212,10 @@ namespace azgra
                     if (sizeTFlag)
                     {
                         outStream << ", size_t";
+                        if (sizeTFlag->hasDefaultValue)
+                        {
+                            outStream << "=" << sizeTFlag->internalValue;
+                        }
                         break;
                     }
 
@@ -210,6 +223,10 @@ namespace azgra
                     if (floatFlag)
                     {
                         outStream << ", float";
+                        if (floatFlag->hasDefaultValue)
+                        {
+                            outStream << "=" << floatFlag->internalValue;
+                        }
                         break;
                     }
 
@@ -217,6 +234,10 @@ namespace azgra
                     if (constCharFlag)
                     {
                         outStream << ", const char*";
+                        if (constCharFlag->hasDefaultValue)
+                        {
+                            outStream << "=" << constCharFlag->internalValue;
+                        }
                         break;
                     }
 
@@ -224,6 +245,10 @@ namespace azgra
                     if (stringFlag)
                     {
                         outStream << ", std::string";
+                        if (stringFlag->hasDefaultValue)
+                        {
+                            outStream << "=" << stringFlag->internalValue;
+                        }
                         break;
                     }
                 } while (false);
