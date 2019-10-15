@@ -98,18 +98,33 @@ namespace azgra::collection
         }
     }
 
-    template <typename T>
+    template<typename T>
     std::set<T> vector_as_set(const std::vector<T> &vec)
     {
         std::set<T> result(vec.begin(), vec.end());
         return result;
     }
 
-    template <typename T>
+    template<typename T>
     std::vector<T> set_as_vector(const std::set<T> &set)
     {
-        std::vector<T> result (set.begin(), set.end());
+        std::vector<T> result(set.begin(), set.end());
         return result;
     }
+
+    template<typename T>
+    std::vector<std::vector<T>> generate_permutations(std::vector<T> pool, const size_t permutationCount)
+    {
+        std::vector<std::vector<T>> permutations;
+        size_t count = 0;
+        do
+        {
+            permutations.push_back(pool);
+            if (++count >= permutationCount)
+                { break; }
+        } while (std::next_permutation(pool.begin(), pool.end()));
+        return permutations;
+    }
+
 
 }

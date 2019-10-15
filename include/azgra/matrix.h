@@ -48,6 +48,17 @@ namespace azgra
             data.resize(rowCount * colCount);
         }
 
+        explicit Matrix(size_t rowCount, size_t colCount, const T &initialValue)
+        {
+            this->rowCount = rowCount;
+            this->colCount = colCount;
+            data.resize(rowCount * colCount);
+            for (size_t i = 0; i < (rowCount * colCount); ++i)
+            {
+                data[i] = initialValue;
+            }
+        }
+
         [[nodiscard]] size_t rows() const noexcept
         {
             return rowCount;
