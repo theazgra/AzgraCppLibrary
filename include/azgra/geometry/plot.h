@@ -42,6 +42,8 @@ namespace azgra::geometry
 
         Plot add_line(const std::vector<Point2D<f64>> &coords, const azgra::basic_string_view__<char> &lineName = "");
 
+        Plot add_2d_point(const Point2D<f64> &point);
+
         Plot set_x_lims(const f64 xMin, const f64 xMax);
 
         Plot set_y_lims(const f64 yMin, const f64 yMax);
@@ -54,6 +56,9 @@ namespace azgra::geometry
 
         void display_window();
 
+        static void animate_lines(azgra::basic_string_view__<char> title,
+                        const std::vector<std::vector<std::vector<Point2D<f64>>>> &linesInTime,
+                        const float animationDelay);
         void test();
     };
 }

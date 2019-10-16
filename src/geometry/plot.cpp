@@ -38,6 +38,15 @@ namespace azgra::geometry
         return *this;
     }
 
+    Plot Plot::add_2d_point(const Point2D<f64> &point)
+    {
+        std::vector<double> x(1), y(1);
+        x[0] = point.x;
+        y[0] = point.y;
+        plt::plot(x, y, "o");
+        return *this;
+    }
+
     Plot Plot::add_line(const std::vector<Point2D<double>> &coords, const azgra::basic_string_view__<char> &lineName)
     {
         always_assert(!m_3d);
@@ -60,9 +69,6 @@ namespace azgra::geometry
             plt::plot(x, y);
         }
 
-        //TODO:
-        // Set x-axis to interval [0,1000000]
-        //plt::xlim(0, 1000 * 1000);
         return *this;
     }
 
@@ -142,8 +148,43 @@ namespace azgra::geometry
 
     void Plot::test()
     {
-        plt::plot({1,3,2,4});
+        plt::plot({1, 3, 2, 4});
         plt::show();
     }
+
+    void Plot::animate_lines(azgra::basic_string_view__<char> title,
+                             const std::vector<std::vector<std::vector<Point2D<f64>>>> &linesInTime,
+                             const float animationDelay)
+    {
+
+        plt::show();
+        int time = 0;
+        std::vector<double> x(2), y(2), xp(1), yp(1);
+        for (const auto &linesInOneTime : linesInTime)
+        {
+            plt::clf();
+            plt::title(std::to_string(time++));
+            for (const auto &line : linesInOneTime)
+            {
+                always_assert(line.size() == 2);
+
+                auto srcPoint = line[0];
+                auto dstPoint = line[1];
+
+                x[0] = srcPoint.x;
+                x[1] = dstPoint.x;
+                y[0] = srcPoint.y;
+                y[1] = dstPoint.y;
+                xp[0] = srcPoint.x;
+                yp[0] = srcPoint.y;
+
+                plt::plot(x, y);
+                plt::plot(xp, yp, "ob");
+            }
+            plt::pause(animationDelay);
+        }
+    }
+
+
 }
 #endif
