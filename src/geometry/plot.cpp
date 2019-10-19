@@ -154,21 +154,26 @@ namespace azgra::geometry
         plt::show();
         const size_t pointCount = linesInTime[0].size();
         std::vector<double> x(pointCount), y(pointCount), xp(pointCount), yp(pointCount);
-        for (size_t timePoint = 0; timePoint < linesInTime.size(); timePoint += animationStep)
+
+        for (size_t i = 0; i < pointCount; ++i)
+        {
+            x[i] = xp[i] = linesInTime[0][i].x;
+            y[i] = yp[i] = linesInTime[0][i].y;
+        }
+        plt::Plot animatedPlot("Animation", x, y);
+        plt::plot(xp, yp, "or");
+
+        for (size_t timePoint = 1; timePoint < linesInTime.size(); timePoint += animationStep)
         {
             const auto &points = linesInTime[timePoint];
             always_assert(points.size() == pointCount);
-            plt::clf();
-            plt::title(std::to_string(timePoint+1));
-
             for (size_t i = 0; i < pointCount; ++i)
             {
                 x[i] = xp[i] = points[i].x;
                 y[i] = yp[i] = points[i].y;
             }
 
-            plt::plot(x, y, "-r");
-            plt::plot(xp, yp, "ob");
+            animatedPlot.update(x, y);
             plt::pause(animationDelay);
         }
         plt::pause(100);
