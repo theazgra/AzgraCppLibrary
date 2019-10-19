@@ -146,43 +146,32 @@ namespace azgra::geometry
         plt::show();
     }
 
-    void Plot::test()
+    void Plot::animate_lines(const std::vector<std::vector<Point2D<f64>>> &linesInTime, const float animationDelay,
+                             const size_t animationStep)
     {
-        plt::plot({1, 3, 2, 4});
+        if (linesInTime.empty())
+            return;
         plt::show();
-    }
-
-    void Plot::animate_lines(azgra::basic_string_view__<char> title,
-                             const std::vector<std::vector<std::vector<Point2D<f64>>>> &linesInTime,
-                             const float animationDelay)
-    {
-
-        plt::show();
-        int time = 0;
-        std::vector<double> x(2), y(2), xp(1), yp(1);
-        for (const auto &linesInOneTime : linesInTime)
+        const size_t pointCount = linesInTime[0].size();
+        std::vector<double> x(pointCount), y(pointCount), xp(pointCount), yp(pointCount);
+        for (size_t timePoint = 0; timePoint < linesInTime.size(); timePoint += animationStep)
         {
+            const auto &points = linesInTime[timePoint];
+            always_assert(points.size() == pointCount);
             plt::clf();
-            plt::title(std::to_string(time++));
-            for (const auto &line : linesInOneTime)
+            plt::title(std::to_string(timePoint+1));
+
+            for (size_t i = 0; i < pointCount; ++i)
             {
-                always_assert(line.size() == 2);
-
-                auto srcPoint = line[0];
-                auto dstPoint = line[1];
-
-                x[0] = srcPoint.x;
-                x[1] = dstPoint.x;
-                y[0] = srcPoint.y;
-                y[1] = dstPoint.y;
-                xp[0] = srcPoint.x;
-                yp[0] = srcPoint.y;
-
-                plt::plot(x, y);
-                plt::plot(xp, yp, "ob");
+                x[i] = xp[i] = points[i].x;
+                y[i] = yp[i] = points[i].y;
             }
+
+            plt::plot(x, y, "-r");
+            plt::plot(xp, yp, "ob");
             plt::pause(animationDelay);
         }
+        plt::pause(100);
     }
 
 
