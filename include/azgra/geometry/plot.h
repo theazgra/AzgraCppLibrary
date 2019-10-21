@@ -58,10 +58,8 @@ namespace azgra::geometry
 
         void display_window();
 
-        static void animate_lines(azgra::basic_string_view__<char> title,
-                        const std::vector<std::vector<std::vector<Point2D<f64>>>> &linesInTime,
-                        const float animationDelay);
-        void test();
+        static void animate_lines(const std::vector<std::vector<Point2D<f64>>> &linesInTime,
+                                  const float animationDelay, const size_t animationStep = 1);
     };
 }
 #endif
