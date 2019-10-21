@@ -47,6 +47,11 @@ namespace azgra::geometry
         return *this;
     }
 
+    Plot Plot::add_2d_points(const std::vector<Point2D<f64>> &points)
+    {
+        std::vector<f64> pointCoord
+    }
+
     Plot Plot::add_line(const std::vector<Point2D<double>> &coords, const azgra::basic_string_view__<char> &lineName)
     {
         always_assert(!m_3d);

@@ -44,6 +44,8 @@ namespace azgra::geometry
 
         Plot add_2d_point(const Point2D<f64> &point);
 
+        Plot add_2d_points(const std::vector<Point2D<f64>> &points);
+
         Plot set_x_lims(const f64 xMin, const f64 xMax);
 
         Plot set_y_lims(const f64 yMin, const f64 yMax);
