@@ -1,24 +1,12 @@
 #include <azgra/azgra.h>
 #include <azgra/collection/enumerable.h>
-#include <set>
-#include <azgra/geometry/plot.h>
-#include <functional>
 
-struct Number
+
+struct Human
 {
-    int n;
-
-    Number() = default;
-
-    explicit Number(int _n) : n(_n)
-    {}
-
-    bool operator<(const Number &x) const
-    {
-        return n < x.n;
-    }
+    int age;
+    int height;
 };
-
 
 int main(int, char **)
 {
@@ -27,14 +15,19 @@ int main(int, char **)
     return 0;
 #endif
 
-    using namespace std;
     using namespace azgra;
     using namespace azgra::collection;
-    using namespace azgra::geometry;
 
-    auto ps = {Point2D<f64>(10, 10), Point2D<f64>(10, 20), Point2D<f64>(20, 10)};
+    auto humans = Enumerable<Human>({{1,  52},
+                                     {2,  80},
+                                     {20, 175},
+                                     {30, 181},
+                                     {50, 160}});
 
-    Plot().add_2d_points(ps).display_window();
+    std::function<int(const Human &)> fn = [](const Human &h)
+    { return h.height; };
+
+    auto heighs = humans.select<int>(fn);
 
     return 0;
 }

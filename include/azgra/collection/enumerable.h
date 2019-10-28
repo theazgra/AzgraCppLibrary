@@ -22,232 +22,285 @@
         std::is_same<T, azgra::i64>(),      \
     "Type must be numeric.")
 
-namespace azgra::collection::experimental_linq
+namespace azgra::collection
 {
-template <typename InputIt, typename InputType = typename std::iterator_traits<InputIt>::value_type, typename ResultType>
-std::vector<ResultType> map_fn(InputIt begin, InputIt end, std::function<ResultType(const InputType &)> fn)
-{
-    std::vector<ResultType> result;
-    for (InputIt it = begin; it != end; ++it)
+    template<typename InputIt, typename InputType = typename std::iterator_traits<InputIt>::value_type, typename ResultType>
+    std::vector<ResultType> map_fn(InputIt begin, InputIt end, std::function<ResultType(const InputType &)> fn)
     {
-        result.push_back(fn(*it));
-    }
-    return result;
-}
-
-class EnumerableError : public std::runtime_error
-{
-public:
-    explicit EnumerableError(const char *errorMessage) : std::runtime_error(errorMessage)
-    {
-    }
-};
-
-template <typename T>
-class Enumerable
-{
-    template <typename U>
-    friend class Enumerable;
-
-private:
-    std::vector<T> data;
-
-public:
-    Enumerable() = default;
-
-    explicit Enumerable(std::vector<T> dataSrc)
-    {
-        data = std::vector<T>(std::move(dataSrc));
-    }
-
-    template <typename CopyIt>
-    Enumerable(CopyIt srcBegin, CopyIt srcEnd)
-    {
-        data = std::vector<T>(srcBegin, srcEnd);
-    }
-
-    Enumerable<T> where(std::function<bool(const T &)> predicate) const noexcept
-    {
-        Enumerable result;
-        for (const T &item : data)
+        std::vector<ResultType> result;
+        for (InputIt it = begin; it != end; ++it)
         {
-            if (predicate(item))
-            {
-                result.data.push_back(item);
-            }
+            result.push_back(fn(*it));
         }
         return result;
     }
 
-    template <typename SelectType>
-    Enumerable<SelectType> select(std::function<SelectType(const T &)> selector) const noexcept
+    class EnumerableError : public std::runtime_error
     {
-        Enumerable<SelectType> result;
-        result.data.resize(data.size());
-        size_t index = 0;
-        for (const T &item : data)
+    public:
+        explicit EnumerableError(const char *errorMessage) : std::runtime_error(errorMessage)
         {
-            result.data[index++] = selector(item);
         }
-        return result;
-    }
+    };
 
-    T first() const noexcept(false)
+    template<typename T>
+    class Enumerable
     {
-        if (data.size() > 0)
-        {
-            return data[0];
-        }
-        else
-        {
-            throw EnumerableError("Enumerable is empty.");
-        }
-    }
+        template<typename U>
+        friend
+        class Enumerable;
 
-    boost::optional<T> first_or_default() const noexcept
-    {
-        if (data.size() > 0)
-        {
-            return data[0];
-        }
-        else
-        {
-            return boost::none;
-        }
-    }
+    private:
+        std::vector<T> data;
 
-    T last() const noexcept(false)
-    {
-        if (data.size() > 0)
-        {
-            return data[data.size() - 1];
-        }
-        else
-        {
-            throw EnumerableError("Enumerable is empty.");
-        }
-    }
+    public:
+        Enumerable() = default;
 
-    boost::optional<T> last_or_default() const noexcept
-    {
-        if (data.size() > 0)
+        explicit Enumerable(std::vector<T> dataSrc)
         {
-            return data[data.size() - 1];
+            data = std::vector<T>(std::move(dataSrc));
         }
-        else
-        {
-            return boost::none;
-        }
-    }
 
-    T first(std::function<bool(const T &)> predicate) const noexcept(false)
-    {
-        if (data.size() > 0)
+        template<typename CopyIt>
+        Enumerable(CopyIt srcBegin, CopyIt srcEnd)
         {
+            data = std::vector<T>(srcBegin, srcEnd);
+        }
+
+        template<typename Predicate>
+        Enumerable<T> where(const Predicate &predicate) const noexcept
+        {
+            Enumerable result;
             for (const T &item : data)
             {
                 if (predicate(item))
                 {
-                    return item;
+                    result.data.push_back(item);
                 }
             }
-            throw EnumerableError("Didn't find requested item.");
+            return result;
         }
-        else
-        {
-            throw EnumerableError("Enumerable is empty.");
-        }
-    }
 
-    boost::optional<T> first_or_default(std::function<bool(const T &)> predicate) const noexcept
-    {
-        if (data.size() > 0)
+        template<typename SelectType, typename SelectorFunction>
+        Enumerable<SelectType> select(const SelectorFunction &selector) const noexcept
         {
+            Enumerable<SelectType> result;
+            result.data.resize(data.size());
+            size_t index = 0;
             for (const T &item : data)
             {
-                if (predicate(item))
-                {
-                    return item;
-                }
+                result.data[index++] = selector(item);
             }
+            return result;
         }
-        return boost::none;
-    }
 
-    T single(std::function<bool(const T &)> predicate) const noexcept(false)
-    {
-        T result;
-        bool found = false;
-        if (data.size() > 0)
+        T first() const noexcept(false)
         {
-            for (const T &item : data)
+            if (data.size() > 0)
             {
-                if (predicate(item))
-                {
-                    if (found)
-                    {
-                        throw EnumerableError("More than one item satisfy the condition.");
-                    }
-                    result = item;
-                    found = true;
-                }
-            }
-            if (found)
-            {
-                return result;
+                return data[0];
             }
             else
             {
-                throw EnumerableError("No item satisfies the condition.");
+                throw EnumerableError("Enumerable is empty.");
             }
         }
-        else
-        {
-            throw EnumerableError("Enumerable is empty.");
-        }
-    }
 
-    boost::optional<T> single_or_default(std::function<bool(const T &)> predicate) const noexcept(false)
-    {
-        T result;
-        bool found = false;
-        if (data.size() > 0)
+        boost::optional<T> first_or_default() const noexcept
         {
-            for (const T &item : data)
+            if (data.size() > 0)
             {
-                if (predicate(item))
-                {
-                    if (found)
-                    {
-                        throw EnumerableError("More than one item satisfy the condition.");
-                    }
-                    result = item;
-                    found = true;
-                }
-            }
-            if (found)
-            {
-                return result;
+                return data[0];
             }
             else
             {
                 return boost::none;
             }
         }
-        else
+
+        T last() const noexcept(false)
         {
+            if (data.size() > 0)
+            {
+                return data[data.size() - 1];
+            }
+            else
+            {
+                throw EnumerableError("Enumerable is empty.");
+            }
+        }
+
+        boost::optional<T> last_or_default() const noexcept
+        {
+            if (data.size() > 0)
+            {
+                return data[data.size() - 1];
+            }
+            else
+            {
+                return boost::none;
+            }
+        }
+
+        template<typename Predicate>
+        T first(const Predicate &predicate) const noexcept(false)
+        {
+            if (data.size() > 0)
+            {
+                for (const T &item : data)
+                {
+                    if (predicate(item))
+                    {
+                        return item;
+                    }
+                }
+                throw EnumerableError("Didn't find requested item.");
+            }
+            else
+            {
+                throw EnumerableError("Enumerable is empty.");
+            }
+        }
+
+        template<typename Predicate>
+        boost::optional<T> first_or_default(const Predicate &predicate) const noexcept
+        {
+            if (data.size() > 0)
+            {
+                for (const T &item : data)
+                {
+                    if (predicate(item))
+                    {
+                        return item;
+                    }
+                }
+            }
             return boost::none;
         }
-    }
 
-    bool any() const noexcept
-    {
-        return data.size() > 0;
-    }
+        template<typename Predicate>
+        T single(const Predicate &predicate) const noexcept(false)
+        {
+            T result;
+            bool found = false;
+            if (data.size() > 0)
+            {
+                for (const T &item : data)
+                {
+                    if (predicate(item))
+                    {
+                        if (found)
+                        {
+                            throw EnumerableError("More than one item satisfy the condition.");
+                        }
+                        result = item;
+                        found = true;
+                    }
+                }
+                if (found)
+                {
+                    return result;
+                }
+                else
+                {
+                    throw EnumerableError("No item satisfies the condition.");
+                }
+            }
+            else
+            {
+                throw EnumerableError("Enumerable is empty.");
+            }
+        }
 
-    bool any(std::function<bool(const T &)> predicate) const noexcept
-    {
-        if (data.size() > 0)
+        template<typename Predicate>
+        boost::optional<T> single_or_default(const Predicate &predicate) const noexcept(false)
+        {
+            T result;
+            bool found = false;
+            if (data.size() > 0)
+            {
+                for (const T &item : data)
+                {
+                    if (predicate(item))
+                    {
+                        if (found)
+                        {
+                            throw EnumerableError("More than one item satisfy the condition.");
+                        }
+                        result = item;
+                        found = true;
+                    }
+                }
+                if (found)
+                {
+                    return result;
+                }
+                else
+                {
+                    return boost::none;
+                }
+            }
+            else
+            {
+                return boost::none;
+            }
+        }
+
+        bool any() const noexcept
+        {
+            return data.size() > 0;
+        }
+
+        template<typename Predicate>
+        bool any(const Predicate &predicate) const noexcept
+        {
+            if (data.size() > 0)
+            {
+                for (const T &item : data)
+                {
+                    if (predicate(item))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        template<typename Predicate>
+        bool all(const Predicate &predicate) const noexcept
+        {
+            for (const T &item : data)
+            {
+                if (!predicate(item))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        [[nodiscard]] size_t count() const noexcept
+        {
+            return data.size();
+        }
+
+        template<typename Predicate>
+        size_t count(const Predicate &predicate) const noexcept
+        {
+            size_t result = 0;
+            for (const T &item : data)
+            {
+                if (predicate(item))
+                {
+                    ++result;
+                }
+            }
+            return result;
+        }
+
+        template<typename Predicate>
+        bool contains(const Predicate &predicate) const noexcept
         {
             for (const T &item : data)
             {
@@ -256,175 +309,125 @@ public:
                     return true;
                 }
             }
+            return false;
         }
-        return false;
-    }
 
-    bool all(std::function<bool(const T &)> predicate) const noexcept
-    {
-        for (const T &item : data)
+        double average() const noexcept
         {
-            if (!predicate(item))
+            REQUIRE_NUMERIC_TYPE;
+            double sum = 0.0;
+            size_t count = 0;
+            for (const T &item : data)
             {
-                return false;
+                sum += item;
+                ++count;
             }
+
+            return (sum / static_cast<double>(count));
         }
-        return true;
-    }
 
-    size_t count() const noexcept
-    {
-        return data.size();
-    }
-
-    size_t count(std::function<bool(const T &)> predicate) const noexcept
-    {
-        size_t result = 0;
-        for (const T &item : data)
+        double sum() const noexcept
         {
-            if (predicate(item))
+            REQUIRE_NUMERIC_TYPE;
+            double sum = 0.0;
+            for (const T &item : data)
             {
-                ++result;
+                sum += item;
             }
-        }
-        return result;
-    }
-
-    bool contains(std::function<bool(const T &)> predicate) const noexcept
-    {
-        for (const T &item : data)
-        {
-            if (predicate(item))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    double average() const noexcept
-    {
-        REQUIRE_NUMERIC_TYPE;
-        double sum = 0.0;
-        size_t count = 0;
-        for (const T &item : data)
-        {
-            sum += item;
-            ++count;
+            return sum;
         }
 
-        return (sum / static_cast<double>(count));
-    }
-
-    double sum() const noexcept
-    {
-        REQUIRE_NUMERIC_TYPE;
-        double sum = 0.0;
-        for (const T &item : data)
+        Enumerable<T> reverse() const noexcept
         {
-            sum += item;
-        }
-        return sum;
-    }
-
-    Enumerable<T> reverse() const noexcept
-    {
-        std::vector<T> reversedData(data.begin(), data.end());
-        std::reverse(reversedData.begin(), reversedData.end());
-        Enumerable<T> result(reversedData);
-        return result;
-    }
-
-    Enumerable<T> take(const size_t count) const noexcept
-    {
-        size_t takeSize = count < data.size() ? count : data.size();
-        Enumerable<T> result;
-        result.data.resize(takeSize);
-        for (size_t i = 0; i < takeSize; ++i)
-        {
-            result.data[i] = data[i];
-        }
-        return result;
-    }
-
-    Enumerable<T> take_while(std::function<bool(const T &)> predicate) const noexcept
-    {
-        Enumerable<T> result;
-        for (const T &item : data)
-        {
-            if (!predicate(item))
-            {
-                break;
-            }
-            result.data.push_back(item);
-        }
-        return result;
-    }
-
-    Enumerable<T> skip(const size_t skipCount) const noexcept
-    {
-        Enumerable<T> result;
-        if (skipCount >= data.size())
-        {
+            std::vector<T> reversedData(data.begin(), data.end());
+            std::reverse(reversedData.begin(), reversedData.end());
+            Enumerable<T> result(reversedData);
             return result;
         }
 
-        for (size_t i = skipCount; i < data.size(); ++i)
+        Enumerable<T> take(const size_t count) const noexcept
         {
-            result.data.push_back(data[i]);
-        }
-        return result;
-    }
-
-    Enumerable<T> except(const std::vector<T> &exceptSrc) const noexcept
-    {
-        Enumerable<T> result;
-        for (const T &item : data)
-        {
-            // If item is not found in exceptSrc add it to result.
-            if (std::find(exceptSrc.begin(), exceptSrc.end(), item) == exceptSrc.end())
+            size_t takeSize = count < data.size() ? count : data.size();
+            Enumerable<T> result;
+            result.data.resize(takeSize);
+            for (size_t i = 0; i < takeSize; ++i)
             {
+                result.data[i] = data[i];
+            }
+            return result;
+        }
+
+        template<typename Predicate>
+        Enumerable<T> take_while(const Predicate &predicate) const noexcept
+        {
+            Enumerable<T> result;
+            for (const T &item : data)
+            {
+                if (!predicate(item))
+                {
+                    break;
+                }
                 result.data.push_back(item);
             }
+            return result;
         }
-        return result;
-    }
 
-    Enumerable<T> except(const Enumerable<T> &exceptSrc) const noexcept
-    {
-        return except(exceptSrc.data);
-    }
-
-    Enumerable<T> distinct() const noexcept
-    {
-        std::set<T> distinctSet(data.begin(), data.end());
-        Enumerable<T> result(distinctSet.begin(), distinctSet.end());
-        return result;
-    }
-
-    template <typename ResultType>
-    Enumerable<ResultType> for_each(std::function<ResultType(const T &)> fn) const noexcept
-    {
-        Enumerable<ResultType> result(map_fn(data.begin(), data.end(), fn));
-        return result;
-    }
-
-    // std::function<bool(const T &)> predicate
-    // std::function<SelectType(const T &)> selector
-    // TODO:  Concat, OrderBy, OrderByDescending, Repeat
-};
-
-template <typename It, typename T = typename std::iterator_traits<It>::value_type>
-std::vector<T> where(const It srcBegin, const It srcEnd, std::function<bool(const T &)> condition)
-{
-    std::vector<T> result;
-    for (It it = srcBegin; it != srcEnd; ++it)
-    {
-        if (condition(*it))
+        Enumerable<T> skip(const size_t skipCount) const noexcept
         {
-            result.push_back(*it);
+            Enumerable<T> result;
+            if (skipCount >= data.size())
+            {
+                return result;
+            }
+
+            for (size_t i = skipCount; i < data.size(); ++i)
+            {
+                result.data.push_back(data[i]);
+            }
+            return result;
         }
-    }
-    return result;
-}
-} // namespace azgra::collection::experimental_linq
+
+        Enumerable<T> except(const std::vector<T> &exceptSrc) const noexcept
+        {
+            Enumerable<T> result;
+            for (const T &item : data)
+            {
+                // If item is not found in exceptSrc add it to result.
+                if (std::find(exceptSrc.begin(), exceptSrc.end(), item) == exceptSrc.end())
+                {
+                    result.data.push_back(item);
+                }
+            }
+            return result;
+        }
+
+        Enumerable<T> except(const Enumerable<T> &exceptSrc) const noexcept
+        {
+            return except(exceptSrc.data);
+        }
+
+        Enumerable<T> distinct() const noexcept
+        {
+            std::set<T> distinctSet(data.begin(), data.end());
+            Enumerable<T> result(distinctSet.begin(), distinctSet.end());
+            return result;
+        }
+
+        template<typename ResultType, typename MapFunction>
+        Enumerable<ResultType> for_each(const MapFunction &fn) const noexcept
+        {
+            Enumerable<ResultType> result(map_fn(data.begin(), data.end(), fn));
+            return result;
+        }
+
+        static Enumerable<T> repeat(const size_t count, const T item)
+        {
+            std::vector<T> items(count);
+            for (size_t i = 0; i < count; ++i)
+            {
+                items[i] = item;
+            }
+            return Enumerable(items);
+        }
+    };
+} // namespace azgra::collection
