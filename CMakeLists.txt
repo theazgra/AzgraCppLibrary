@@ -30,7 +30,7 @@ set(OBJECTS_TO_BUILD src/stream/binary_converter.cpp
         include/azgra/collection/vector_utilities.h
         include/azgra/io/text_file_functions.h
         include/azgra/matrix.h
-        include/azgra/collection/linq.h
+        include/azgra/collection/enumerable.h
         src/geometry/plot.cpp
         )
 

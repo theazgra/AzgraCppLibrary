@@ -1,5 +1,5 @@
 #include <azgra/azgra.h>
-#include <azgra/collection/linq.h>
+#include <azgra/collection/enumerable.h>
 #include <set>
 #include <azgra/geometry/plot.h>
 
