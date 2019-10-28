@@ -28,10 +28,13 @@ int main(int, char **)
 #endif
 
     using namespace std;
+    using namespace azgra;
     using namespace azgra::collection;
+    using namespace azgra::geometry;
 
-    std::vector<int> numbers = {0,1,2,3,4,5,6,7,8,9};
-    vector<int> filtered = where_test(numbers, [](const int &i){ return (i % 2 == 0);});
+    auto ps = {Point2D<f64>(10, 10), Point2D<f64>(10, 20), Point2D<f64>(20, 10)};
+
+    Plot().add_2d_points(ps).display_window();
 
     return 0;
 }

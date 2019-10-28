@@ -49,8 +49,15 @@ namespace azgra::geometry
 
     Plot Plot::add_2d_points(const std::vector<Point2D<f64>> &points)
     {
-        for (const auto &p : points)
-            add_2d_point(p);
+        size_t count = points.size();
+        std::vector<double> x(count), y(count);
+        for (size_t i = 0; i < count; ++i)
+        {
+            x[i] = points[i].x;
+            y[i] = points[i].y;
+        }
+
+        plt::plot(x, y, "o");
         return *this;
     }
 
