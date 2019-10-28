@@ -67,7 +67,7 @@ namespace azgra::io
         return lines;
     }
 
-    std::vector<std::string> read_lines(const basic_string_view__<char> &fileName)
+    inline std::vector<std::string> read_lines(const basic_string_view__<char> &fileName)
     {
         std::ifstream inputTextStream = open_text_file(fileName);
         std::vector<std::string> lines;
