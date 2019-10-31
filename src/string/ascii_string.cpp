@@ -1,4 +1,4 @@
-#include <azgra/string/simple_string.h>
+#include <azgra/string/ascii_string.h>
 
 namespace azgra
 {
@@ -668,9 +668,8 @@ namespace azgra
             multi_append(strings);
         }
 
-        SmartStringView<char> AsciiString::get_smart_string_view() const noexcept
+        SmartStringView<char> AsciiString::get_ssw() const noexcept
         {
-
             SmartStringView<char> result(basic_string_view__<char>(_string, _length));
             return result;
         }

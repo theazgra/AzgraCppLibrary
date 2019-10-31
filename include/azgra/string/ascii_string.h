@@ -295,7 +295,7 @@ namespace azgra
 
             /// Get SmartStringView wrapper.
             /// \return SmartStringView wrapper.
-            SmartStringView<char> get_smart_string_view() const noexcept;
+            SmartStringView<char> get_ssw() const noexcept;
         };
     }; // namespace string
 } // namespace azgra
