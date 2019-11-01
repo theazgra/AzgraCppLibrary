@@ -19,13 +19,13 @@ namespace azgra
         {
         private:
             /// Flag indicating the empty string.
-            bool _isEmpty = true;
+            bool m_isEmpty = true;
 
             /// Internal string memory.
-            std::vector<char> _string;
+            std::vector<char> m_string;
 
             /// Length of the string. Doesn't equal to allocated size of _string, which contains 0 at the end.
-            size_t _length = 0;
+            size_t m_length = 0;
 
             /**
              * @brief Get size of c string.
