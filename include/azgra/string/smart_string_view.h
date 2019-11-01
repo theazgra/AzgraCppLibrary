@@ -2,7 +2,6 @@
 
 #include <azgra/azgra.h>
 
-
 namespace azgra
 {
     namespace string

@@ -45,10 +45,9 @@ namespace azgra
             return len;
         }
 
-        void AsciiString::internal_initalize(const char *string)
+        void AsciiString::internal_initalize(const char *string, const size_t length)
         {
-            size_t inputStringLen = c_string_length(string);
-
+            size_t inputStringLen = length;
             _isEmpty = (inputStringLen == 0);
             _length = inputStringLen;
             _string = alloc_string(_length + 1);
@@ -57,6 +56,12 @@ namespace azgra
                 _string[i] = string[i];
 
             _string[_length] = '\0';
+        }
+
+        void AsciiString::internal_initalize(const char *string)
+        {
+            size_t inputStringLen = c_string_length(string);
+            internal_initalize(string, inputStringLen);
         }
 
         AsciiString::AsciiString(const char *cString)
@@ -93,6 +98,16 @@ namespace azgra
         }
 
         char &AsciiString::operator[](const azgra::i32 &index)
+        {
+            return _string[index];
+        }
+
+        char &AsciiString::at(const azgra::i32 &index)
+        {
+            return _string[index];
+        }
+
+        char const &AsciiString::at(const azgra::i32 &index) const
         {
             return _string[index];
         }
@@ -673,6 +688,15 @@ namespace azgra
             SmartStringView<char> result(basic_string_view__<char>(_string, _length));
             return result;
         }
+
+        AsciiString::AsciiString(const char *cString, const size_t len)
+        {
+            assert(len <= c_string_length(cString));
+            internal_initalize(cString, len);
+        }
+
+
+
 
     }; // namespace string
 }; // namespace azgra

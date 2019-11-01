@@ -64,6 +64,11 @@ namespace azgra
             /// \param string Base string from which this instance will be created.
             void internal_initalize(const char *string);
 
+            /// Initialize this instance string with given length memory and set flags.
+            /// \param string Base string from which this instance will be created.
+            /// \param length Length of the string
+            void internal_initalize(const char *string, const size_t length);
+
             /// Construct new AsciiString without allocating new memory.
             /// \param cString Allocated string.
             /// \param length Length of allocated string.
@@ -77,6 +82,8 @@ namespace azgra
             /// Create instance from C string
             /// \param cString C string to copy from.
             explicit AsciiString(const char *cString);
+
+            explicit AsciiString(const char *cString, const size_t len);
 
             /// Create instance by concatenating multiple C strings.
             /// \param strings C strings to concatenate to a single instance.
@@ -226,6 +233,16 @@ namespace azgra
             /// \param index Index of the character in string.
             /// \return Reference to the character.
             char &operator[](const azgra::i32 &index);
+
+            /// Character indexer.
+            /// \param index Index of the character in string.
+            /// \return Reference to the character.
+            char &at(const azgra::i32 &index);
+
+            /// Constant character indexer.
+            /// \param index Index of the character in string.
+            /// \return Reference to the character.
+            char const &at(const azgra::i32 &index) const;
 
             /// Initialize this string with C like string.
             /// \param cString
