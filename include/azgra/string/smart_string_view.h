@@ -2,7 +2,6 @@
 
 #include <azgra/azgra.h>
 
-
 namespace azgra
 {
     namespace string
@@ -15,21 +14,23 @@ namespace azgra
         class SmartStringView
         {
         private:
-            basic_string_view__<CharType> sw;
+            basic_string_view__ <CharType> sw;
         public:
             SmartStringView() = default;
 
-            SmartStringView(const CharType *cString) : SmartStringView(basic_string_view__<CharType>(cString)) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
+            SmartStringView(const CharType *cString) : SmartStringView(
+                    basic_string_view__<CharType>(cString)) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
             {}
 
-            SmartStringView(const basic_string_view__<CharType> stringView) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
+            SmartStringView(
+                    const basic_string_view__ <CharType> stringView) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
             {
                 sw = stringView;
             }
 
             ~SmartStringView() = default;
 
-            constexpr basic_string_view__<CharType> string_view() const noexcept
+            constexpr basic_string_view__ <CharType> string_view() const noexcept
             {
                 return sw;
             }
@@ -59,7 +60,7 @@ namespace azgra
                 return sw.length();
             }
 
-            constexpr bool contains(const basic_string_view__<CharType> &otherSw) const noexcept
+            constexpr bool contains(const basic_string_view__ <CharType> &otherSw) const noexcept
             {
                 return (sw.find(otherSw) != sw.npos);
             }
@@ -70,19 +71,35 @@ namespace azgra
                 return static_cast<int>(index != sw.npos ? index : -1);
             }
 
-            constexpr int index_of(const basic_string_view__<CharType> &otherSw, const size_t fromIndex = 0) const noexcept
+            constexpr int index_of_first(const std::vector<CharType> &chars, const size_t fromIndex) const noexcept
+            {
+                bool found = false;
+                size_t index = length();
+                for (const char &c : chars)
+                {
+                    size_t cIndex = sw.find(c, fromIndex);
+                    if (cIndex < index)
+                    {
+                        index = cIndex;
+                        found = true;
+                    }
+                }
+                return static_cast<int>(found ? index : -1);
+            }
+
+            constexpr int index_of(const basic_string_view__ <CharType> &otherSw, const size_t fromIndex = 0) const noexcept
             {
                 auto index = sw.find(otherSw, fromIndex);
                 return static_cast<int>(index != sw.npos ? index : -1);
             }
 
-            constexpr int last_index_of(const basic_string_view__<CharType> &otherSw) const noexcept
+            constexpr int last_index_of(const basic_string_view__ <CharType> &otherSw) const noexcept
             {
                 auto index = rfind(otherSw);
                 return static_cast<int>(index != sw.npos ? index : -1);
             }
 
-            constexpr bool starts_with(const basic_string_view__<CharType> &otherSw) const noexcept
+            constexpr bool starts_with(const basic_string_view__ <CharType> &otherSw) const noexcept
             {
                 return (index_of(otherSw) == 0);
             }
@@ -92,7 +109,7 @@ namespace azgra
                 return (sw[0] == testChar);
             }
 
-            constexpr bool ends_with(const basic_string_view__<CharType> &otherSw) const noexcept
+            constexpr bool ends_with(const basic_string_view__ <CharType> &otherSw) const noexcept
             {
                 return (index_of(otherSw) == (sw.length() - otherSw.length()));
             }
@@ -104,7 +121,7 @@ namespace azgra
                 return (sw[sw.length() - 1] == testChar);
             }
 
-            constexpr int count(const basic_string_view__<CharType> &otherSw) const noexcept
+            constexpr int count(const basic_string_view__ <CharType> &otherSw) const noexcept
             {
                 int result = 0;
 
@@ -122,17 +139,28 @@ namespace azgra
                 return result;
             }
 
+            constexpr bool is_empty() const noexcept
+            {
+                return !(sw.length() > 0);
+            }
+
+
+            constexpr bool operator==(const char c) const noexcept
+            {
+                return (sw.length() == 1 && sw[0] == c);
+            }
+
             constexpr bool operator==(const SmartStringView<CharType> &otherSw) const noexcept
             {
                 return (sw == otherSw.sw);
             }
 
-            constexpr bool operator==(const basic_string_view__<CharType> &otherSw) const noexcept
+            constexpr bool operator==(const basic_string_view__ <CharType> &otherSw) const noexcept
             {
                 return (sw == otherSw);
             }
 
-            constexpr bool equals(const basic_string_view__<CharType> &otherSw) const noexcept
+            constexpr bool equals(const basic_string_view__ <CharType> &otherSw) const noexcept
             {
                 return (sw == otherSw);
             }
@@ -146,6 +174,31 @@ namespace azgra
             constexpr SmartStringView substring(size_t fromIndex, size_t len) const
             {
                 SmartStringView result(basic_string_view__<CharType>(sw.data() + fromIndex, len));
+                return result;
+            }
+
+            constexpr std::vector<SmartStringView<CharType>> multi_split(const std::vector<CharType> &separatorChars) const noexcept
+            {
+                if (separatorChars.size() == 1)
+                {
+                    return split(separatorChars[0]);
+                }
+                std::vector<SmartStringView<CharType>> result;
+
+                size_t searchFrom = 0;
+                int index = index_of_first(separatorChars, searchFrom);
+                while (index != -1)
+                {
+                    result.push_back(
+                            SmartStringView(
+                                    basic_string_view__<CharType>(sw.data() + searchFrom, index - searchFrom)));
+
+                    searchFrom = index + 1;
+                    index = index_of_first(separatorChars, searchFrom);
+                }
+                result.push_back(
+                        SmartStringView(basic_string_view__<CharType>(sw.data() + searchFrom)));
+
                 return result;
             }
 
@@ -171,7 +224,7 @@ namespace azgra
             }
 
             constexpr std::vector<SmartStringView<CharType>>
-            split(const basic_string_view__<CharType> &separatorString) const noexcept
+            split(const basic_string_view__ <CharType> &separatorString) const noexcept
             {
                 std::vector<SmartStringView<CharType>> result;
                 size_t separatorLen = separatorString.length();
