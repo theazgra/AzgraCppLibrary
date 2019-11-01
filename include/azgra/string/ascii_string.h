@@ -22,26 +22,10 @@ namespace azgra
             bool _isEmpty = true;
 
             /// Internal string memory.
-            char *_string = nullptr;
+            std::vector<char> _string;
 
             /// Length of the string. Doesn't equal to allocated size of _string, which contains 0 at the end.
             size_t _length = 0;
-
-            /// Allocates memory for string, with size of sizeof(char) * length
-            /// \param allocSize Number of characters to allocate.
-            /// \return Allocated memory.
-            static char *alloc_string(const size_t &allocSize);
-
-            /// Reallocate string memory, copying old content to new allocated memory. Old memory is freed.
-            /// \param length Number of characters to allocate.
-            /// \param oldString Old string memory.
-            /// \param copyLen Number of characters to copy from old string.
-            /// \return Reallocated memory with old content copied.
-            static char *realloc_string(const size_t &length, char *oldString, const size_t copyLen);
-
-            /// Free string memory.
-            /// \param memory Memory to free.
-            static void free_string(char *memory);
 
             /**
              * @brief Get size of c string.
@@ -69,11 +53,9 @@ namespace azgra
             /// \param length Length of the string
             void internal_initalize(const char *string, const size_t length);
 
-            /// Construct new AsciiString without allocating new memory.
-            /// \param cString Allocated string.
-            /// \param length Length of allocated string.
-            /// \param noAlloc FLag which must be true.
-            AsciiString(char *cString, const size_t length, bool noAlloc = false);
+            /// Construct new AsciiString from vector.
+            /// \param string Allocated string.
+            explicit AsciiString(std::vector<char> &string);
 
         public:
             /// Default empty string constructor.
@@ -176,9 +158,9 @@ namespace azgra
             bool ends_with(const char *string) const;
 
             /// Equality test.
-            /// \param string AsciiString to test.
+            /// \param other AsciiString to test.
             /// \return True if two azgra::string::AsciiString strings are equal.
-            bool equals(const AsciiString &string) const;
+            bool equals(const AsciiString &other) const;
 
             /// Equality test for azgra::string::AsciiString and C like string.
             /// \param string String to check.
@@ -233,6 +215,11 @@ namespace azgra
             /// \param index Index of the character in string.
             /// \return Reference to the character.
             char &operator[](const azgra::i32 &index);
+
+            /// Constant character indexer operator.
+            /// \param index Index of the character in string.
+            /// \return Constant reference to the character.
+            char const &operator[](const azgra::i32 &index) const;
 
             /// Character indexer.
             /// \param index Index of the character in string.

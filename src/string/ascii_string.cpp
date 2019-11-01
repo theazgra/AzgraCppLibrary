@@ -1,39 +1,12 @@
 #include <azgra/string/ascii_string.h>
 
+#include <memory>
+
 namespace azgra
 {
     namespace string
     {
         //TODO: Add asserts.
-
-        char *AsciiString::alloc_string(const size_t &length)
-        {
-            assert(length > 0);
-            size_t allocSize = (sizeof(char) * length);
-            char *memory = static_cast<char *>(::operator new(allocSize));
-            return memory;
-        }
-
-        char *AsciiString::realloc_string(const size_t &length, char *oldString, const size_t copyLen)
-        {
-            assert(length > copyLen);
-
-            char *memory = alloc_string(length);
-            memcpy(memory, oldString, copyLen);
-            // Free old string memory.
-            free_string(oldString);
-            return memory;
-        }
-
-        void AsciiString::free_string(char *memory)
-        {
-            if (memory != nullptr)
-            {
-                ::operator delete(memory);
-                memory = nullptr;
-            }
-        }
-
         size_t AsciiString::c_string_length(const char *cString)
         {
             size_t len = 0;
@@ -50,7 +23,7 @@ namespace azgra
             size_t inputStringLen = length;
             _isEmpty = (inputStringLen == 0);
             _length = inputStringLen;
-            _string = alloc_string(_length + 1);
+            _string.resize(_length + 1);
 
             for (size_t i = 0; i < inputStringLen; i++)
                 _string[i] = string[i];
@@ -69,35 +42,37 @@ namespace azgra
             internal_initalize(cString);
         }
 
-        AsciiString::AsciiString(char *cString, const size_t length, bool noAlloc)
+        AsciiString::AsciiString(std::vector<char> &string)
         {
-            assert(noAlloc);
-            _string = cString;
-            _length = length;
-            _isEmpty = (length == 0);
+            _string = std::move(string);
+            _length = _string.size() - 1;
+            _isEmpty = (_length == 0);
         }
 
         AsciiString::AsciiString(const std::vector<const char *> &strings)
         {
             _length = 0;
-            _string = nullptr;
             multi_append(strings);
             _isEmpty = (_length <= 0);
         }
 
         AsciiString::AsciiString()
         {
-            _string = nullptr;
             _length = 0;
             _isEmpty = true;
         }
 
         AsciiString::operator const char *() const
         {
-            return _string;
+            return _string.data();
         }
 
         char &AsciiString::operator[](const azgra::i32 &index)
+        {
+            return _string[index];
+        }
+
+        char const &AsciiString::operator[](const azgra::i32 &index) const
         {
             return _string[index];
         }
@@ -114,7 +89,6 @@ namespace azgra
 
         void AsciiString::operator=(const char *cString)
         {
-            free_string(_string);
             internal_initalize(cString);
         }
 
@@ -131,14 +105,16 @@ namespace azgra
 
         AsciiString AsciiString::operator+(const char *cString) const
         {
-            AsciiString result(_string);
+            std::vector<char> copy = std::vector<char>(_string.begin(), _string.end());
+            AsciiString result(copy);
             result.concat(cString);
             return result;
         }
 
         AsciiString AsciiString::operator+(const char c) const
         {
-            AsciiString result(_string);
+            std::vector<char> copy = std::vector<char>(_string.begin(), _string.end());
+            AsciiString result(copy);
             char stringToAdd[1] = {c};
             result.concat(stringToAdd);
             return result;
@@ -156,7 +132,7 @@ namespace azgra
 
         AsciiString::~AsciiString()
         {
-            free_string(_string);
+            _string.resize(0);
             _length = 0;
         }
 
@@ -166,11 +142,7 @@ namespace azgra
                 return;
 
             size_t newLength = _length + length + 1;
-            char *newString = realloc_string(newLength, _string, _length);
-
-            free_string(_string);
-
-            _string = newString;
+            _string.resize(newLength);
 
             for (size_t i = _length; i < newLength - 1; i++)
                 _string[i] = string[i - _length];
@@ -188,7 +160,7 @@ namespace azgra
 
         const char *AsciiString::get_c_string() const
         {
-            return _string;
+            return _string.data();
         }
 
         size_t AsciiString::length() const
@@ -373,9 +345,16 @@ namespace azgra
             return (last_index_of(string) == (azgra::i64) (_length - c_string_length(string)));
         }
 
-        bool AsciiString::equals(const AsciiString &string) const
+        bool AsciiString::equals(const AsciiString &other) const
         {
-            return equals(string._string);
+            if (_string.size() != other._string.size())
+                return false;
+            for (size_t i = 0; i < _length; ++i)
+            {
+                if (_string[i] != other._string[i])
+                    return false;
+            }
+            return true;
         }
 
         bool AsciiString::equals(const char *string) const
@@ -429,7 +408,7 @@ namespace azgra
 
             size_t replaceStringLen = c_string_length(newString);
             size_t newLength = _length - (matchCount * matchLen) + (matchCount * replaceStringLen);
-            char *newStringMemory = alloc_string(newLength);
+            std::vector<char> newStringMemory(newLength);
 
             size_t searchFrom = 0;
             size_t newStringIndex = 0;
@@ -455,7 +434,6 @@ namespace azgra
             for (size_t i = searchFrom; i < _length; i++)
                 newStringMemory[newStringIndex++] = _string[i];
 
-            free_string(_string);
             _string = newStringMemory;
             _length = newLength;
         }
@@ -467,7 +445,7 @@ namespace azgra
                 return;
 
             size_t newLength = _length - removeCount;
-            char *newString = alloc_string(newLength);
+            std::vector<char> newString(newLength);
             size_t index = 0;
             for (size_t i = 0; i < _length; i++)
             {
@@ -477,7 +455,6 @@ namespace azgra
                 }
             }
 
-            free_string(_string);
             _length = newLength;
             _string = newString;
         }
@@ -491,7 +468,7 @@ namespace azgra
             size_t matchCount = count(string);
             size_t newLen = _length - (matchCount * matchLen);
 
-            char *newString = alloc_string(newLen);
+            std::vector<char> newString(newLen);
 
             size_t searchFrom = 0;
             size_t newStringIndex = 0;
@@ -511,7 +488,6 @@ namespace azgra
             for (size_t i = searchFrom; i < _length; i++)
                 newString[newStringIndex++] = _string[i];
 
-            free_string(_string);
             _string = newString;
             _length = newLen;
         }
@@ -525,7 +501,7 @@ namespace azgra
         {
             assert(fromIndex < _length && (length - fromIndex) <= _length);
 
-            char *subsMemory = alloc_string(length + 1);
+            std::vector<char> subsMemory(length + 1);
             AsciiString result(subsMemory);
 
             for (size_t i = fromIndex; i < fromIndex + length; i++)
@@ -542,9 +518,9 @@ namespace azgra
             size_t replLen = c_string_length(cString);
             size_t resultLen = replLen * replicationCount;
             assert(replLen > 0 && replicationCount > 0);
-            char *resultMemory = alloc_string(resultLen + 1);
 
-            AsciiString result(resultMemory, resultLen, true);
+            std::vector<char> resultMemory(resultLen + 1);
+            AsciiString result(resultMemory);
 
             for (azgra::i32 repl = 0; repl < replicationCount; repl++)
             {
@@ -577,7 +553,7 @@ namespace azgra
 
             if (_length - from > 0)
             {
-                result.push_back(std::shared_ptr<AsciiString>(new AsciiString(substring(from))));
+                result.push_back(std::make_shared<AsciiString>(substring(from)));
             }
 
             return result;
@@ -588,7 +564,7 @@ namespace azgra
             if ((_length <= desiredLength) || (_length == desiredLength))
                 return;
 
-            char *result = alloc_string(desiredLength + 1);
+            std::vector<char> result(desiredLength + 1);
             int fillSize = desiredLength - _length;
             for (int i = 0; i < fillSize; ++i)
             {
@@ -600,7 +576,6 @@ namespace azgra
             }
             result[desiredLength] = '\0';
 
-            free_string(_string);
             _string = result;
             _length = desiredLength;
         }
@@ -610,7 +585,7 @@ namespace azgra
             if ((_length > desiredLength) || (_length == desiredLength))
                 return;
 
-            _string = realloc_string(desiredLength + 1, _string, _length);
+            _string.resize(desiredLength + 1);
             int fillSize = desiredLength - _length;
             for (int i = 0; i < fillSize; ++i)
             {
@@ -633,16 +608,12 @@ namespace azgra
 
             if (finalLen > 0)
             {
-                // If we are appending to existing string we reallocate, copying the old string into new memory.
-                {
-                    char *newMemory = (_length > 0) ? realloc_string(finalLen + 1, _string, _length) : alloc_string(finalLen + 1);
-                    _string = newMemory;
-                }
+                _string.resize(finalLen + 1);
 
                 size_t offset = _length;
                 for (size_t stringIndex = 0; stringIndex < strings.size(); ++stringIndex)
                 {
-                    memcpy(_string + offset, strings[stringIndex], lengths[stringIndex]);
+                    memcpy(_string.data() + offset, strings[stringIndex], lengths[stringIndex]);
                     offset += lengths[stringIndex];
                 }
 
@@ -654,14 +625,13 @@ namespace azgra
         void AsciiString::fill_left(const char fillChar, const size_t fillCount)
         {
             size_t finalLen = _length + fillCount;
-            char *newString = alloc_string(finalLen + 1);
+            std::vector<char> newString(finalLen + 1);
             for (size_t i = 0; i < fillCount; ++i)
             {
                 newString[i] = fillChar;
             }
-            memcpy(newString + (fillCount * sizeof(char)), _string, _length);
+            memcpy(newString.data() + (fillCount * sizeof(char)), _string.data(), _length);
             newString[finalLen] = '\0';
-            free_string(_string);
             _string = newString;
             _length = finalLen;
         }
@@ -669,7 +639,7 @@ namespace azgra
         void AsciiString::fill_right(const char fillChar, const size_t fillCount)
         {
             size_t finalLen = _length + fillCount;
-            _string = realloc_string(finalLen + 1, _string, _length);
+            _string.resize(finalLen + 1);
             for (size_t i = 0; i < fillCount; ++i)
             {
                 _string[_length + i] = fillChar;
@@ -685,7 +655,7 @@ namespace azgra
 
         SmartStringView<char> AsciiString::get_ssw() const noexcept
         {
-            SmartStringView<char> result(basic_string_view__<char>(_string, _length));
+            SmartStringView<char> result(basic_string_view__<char>(_string.data(), _length));
             return result;
         }
 
@@ -694,8 +664,6 @@ namespace azgra
             assert(len <= c_string_length(cString));
             internal_initalize(cString, len);
         }
-
-
 
 
     }; // namespace string
