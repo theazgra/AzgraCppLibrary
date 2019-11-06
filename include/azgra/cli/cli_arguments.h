@@ -1,7 +1,7 @@
 #pragma once
 
 #include <azgra/cli/cli_option.h>
-#include <azgra/string/simple_string.h>
+#include <azgra/string/ascii_string.h>
 
 #include <vector>
 #include <cstdio>

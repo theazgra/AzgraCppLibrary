@@ -429,5 +429,39 @@ namespace azgra::collection
             }
             return Enumerable(items);
         }
+
+        static Enumerable<T> range(const T inclusiveFrom, const T exclusiveTo)
+        {
+            static_assert(std::is_same<T, int>::value || std::is_same<T, uint>::value || std::is_same<T, size_t>::value
+                          || std::is_same<T, long>::value || std::is_same<T, short>::value);
+
+            std::vector<T> items(exclusiveTo - inclusiveFrom);
+            for (size_t i = inclusiveFrom; i < exclusiveTo; ++i)
+            {
+                items[i - inclusiveFrom] = i;
+            }
+            return Enumerable(items);
+        }
+
+        auto begin()
+        {
+            return data.begin();
+        }
+
+        auto end()
+        {
+            return data.end();
+        }
+
+        auto begin() const
+        {
+            return data.begin();
+        }
+
+        auto end() const
+        {
+            return data.end();
+        }
+
     };
 } // namespace azgra::collection

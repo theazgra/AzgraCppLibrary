@@ -50,9 +50,35 @@ namespace azgra::io
         return lines;
     }
 
-    template<typename LineType>
-    std::vector<LineType> parse_by_lines(const basic_string_view__<char> &fileName,
-                                         std::function<LineType(const azgra::string::SmartStringView<char> &line)> lineParseFunction)
+    template<typename CellType, typename CellParseFunction>
+    std::vector<std::vector<CellType>> csv_parse_cells2(const basic_string_view__<char> &fileName,
+                                                        const basic_string_view__<char> &separator,
+                                                        CellParseFunction cellParseFunction)
+    {
+
+        std::ifstream inputTextStream = open_text_file(fileName);
+
+        std::vector<std::vector<CellType>> lines;
+
+        std::string line;
+        while (std::getline(inputTextStream, line))
+        {
+            azgra::string::SmartStringView smartLine(line.c_str());
+            auto cells = smartLine.split(separator);
+
+            std::vector<CellType> values(cells.size());
+            for (size_t i = 0; i < cells.size(); ++i)
+            {
+                values[i] = cellParseFunction(cells[i]);
+            }
+            lines.push_back(values);
+        }
+        return lines;
+    }
+
+
+    template<typename LineType, typename LineParseFunction>
+    std::vector<LineType> parse_by_lines(const basic_string_view__<char> &fileName, LineParseFunction lineParseFunction)
     {
         std::ifstream inputTextStream = open_text_file(fileName);
 

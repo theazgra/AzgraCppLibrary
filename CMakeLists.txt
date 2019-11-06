@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 
 project(azgra)
 
-option(MATPLOTLIB_CPP "Compile with matplotlib-cpp support" ON)
+option(MATPLOTLIB_CPP "Compile with matplotlib-cpp support" OFF)
 
 #set(CMAKE_CXX_FLAGS "-Wall -fPIC")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC")
@@ -18,7 +18,7 @@ set(OBJECTS_TO_BUILD src/stream/binary_converter.cpp
         src/stream/memory_bit_stream.cpp
         src/utilities/stopwatch.cpp
         src/utilities/z_order.cpp
-        src/string/simple_string.cpp
+        src/string/ascii_string.cpp
         src/utilities/guid.cpp
         src/fs/file_system.cpp
         src/cli/cli_arguments.cpp
