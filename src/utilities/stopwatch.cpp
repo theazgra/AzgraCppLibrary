@@ -1,4 +1,4 @@
-#include <azgra/utilities/Stopwatch.h>
+#include <azgra/utilities/stopwatch.h>
 
 namespace azgra
 {

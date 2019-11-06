@@ -16,7 +16,7 @@ set(OBJECTS_TO_BUILD src/stream/binary_converter.cpp
         src/stream/out_binary_buffer_stream.cpp
         src/stream/in_binary_buffer_stream.cpp
         src/stream/memory_bit_stream.cpp
-        src/utilities/Stopwatch.cpp
+        src/utilities/stopwatch.cpp
         src/utilities/z_order.cpp
         src/string/simple_string.cpp
         src/utilities/guid.cpp

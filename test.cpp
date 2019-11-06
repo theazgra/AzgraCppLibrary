@@ -1,33 +1,37 @@
-#include <azgra/azgra.h>
-#include <azgra/collection/enumerable.h>
+#include <azgra/stream/in_binary_file_stream.h>
+//#include <azgra/stream/binary_converter.h>
 
+using namespace azgra;
+/*
+ *  public static int[] convertU16BytesToInt(final byte[] bytes) {
+        assert (bytes.length % 2 == 0);
+        int[] values = new int[bytes.length / 2];
 
-struct Human
+        int index = 0;
+        for (int i = 0; i < bytes.length; i += 2) {
+            final int value = (int) (((bytes[i] & 0xff) << 8) | (bytes[i + 1] & 0xff));
+            if (value > 0) {
+                values[index++] = value;
+                continue;
+            }
+            values[index++] = value;
+        }
+        return values;
+    }
+ * */
+
+int main(int argc, char **argv)
 {
-    int age;
-    int height;
-};
 
-int main(int, char **)
-{
-#ifndef MATPLOTLIB_CPP
-    fprintf(stdout,"matplotlib-cpp disabled\n");
-    return 0;
-#endif
+    InBinaryFileStream stream(argv[1]);
+    auto bytes = stream.consume_whole_file();
+    auto u32Values = bytes_to_ushort_array(bytes);
 
-    using namespace azgra;
-    using namespace azgra::collection;
+    std::ofstream out(argv[2]);
+    always_assert(out.is_open());
+    for (u32 val : u32Values)
+        out << val << "\n";
 
-    auto humans = Enumerable<Human>({{1,  52},
-                                     {2,  80},
-                                     {20, 175},
-                                     {30, 181},
-                                     {50, 160}});
-
-    std::function<int(const Human &)> fn = [](const Human &h)
-    { return h.height; };
-
-    auto heighs = humans.select<int>(fn);
 
     return 0;
 }
