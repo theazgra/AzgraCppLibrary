@@ -655,7 +655,7 @@ namespace azgra
 
         SmartStringView<char> AsciiString::get_ssw() const noexcept
         {
-            SmartStringView<char> result(basic_string_view__<char>(m_string.data(), m_length));
+            SmartStringView<char> result(BasicStringView<char>(m_string.data(), m_length));
             return result;
         }
 

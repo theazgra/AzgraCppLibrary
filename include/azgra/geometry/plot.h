@@ -34,17 +34,18 @@ namespace azgra::geometry
     public:
         Plot() = default;
 
-        explicit Plot(azgra::basic_string_view__<char> title);
+        explicit Plot(azgra::BasicStringView<char> title);
 
-        explicit Plot(azgra::basic_string_view__<char> title, const azgra::u16 plotWidth, const azgra::u16 plotHeight);
+        explicit Plot(azgra::BasicStringView<char> title, const azgra::u16 plotWidth, const azgra::u16 plotHeight);
 
         Plot add_surface_plot(const std::vector<std::vector<Point3D<f64>>> &coords);
 
-        Plot add_line(const std::vector<Point2D<f64>> &coords, const azgra::basic_string_view__<char> &lineName = "");
+        Plot add_line(const std::vector<Point2D<f64>> &coords, const BasicStringView<char> &lineName = "");
 
         Plot add_2d_point(const Point2D<f64> &point);
 
         Plot add_2d_points(const std::vector<Point2D<f64>> &points);
+
 
         Plot set_x_lims(const f64 xMin, const f64 xMax);
 
@@ -54,7 +55,7 @@ namespace azgra::geometry
 
         Plot set_y_ticks(const std::vector<f64> &yTicks, const std::vector<std::string> &yTickLabels);
 
-        void save(azgra::basic_string_view__<char> fileName);
+        void save(azgra::BasicStringView<char> fileName);
 
         void display_window();
 

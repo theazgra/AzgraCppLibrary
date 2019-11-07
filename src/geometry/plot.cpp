@@ -6,7 +6,7 @@
 namespace plt = matplotlibcpp;
 namespace azgra::geometry
 {
-    Plot::Plot(azgra::basic_string_view__<char> title, const azgra::u16 plotWidth, const azgra::u16 plotHeight)
+    Plot::Plot(azgra::BasicStringView<char> title, const azgra::u16 plotWidth, const azgra::u16 plotHeight)
     {
         m_plotTitle = std::string(title);
         m_plotWidth = plotWidth;
@@ -61,7 +61,7 @@ namespace azgra::geometry
         return *this;
     }
 
-    Plot Plot::add_line(const std::vector<Point2D<double>> &coords, const azgra::basic_string_view__<char> &lineName)
+    Plot Plot::add_line(const std::vector<Point2D<double>> &coords, const azgra::BasicStringView<char> &lineName)
     {
         always_assert(!m_3d);
 
@@ -86,7 +86,7 @@ namespace azgra::geometry
         return *this;
     }
 
-    Plot::Plot(azgra::basic_string_view__<char> title)
+    Plot::Plot(azgra::BasicStringView<char> title)
     {
         m_plotTitle = std::string(title);
     }
@@ -148,7 +148,7 @@ namespace azgra::geometry
         }
     }
 
-    void Plot::save(azgra::basic_string_view__<char> fileName)
+    void Plot::save(azgra::BasicStringView<char> fileName)
     {
         prepare_plot();
         plt::save(std::string(fileName));
