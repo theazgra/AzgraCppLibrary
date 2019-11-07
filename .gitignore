@@ -10,3 +10,5 @@ CTestTestfile.cmake
 cmake-build-*/
 .idea/
 /test/
+venv/
+*.ipynb

@@ -193,6 +193,27 @@ namespace azgra::geometry
         plt::pause(100);
     }
 
-
 }
 #endif
+namespace azgra::geometry
+{
+    void dump_3d_points_history(const std::vector<std::vector<Point3D<f64>>> &pointsHistory, const char *path)
+    {
+        if (pointsHistory.size() <= 0)
+            return;
+        std::ofstream stream(path, std::ios::out);
+        always_assert(stream.is_open());
+        const size_t iterationCount = pointsHistory.size();
+
+        stream << "IterationCount=" << iterationCount << "\n";
+
+        for (const auto &points : pointsHistory)
+        {
+            stream << "PointCount=" << points.size() << "\n";
+            for (const auto &point : points)
+            {
+                stream << point.x << ';' << point.y << ';' << point.z << '\n';
+            }
+        }
+    }
+}

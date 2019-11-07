@@ -1,10 +1,16 @@
 #pragma once
-#ifdef MATPLOTLIB_CPP
+
 
 #include <azgra/azgra.h>
-#include <string_view>
 #include "point.h"
+#include <fstream>
 
+namespace azgra::geometry
+{
+    void dump_3d_points_history(const std::vector<std::vector<Point3D<f64>>> &points, const char *path);
+}
+
+#ifdef MATPLOTLIB_CPP
 namespace azgra::geometry
 {
     class Plot
