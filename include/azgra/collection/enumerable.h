@@ -24,14 +24,18 @@
 
 namespace azgra::collection
 {
-    template<typename InputIt, typename InputType = typename std::iterator_traits<InputIt>::value_type, typename ResultType>
-    std::vector<ResultType> map_fn(InputIt begin, InputIt end, std::function<ResultType(const InputType &)> fn)
+    template<
+            typename It,
+            typename SelectorFunction,
+            typename T = typename std::iterator_traits<It>::value_type,
+            typename SelectType = typename std::result_of<SelectorFunction &(T)>::type
+    >
+    std::vector<SelectType> select(const It begin, const It end, SelectorFunction selector)
     {
-        std::vector<ResultType> result;
-        for (InputIt it = begin; it != end; ++it)
-        {
-            result.push_back(fn(*it));
-        }
+        std::vector<SelectType> result;
+        const size_t size = std::distance(begin, end);
+        result.resize(size);
+        std::transform(begin, end, result.begin(), selector);
         return result;
     }
 
@@ -81,17 +85,18 @@ namespace azgra::collection
             return result;
         }
 
-        template<typename SelectType, typename SelectorFunction>
-        Enumerable<SelectType> select(const SelectorFunction &selector) const noexcept
+        template<typename SelectorFunction, typename SelectType = typename std::result_of<SelectorFunction &(T)>::type>
+        Enumerable<SelectType> select(SelectorFunction selector) const noexcept
         {
+
             Enumerable<SelectType> result;
-            result.data.resize(data.size());
-            size_t index = 0;
-            for (const T &item : data)
-            {
-                result.data[index++] = selector(item);
-            }
+            result.data = azgra::collection::select(data.begin(), data.end(), selector);
             return result;
+        }
+
+        std::vector<T> to_vector() const noexcept
+        {
+            return data;
         }
 
         T first() const noexcept(false)
@@ -416,7 +421,9 @@ namespace azgra::collection
         template<typename ResultType, typename MapFunction>
         Enumerable<ResultType> for_each(const MapFunction &fn) const noexcept
         {
-            Enumerable<ResultType> result(map_fn(data.begin(), data.end(), fn));
+            Enumerable<ResultType> result;
+            result.data.resize(data.size());
+            std::transform(data.begin(), data.end(), result.data.begin(), fn);
             return result;
         }
 
@@ -429,5 +436,40 @@ namespace azgra::collection
             }
             return Enumerable(items);
         }
+
+        static Enumerable<T> range(const T inclusiveFrom, const T exclusiveTo)
+        {
+            static_assert(std::is_same<T, int>::value || std::is_same<T, uint>::value || std::is_same<T, size_t>::value
+                          || std::is_same<T, long>::value || std::is_same<T, short>::value);
+
+            std::vector<T> items(exclusiveTo - inclusiveFrom);
+            for (size_t i = inclusiveFrom; i < exclusiveTo; ++i)
+            {
+                items[i - inclusiveFrom] = i;
+            }
+            return Enumerable(items);
+        }
+
+        auto begin()
+        {
+            return data.begin();
+        }
+
+        auto end()
+        {
+            return data.end();
+        }
+
+        auto begin() const
+        {
+            return data.begin();
+        }
+
+        auto end() const
+        {
+            return data.end();
+        }
     };
+
+
 } // namespace azgra::collection

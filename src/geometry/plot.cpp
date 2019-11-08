@@ -6,7 +6,7 @@
 namespace plt = matplotlibcpp;
 namespace azgra::geometry
 {
-    Plot::Plot(azgra::basic_string_view__<char> title, const azgra::u16 plotWidth, const azgra::u16 plotHeight)
+    Plot::Plot(azgra::BasicStringView<char> title, const azgra::u16 plotWidth, const azgra::u16 plotHeight)
     {
         m_plotTitle = std::string(title);
         m_plotWidth = plotWidth;
@@ -61,7 +61,7 @@ namespace azgra::geometry
         return *this;
     }
 
-    Plot Plot::add_line(const std::vector<Point2D<double>> &coords, const azgra::basic_string_view__<char> &lineName)
+    Plot Plot::add_line(const std::vector<Point2D<double>> &coords, const azgra::BasicStringView<char> &lineName)
     {
         always_assert(!m_3d);
 
@@ -86,7 +86,7 @@ namespace azgra::geometry
         return *this;
     }
 
-    Plot::Plot(azgra::basic_string_view__<char> title)
+    Plot::Plot(azgra::BasicStringView<char> title)
     {
         m_plotTitle = std::string(title);
     }
@@ -148,7 +148,7 @@ namespace azgra::geometry
         }
     }
 
-    void Plot::save(azgra::basic_string_view__<char> fileName)
+    void Plot::save(azgra::BasicStringView<char> fileName)
     {
         prepare_plot();
         plt::save(std::string(fileName));
@@ -193,6 +193,27 @@ namespace azgra::geometry
         plt::pause(100);
     }
 
-
 }
 #endif
+namespace azgra::geometry
+{
+    void dump_3d_points_history(const std::vector<std::vector<Point3D<f64>>> &pointsHistory, const char *path)
+    {
+        if (pointsHistory.size() <= 0)
+            return;
+        std::ofstream stream(path, std::ios::out);
+        always_assert(stream.is_open());
+        const size_t iterationCount = pointsHistory.size();
+
+        stream << "IterationCount=" << iterationCount << "\n";
+
+        for (const auto &points : pointsHistory)
+        {
+            stream << "PointCount=" << points.size() << "\n";
+            for (const auto &point : points)
+            {
+                stream << point.x << ';' << point.y << ';' << point.z << '\n';
+            }
+        }
+    }
+}

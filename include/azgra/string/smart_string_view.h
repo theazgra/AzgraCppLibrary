@@ -15,23 +15,23 @@ namespace azgra
         class SmartStringView
         {
         private:
-            basic_string_view__ <CharType> sw;
+            BasicStringView <CharType> sw;
         public:
             SmartStringView() = default;
 
             SmartStringView(const CharType *cString) : SmartStringView(
-                    basic_string_view__<CharType>(cString)) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
+                    BasicStringView<CharType>(cString)) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
             {}
 
             SmartStringView(
-                    const basic_string_view__ <CharType> stringView) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
+                    const BasicStringView <CharType> stringView) // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
             {
                 sw = stringView;
             }
 
             ~SmartStringView() = default;
 
-            constexpr basic_string_view__ <CharType> string_view() const noexcept
+            constexpr BasicStringView <CharType> string_view() const noexcept
             {
                 return sw;
             }
@@ -61,7 +61,7 @@ namespace azgra
                 return sw.length();
             }
 
-            constexpr bool contains(const basic_string_view__ <CharType> &otherSw) const noexcept
+            constexpr bool contains(const BasicStringView <CharType> &otherSw) const noexcept
             {
                 return (sw.find(otherSw) != sw.npos);
             }
@@ -88,19 +88,19 @@ namespace azgra
                 return static_cast<int>(found ? index : -1);
             }
 
-            constexpr int index_of(const basic_string_view__ <CharType> &otherSw, const size_t fromIndex = 0) const noexcept
+            constexpr int index_of(const BasicStringView <CharType> &otherSw, const size_t fromIndex = 0) const noexcept
             {
                 auto index = sw.find(otherSw, fromIndex);
                 return static_cast<int>(index != sw.npos ? index : -1);
             }
 
-            constexpr int last_index_of(const basic_string_view__ <CharType> &otherSw) const noexcept
+            constexpr int last_index_of(const BasicStringView <CharType> &otherSw) const noexcept
             {
                 auto index = rfind(otherSw);
                 return static_cast<int>(index != sw.npos ? index : -1);
             }
 
-            constexpr bool starts_with(const basic_string_view__ <CharType> &otherSw) const noexcept
+            constexpr bool starts_with(const BasicStringView <CharType> &otherSw) const noexcept
             {
                 return (index_of(otherSw) == 0);
             }
@@ -110,7 +110,7 @@ namespace azgra
                 return (sw[0] == testChar);
             }
 
-            constexpr bool ends_with(const basic_string_view__ <CharType> &otherSw) const noexcept
+            constexpr bool ends_with(const BasicStringView <CharType> &otherSw) const noexcept
             {
                 return (index_of(otherSw) == (sw.length() - otherSw.length()));
             }
@@ -122,7 +122,7 @@ namespace azgra
                 return (sw[sw.length() - 1] == testChar);
             }
 
-            constexpr int count(const basic_string_view__ <CharType> &otherSw) const noexcept
+            constexpr int count(const BasicStringView <CharType> &otherSw) const noexcept
             {
                 int result = 0;
 
@@ -164,25 +164,25 @@ namespace azgra
                 return (sw == otherSw.sw);
             }
 
-            constexpr bool operator==(const basic_string_view__ <CharType> &otherSw) const noexcept
+            constexpr bool operator==(const BasicStringView <CharType> &otherSw) const noexcept
             {
                 return (sw == otherSw);
             }
 
-            constexpr bool equals(const basic_string_view__ <CharType> &otherSw) const noexcept
+            constexpr bool equals(const BasicStringView <CharType> &otherSw) const noexcept
             {
                 return (sw == otherSw);
             }
 
             constexpr SmartStringView substring(size_t fromIndex) const
             {
-                SmartStringView result(basic_string_view__<CharType>(sw.data() + fromIndex));
+                SmartStringView result(BasicStringView<CharType>(sw.data() + fromIndex));
                 return result;
             }
 
             constexpr SmartStringView substring(size_t fromIndex, size_t len) const
             {
-                SmartStringView result(basic_string_view__<CharType>(sw.data() + fromIndex, len));
+                SmartStringView result(BasicStringView<CharType>(sw.data() + fromIndex, len));
                 return result;
             }
 
@@ -200,13 +200,13 @@ namespace azgra
                 {
                     result.push_back(
                             SmartStringView(
-                                    basic_string_view__<CharType>(sw.data() + searchFrom, index - searchFrom)));
+                                    BasicStringView<CharType>(sw.data() + searchFrom, index - searchFrom)));
 
                     searchFrom = index + 1;
                     index = index_of_first(separatorChars, searchFrom);
                 }
                 result.push_back(
-                        SmartStringView(basic_string_view__<CharType>(sw.data() + searchFrom)));
+                        SmartStringView(BasicStringView<CharType>(sw.data() + searchFrom)));
 
                 return result;
             }
@@ -221,19 +221,19 @@ namespace azgra
                 {
                     result.push_back(
                             SmartStringView(
-                                    basic_string_view__<CharType>(sw.data() + searchFrom, index - searchFrom)));
+                                    BasicStringView<CharType>(sw.data() + searchFrom, index - searchFrom)));
 
                     searchFrom = index + 1;
                     index = index_of(separatorChar, searchFrom);
                 }
                 result.push_back(
-                        SmartStringView(basic_string_view__<CharType>(sw.data() + searchFrom)));
+                        SmartStringView(BasicStringView<CharType>(sw.data() + searchFrom)));
 
                 return result;
             }
 
             constexpr std::vector<SmartStringView<CharType>>
-            split(const basic_string_view__ <CharType> &separatorString) const noexcept
+            split(const BasicStringView <CharType> &separatorString) const noexcept
             {
                 std::vector<SmartStringView<CharType>> result;
                 size_t separatorLen = separatorString.length();
@@ -245,14 +245,14 @@ namespace azgra
                 {
                     result.push_back(
                             SmartStringView(
-                                    basic_string_view__<CharType>(sw.data() + searchFrom, index - searchFrom)));
+                                    BasicStringView<CharType>(sw.data() + searchFrom, index - searchFrom)));
 
                     searchFrom = index + separatorLen;
                     index = index_of(separatorString, searchFrom);
                 }
                 if (sw.length() != searchFrom)
                 {
-                    result.push_back(SmartStringView(basic_string_view__<CharType>(sw.data() + searchFrom)));
+                    result.push_back(SmartStringView(BasicStringView<CharType>(sw.data() + searchFrom)));
                 }
 
                 return result;

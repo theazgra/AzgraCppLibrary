@@ -61,13 +61,15 @@ namespace azgra
 
     // Since we are using also older GCC than 7 we have to define this.
 #ifdef GCC_CXX17
+
 #include <string_view>
-    template<typename CharType>
-    using basic_string_view__ = std::basic_string_view<CharType>;
+
+    template<typename CharType = char>
+    using BasicStringView = std::basic_string_view<CharType>;
 #else
-    #include <experimental/string_view>
-template<typename CharType>
-using basic_string_view__ = std::experimental::basic_string_view<CharType>;
+#include <experimental/string_view>
+    template<typename CharType = char>
+    using BasicStringView = std::experimental::basic_string_view<CharType>;
 #endif
 
 };

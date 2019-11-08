@@ -1,33 +1,33 @@
-#include <azgra/azgra.h>
-#include <azgra/collection/enumerable.h>
+#include <azgra/stream/in_binary_file_stream.h>
+#include <azgra/geometry/plot.h>
 
+using namespace azgra;
+using namespace azgra::geometry;
 
-struct Human
+int main(int argc, char **argv)
 {
-    int age;
-    int height;
-};
+    std::vector<Point3D<f64>> points = {Point3D<f64>(0, 0, 0),
+                                        Point3D<f64>(1, 1, 1),
+                                        Point3D<f64>(2, 2, 2),
+                                        Point3D<f64>(3, 3, 3),
+                                        Point3D<f64>(4, 4, 4),
+                                        Point3D<f64>(5, 5, 5)};
 
-int main(int, char **)
-{
-#ifndef MATPLOTLIB_CPP
-    fprintf(stdout,"matplotlib-cpp disabled\n");
-    return 0;
-#endif
+    std::vector<Point3D<f64>> points2 = {Point3D<f64>(0, 0, 9),
+                                         Point3D<f64>(1, 1, 8),
+                                         Point3D<f64>(2, 2, 7),
+                                         Point3D<f64>(3, 3, 6),
+                                         Point3D<f64>(4, 4, 5),
+                                         Point3D<f64>(5, 5, 7)};
+    dump_3d_points_history({points,points2}, "points.pts");
+//    InBinaryFileStream stream(argv[1]);
+//    auto bytes = stream.consume_whole_file();
+//    auto u32Values = bytes_to_ushort_array(bytes);
+//    std::ofstream out(argv[2]);
+//    always_assert(out.is_open());
+//    for (u32 val : u32Values)
+//        out << val << "\n";
 
-    using namespace azgra;
-    using namespace azgra::collection;
-
-    auto humans = Enumerable<Human>({{1,  52},
-                                     {2,  80},
-                                     {20, 175},
-                                     {30, 181},
-                                     {50, 160}});
-
-    std::function<int(const Human &)> fn = [](const Human &h)
-    { return h.height; };
-
-    auto heighs = humans.select<int>(fn);
 
     return 0;
 }
