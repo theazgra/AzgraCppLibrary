@@ -1,6 +1,7 @@
 #pragma once
 
 #include <azgra/azgra.h>
+#include <algorithm>
 
 namespace azgra
 {
@@ -142,6 +143,14 @@ namespace azgra
             constexpr bool is_empty() const noexcept
             {
                 return !(sw.length() > 0);
+            }
+
+            constexpr bool is_number() const noexcept
+            {
+                return (sw.length() > 0) && (std::find_if(sw.begin(), sw.end(), [](const char c)
+                {
+                    return !std::isdigit(c);
+                }) == sw.end());
             }
 
 
