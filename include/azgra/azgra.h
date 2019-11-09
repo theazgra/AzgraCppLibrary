@@ -8,6 +8,15 @@
 #include <azgra/utilities/print_helpers.h>
 #include <azgra/azgra_math.h>
 
+#ifdef GCC_CXX17
+#include <string_view>
+#else
+
+#include <experimental/string_view>
+
+#endif
+
+
 #ifndef NDEBUG
 #define DEBUG 1
 #endif
@@ -61,23 +70,17 @@ namespace azgra
 
     // Since we are using also older GCC than 7 we have to define this.
 #ifdef GCC_CXX17
-
-#include <string_view>
-
     template<typename CharType = char>
     using BasicStringView = std::basic_string_view<CharType>;
 #else
-#include <experimental/string_view>
-    template<typename CharType = char>
+    template<typename CharType>
     using BasicStringView = std::experimental::basic_string_view<CharType>;
 #endif
-
 };
+
 
 namespace azgra
 {
-
-
     template<typename T>
     inline void max(T &src, const T test)
     { src = (test > src) ? test : src; }

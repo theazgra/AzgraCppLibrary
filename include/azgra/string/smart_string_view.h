@@ -11,7 +11,7 @@ namespace azgra
          * This is wrapper for string_view, which introduces helper methods,
          * which are not yet present in C++17
          */
-        template<typename CharType>
+        template<typename CharType = char>
         class SmartStringView
         {
         private:
