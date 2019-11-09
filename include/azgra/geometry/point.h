@@ -1,7 +1,11 @@
 #pragma once
 
+#include <azgra/azgra.h>
+
 namespace azgra::geometry
 {
+    using namespace azgra;
+
     template<typename CoordinateType = int>
     struct Point2D
     {
