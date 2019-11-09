@@ -1,6 +1,5 @@
-#ifdef MATPLOTLIB_CPP
-
 #include <azgra/geometry/plot.h>
+#ifdef MATPLOTLIB_CPP
 #include <azgra/geometry/matplotlibcpp.h>
 
 namespace plt = matplotlibcpp;
