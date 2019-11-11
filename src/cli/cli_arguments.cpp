@@ -285,7 +285,7 @@ namespace azgra
         bool CliArguments::parse(const int argc, const char **argv)
         {
             bool failed = false;
-            // Lest mark required groups from methods.
+            // Lets mark required groups from methods.
             mark_required_groups();
 
             const char *helpIdentifier = "--help";
@@ -373,7 +373,7 @@ namespace azgra
 
                 for (const CliFlagGroup &group : groups)
                 {
-                    failed &= !(group.check_group_policy(errorStream));
+                    failed |= !(group.check_group_policy(errorStream));
                 }
             }
 
