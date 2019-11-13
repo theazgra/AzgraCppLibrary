@@ -5,6 +5,7 @@
 #include <set>
 #include <functional>
 #include <algorithm>
+#include <numeric>
 #include <boost/optional.hpp>
 
 #define REQUIRE_NUMERIC_TEMPLATE(T) static_assert( \
@@ -349,10 +350,7 @@ namespace azgra::collection
 
         auto sum() const noexcept
         {
-            return collection::sum(data.begin(),
-                                   data.end(),
-                                   [](const T &x)
-                                   { return x; });
+            return std::accumulate(data.begin(), data.end(), 0.0);
         }
 
         template<typename SelectorFunction, typename SelectType = typename std::result_of<SelectorFunction &(T)>::type>
