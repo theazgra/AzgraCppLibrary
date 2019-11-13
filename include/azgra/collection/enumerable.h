@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <boost/optional.hpp>
 
-#define REQUIRE_NUMERIC_TYPE static_assert( \
+#define REQUIRE_NUMERIC_TEMPLATE(T) static_assert( \
     std::is_same<T, int>() ||               \
         std::is_same<T, long>() ||          \
         std::is_same<T, size_t>() ||        \
@@ -37,6 +37,23 @@ namespace azgra::collection
         result.resize(size);
         std::transform(begin, end, result.begin(), selector);
         return result;
+    }
+
+    template<
+            typename It,
+            typename SelectorFunction,
+            typename T = typename std::iterator_traits<It>::value_type,
+            typename SelectType = typename std::result_of<SelectorFunction &(T)>::type
+    >
+    auto sum(const It begin, const It end, SelectorFunction selector)
+    {
+        REQUIRE_NUMERIC_TEMPLATE(SelectType);
+        auto sum = 0.0;
+        for (It from = begin; from != end; ++from)
+        {
+            sum += selector(*from);
+        }
+        return sum;
     }
 
     class EnumerableError : public std::runtime_error
@@ -88,7 +105,6 @@ namespace azgra::collection
         template<typename SelectorFunction, typename SelectType = typename std::result_of<SelectorFunction &(T)>::type>
         Enumerable<SelectType> select(SelectorFunction selector) const noexcept
         {
-
             Enumerable<SelectType> result;
             result.data = azgra::collection::select(data.begin(), data.end(), selector);
             return result;
@@ -319,7 +335,7 @@ namespace azgra::collection
 
         double average() const noexcept
         {
-            REQUIRE_NUMERIC_TYPE;
+            REQUIRE_NUMERIC_TEMPLATE(T);
             double sum = 0.0;
             size_t count = 0;
             for (const T &item : data)
@@ -331,15 +347,18 @@ namespace azgra::collection
             return (sum / static_cast<double>(count));
         }
 
-        double sum() const noexcept
+        auto sum() const noexcept
         {
-            REQUIRE_NUMERIC_TYPE;
-            double sum = 0.0;
-            for (const T &item : data)
-            {
-                sum += item;
-            }
-            return sum;
+            return collection::sum(data.begin(),
+                                   data.end(),
+                                   [](const T &x)
+                                   { return x; });
+        }
+
+        template<typename SelectorFunction, typename SelectType = typename std::result_of<SelectorFunction &(T)>::type>
+        auto sum(SelectorFunction selector) const noexcept
+        {
+            return collection::sum(data.begin(), data.end(), selector);
         }
 
         Enumerable<T> reverse() const noexcept
