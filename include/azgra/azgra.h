@@ -5,6 +5,7 @@
 #include <azgra/always_on_assert.h>
 #include <memory>
 #include <limits>
+#include <optional>
 #include <azgra/utilities/print_helpers.h>
 #include <azgra/azgra_math.h>
 
@@ -76,6 +77,9 @@ namespace azgra
     template<typename CharType>
     using BasicStringView = std::experimental::basic_string_view<CharType>;
 #endif
+
+    template <typename T>
+    using Optional = std::optional<T>;
 };
 
 
