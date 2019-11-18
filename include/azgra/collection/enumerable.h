@@ -6,7 +6,7 @@
 #include <functional>
 #include <algorithm>
 #include <numeric>
-#include <boost/optional.hpp>
+#include <optional>
 
 #define REQUIRE_NUMERIC_TEMPLATE(T) static_assert( \
     std::is_same<T, int>() ||               \
@@ -128,7 +128,7 @@ namespace azgra::collection
             }
         }
 
-        boost::optional<T> first_or_default() const noexcept
+        std::optional<T> first_or_default() const noexcept
         {
             if (data.size() > 0)
             {
@@ -136,7 +136,7 @@ namespace azgra::collection
             }
             else
             {
-                return boost::none;
+                return std::nullopt;
             }
         }
 
@@ -152,7 +152,7 @@ namespace azgra::collection
             }
         }
 
-        boost::optional<T> last_or_default() const noexcept
+        std::optional<T> last_or_default() const noexcept
         {
             if (data.size() > 0)
             {
@@ -160,7 +160,7 @@ namespace azgra::collection
             }
             else
             {
-                return boost::none;
+                return std::nullopt;
             }
         }
 
@@ -185,7 +185,7 @@ namespace azgra::collection
         }
 
         template<typename Predicate>
-        boost::optional<T> first_or_default(const Predicate &predicate) const noexcept
+        std::optional<T> first_or_default(const Predicate &predicate) const noexcept
         {
             if (data.size() > 0)
             {
@@ -197,7 +197,7 @@ namespace azgra::collection
                     }
                 }
             }
-            return boost::none;
+            return std::nullopt;
         }
 
         template<typename Predicate>
@@ -235,7 +235,7 @@ namespace azgra::collection
         }
 
         template<typename Predicate>
-        boost::optional<T> single_or_default(const Predicate &predicate) const noexcept(false)
+        std::optional<T> single_or_default(const Predicate &predicate) const noexcept(false)
         {
             T result;
             bool found = false;
@@ -259,12 +259,12 @@ namespace azgra::collection
                 }
                 else
                 {
-                    return boost::none;
+                    return std::nullopt;
                 }
             }
             else
             {
-                return boost::none;
+                return std::nullopt;
             }
         }
 

@@ -5,16 +5,23 @@
 #include <azgra/always_on_assert.h>
 #include <memory>
 #include <limits>
-#include <optional>
 #include <azgra/utilities/print_helpers.h>
 #include <azgra/azgra_math.h>
 
+#if __GNUC__ >= 7
+#define GCC_CXX17
+#endif
+
+#if __GNUC__ >= 8
+#define GCC_8
+#endif
+
 #ifdef GCC_CXX17
+
 #include <string_view>
+
 #else
-
 #include <experimental/string_view>
-
 #endif
 
 
@@ -22,9 +29,6 @@
 #define DEBUG 1
 #endif
 
-#if __GNUC__ >= 7
-#define GCC_CXX17
-#endif
 
 #define INVALID_CASE always_assert(false && "Wrong/missing case in switch statement.");
 
@@ -54,7 +58,6 @@ namespace azgra
     typedef float f32;
     typedef double f64;
 
-
     constexpr size_t int64_t_size = sizeof(int64_t);
 
     static_assert(sizeof(byte) == static_cast<size_t>(1));
@@ -77,22 +80,6 @@ namespace azgra
     template<typename CharType>
     using BasicStringView = std::experimental::basic_string_view<CharType>;
 #endif
-
-    template <typename T>
-    using Optional = std::optional<T>;
 };
 
-
-namespace azgra
-{
-    template<typename T>
-    inline void max(T &src, const T test)
-    { src = (test > src) ? test : src; }
-
-    template<typename T>
-    inline void min(T &src, const T test)
-    { src = (test < src) ? test : src; }
-
 #define AZGRA_NAME_OF(var) (#var)
-
-}; // namespace azgra
