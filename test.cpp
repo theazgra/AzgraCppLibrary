@@ -1,5 +1,6 @@
 #include <azgra/geometry/plot.h>
 #include <azgra/collection/enumerable.h>
+#include <azgra/fs/file_system.h>
 
 using namespace azgra;
 using namespace azgra::geometry;

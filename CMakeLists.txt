@@ -44,7 +44,7 @@ set_property(TARGET azgra PROPERTY CXX_STANDARD 17)
 
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost REQUIRED COMPONENTS filesystem locale)
+find_package(Boost REQUIRED COMPONENTS locale)
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})

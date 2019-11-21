@@ -1,4 +1,7 @@
+#pragma once
+
 #include "std_file_sytem.h"
+// #include "directory_info.h"
 #include <fstream>
 
 namespace azgra::fs
@@ -23,6 +26,12 @@ namespace azgra::fs
          * @param filePath File path.
          */
         explicit FileInfo(const azgra::BasicStringView<char> &filePath);
+
+        /**
+         * Create fileinfo from std::filesystem::path.
+         * @param filePath File path.
+         */
+        explicit FileInfo(const sfs::path &filePath);
 
         /**
          * Check whether specified file exists.
@@ -97,5 +106,8 @@ namespace azgra::fs
          * @return True if file was copied.
          */
         bool copy_file(const BasicStringView<char> &destination, bool overwrite);
+
+        // TODO(Moravec): How do we do this? Circular reference.
+        //[[nodiscard]] DirectoryInfo get_directory() const;
     };
 }

@@ -24,6 +24,12 @@ namespace azgra::fs
         explicit DirectoryInfo(const BasicStringView<char> &directoryPath);
 
         /**
+         * Create DirectoryInfo from std::filesystem::path.
+         * @param directoryPath Path to the directory.
+         */
+        explicit DirectoryInfo(const sfs::path &dirPath);
+
+        /**
          * Get current working directory path.
          * @return Absolute path of working directory.
          */
@@ -35,6 +41,49 @@ namespace azgra::fs
          */
         static void set_working_directory(const BasicStringView<char> &directoryPath);
 
-        //parentdir,dirfiles,movedir,copydir,removedir,absolutepath,dirname,dirfileswithfilter,createdirpath,createdir
+        /**
+         * Get the name of directory.
+         * @return Name of directory.
+         */
+        [[nodiscard]] std::string get_directory_name() const;
+
+        /**
+         * Get absolute path to this directory.
+         * @return Absolute directory path.
+         */
+        [[nodiscard]] std::string get_absolute_path() const;
+
+        /**
+         * Get DirectoryInfo of parent directory.
+         * @return
+         */
+        [[nodiscard]] DirectoryInfo get_parent_directory() const;
+
+        /**
+         * Create this directory. Parent directory must exist.
+         * @return True if new directory was created.
+         */
+        bool create_directory();
+
+        /**
+         * Create this directory and all missing parent directories.
+         * @return True if new directory was created.
+         */
+        bool create_directory_path();
+
+        /**
+         * Get vector of files inside this directory.
+         * @return Vector of FileInfos
+         */
+
+        [[nodiscard]] std::vector<FileInfo> get_directory_files() const;
+
+        /**
+         * Get vector of subdirectories inside this directory.
+         * @return Vector of DirectoryInfos
+         */
+        [[nodiscard]] std::vector<DirectoryInfo> get_subdirectories() const;
+
+        //dirfiles,movedir,copydir,removedir,dirfileswithfilter
     };
 }
