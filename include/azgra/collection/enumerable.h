@@ -76,6 +76,39 @@ namespace azgra::collection
         return result;
     }
 
+    template<
+            typename It,
+            typename T = typename std::iterator_traits<It>::value_type
+    >
+    T max(const It begin, const It end)
+    {
+        const auto maxValue = *std::max_element(begin, end);
+        return maxValue;
+    }
+
+    template<
+            typename It,
+            typename T = typename std::iterator_traits<It>::value_type
+    >
+    T min(const It begin, const It end)
+    {
+        const auto minValue = *std::min_element(begin, end);
+        return minValue;
+    }
+
+    template<
+            typename It,
+            typename T = typename std::iterator_traits<It>::value_type
+    >
+    std::pair<T, T> min_max(const It begin, const It end)
+    {
+
+        const auto minMaxValue = *std::minmax_element(begin, end);
+        return minMaxValue;
+    }
+
+    //min,max,minmax
+
     class EnumerableError : public std::runtime_error
     {
     public:
