@@ -57,6 +57,58 @@ namespace azgra::collection
         return sum;
     }
 
+    template<
+            typename It,
+            typename It2,
+            typename T = typename std::iterator_traits<It>::value_type,
+            typename T2 = typename std::iterator_traits<It2>::value_type
+    >
+    std::vector<T> except(const It begin, const It end, const It2 exceptBegin, const It2 exceptEnd)
+    {
+        static_assert(std::is_same_v<T, T2>);
+        std::vector<T> result;
+
+        std::copy_if(begin, end, std::back_inserter(result), [exceptBegin, exceptEnd](const T &value)
+        {
+            return (std::find(exceptBegin, exceptEnd, value) == exceptEnd);
+        });
+
+        return result;
+    }
+
+    template<
+            typename It,
+            typename T = typename std::iterator_traits<It>::value_type
+    >
+    T max(const It begin, const It end)
+    {
+        const auto maxValue = *std::max_element(begin, end);
+        return maxValue;
+    }
+
+    template<
+            typename It,
+            typename T = typename std::iterator_traits<It>::value_type
+    >
+    T min(const It begin, const It end)
+    {
+        const auto minValue = *std::min_element(begin, end);
+        return minValue;
+    }
+
+    template<
+            typename It,
+            typename T = typename std::iterator_traits<It>::value_type
+    >
+    std::pair<T, T> min_max(const It begin, const It end)
+    {
+
+        const auto minMaxValue = *std::minmax_element(begin, end);
+        return minMaxValue;
+    }
+
+    //min,max,minmax
+
     class EnumerableError : public std::runtime_error
     {
     public:
@@ -411,16 +463,9 @@ namespace azgra::collection
 
         Enumerable<T> except(const std::vector<T> &exceptSrc) const noexcept
         {
-            Enumerable<T> result;
-            for (const T &item : data)
-            {
-                // If item is not found in exceptSrc add it to result.
-                if (std::find(exceptSrc.begin(), exceptSrc.end(), item) == exceptSrc.end())
-                {
-                    result.data.push_back(item);
-                }
-            }
-            return result;
+            auto exceptData = collection::except(data.begin(), data.end(), exceptSrc.begin(), exceptSrc.end());
+            Enumerable<T> result(exceptData);
+            return exceptData;
         }
 
         Enumerable<T> except(const Enumerable<T> &exceptSrc) const noexcept
