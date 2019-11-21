@@ -11,6 +11,6 @@ Most of the tools are here to simplify my life and are used in school projects.
 - C++17 is required
 
 ### Dependencies
-- Boost filesystem (*will be replaced with C++ standard filesystem library*)
+- ~~Boost filesystem (*will be replaced with C++ standard filesystem library*)~~ Right now we are implementing wrapper of std::filesystem
 - Boost locale (*UTF-8 support*)
 
