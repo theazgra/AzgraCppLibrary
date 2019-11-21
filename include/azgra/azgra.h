@@ -5,6 +5,7 @@
 #include <azgra/always_on_assert.h>
 #include <memory>
 #include <limits>
+#include <optional>
 #include <azgra/utilities/print_helpers.h>
 #include <azgra/azgra_math.h>
 
