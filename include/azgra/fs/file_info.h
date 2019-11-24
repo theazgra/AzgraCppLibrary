@@ -1,7 +1,6 @@
 #pragma once
 
 #include "std_file_sytem.h"
-// #include "directory_info.h"
 #include <fstream>
 
 namespace azgra::fs
@@ -105,9 +104,12 @@ namespace azgra::fs
          * @param overwrite True if overwrite existing file.
          * @return True if file was copied.
          */
-        bool copy_file(const BasicStringView<char> &destination, bool overwrite);
+        bool copy_file(const BasicStringView<char> &destination, bool overwrite) const;
 
-        // TODO(Moravec): How do we do this? Circular reference.
-        //[[nodiscard]] DirectoryInfo get_directory() const;
+        /**
+         * Get parent directory path.
+         * @return Path of the parent directory.
+         */
+        [[nodiscard]] sfs::path get_directory_path() const;
     };
 }

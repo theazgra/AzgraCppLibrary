@@ -11,6 +11,8 @@ namespace azgra::fs
         bool m_exists = false;
         sfs::path m_path{};
 
+        void internal_move_directory(const sfs::path &newPath);
+
     public:
         /**
          * Default constructor for containers.
@@ -28,6 +30,12 @@ namespace azgra::fs
          * @param directoryPath Path to the directory.
          */
         explicit DirectoryInfo(const sfs::path &dirPath);
+
+        /**
+         * Check if this directory exists.
+         * @return True if directory exists.
+         */
+        [[nodiscard]] bool exists() const;
 
         /**
          * Get current working directory path.
@@ -72,18 +80,45 @@ namespace azgra::fs
         bool create_directory_path();
 
         /**
-         * Get vector of files inside this directory.
+         * Get vector of regular files inside this directory.
          * @return Vector of FileInfos
          */
 
-        [[nodiscard]] std::vector<FileInfo> get_directory_files() const;
+        [[nodiscard]] std::vector<FileInfo> get_files(const bool followSymlinks = true) const;
 
         /**
          * Get vector of subdirectories inside this directory.
          * @return Vector of DirectoryInfos
          */
-        [[nodiscard]] std::vector<DirectoryInfo> get_subdirectories() const;
+        [[nodiscard]] std::vector<DirectoryInfo> get_subdirectories(const bool followSymlinks = true) const;
 
-        //dirfiles,movedir,copydir,removedir,dirfileswithfilter
+        /**
+         * Copy directory and its files.
+         * @param destination Destination where directory will be copied into.
+         * @param overwrite True if existing files should be overwritten.
+         * @param recursive True if recursively copy subdirectories.
+         */
+        void copy(const BasicStringView<char> &destination, const bool overwrite, const bool recursive) const;
+
+        /**
+         * Rename this directory.
+         * @param directoryName Directory name.
+         */
+        void rename_directory(const BasicStringView<char> &directoryName);
+
+        /**
+         * Move this directory to new place.
+         * @param destinationPath Full path to the new destination.
+         */
+        void move_directory(const BasicStringView<char> &destinationPath);
+
+        /**
+         * Tries to delete this repository.
+         * @param recursive True if all subdirectories and should be deleted also.
+         * @return True if some files were deleted.
+         */
+        [[nodiscard]] bool delete_directory(const bool recursive);
+
+        // dirfileswithfilter
     };
 }

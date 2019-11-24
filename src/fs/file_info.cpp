@@ -62,12 +62,18 @@ namespace azgra::fs
     void FileInfo::change_file_size(const size_t newSize) const
     {
         assert(m_exists && "File doesn't exist.");
+        if (!m_exists)
+        { return; }
+
         sfs::resize_file(m_path, newSize);
     }
 
     void FileInfo::rename_file(const BasicStringView<char> &newName)
     {
         assert(m_exists && "File doesn't exist.");
+        if (!m_exists)
+        { return; }
+
         const sfs::path currentFileDir = m_path.parent_path();
         const sfs::path newPath = currentFileDir / sfs::path(newName);
         internal_move_file(newPath);
@@ -76,6 +82,9 @@ namespace azgra::fs
     void FileInfo::move_to_path(const BasicStringView<char> &newAbsolutePath)
     {
         assert(m_exists && "File doesn't exist.");
+        if (!m_exists)
+        { return; }
+
         const sfs::path newPath(newAbsolutePath);
         internal_move_file(newPath);
     }
@@ -83,6 +92,8 @@ namespace azgra::fs
     void FileInfo::move_to_directory(const BasicStringView<char> &directoryPath)
     {
         assert(m_exists && "File doesn't exist.");
+        if (!m_exists)
+        { return; }
 
         const sfs::path destDirPath(directoryPath);
         always_assert(sfs::is_directory(destDirPath) && "Destination directory is invalid");
@@ -93,7 +104,7 @@ namespace azgra::fs
 
     void FileInfo::internal_move_file(const sfs::path &newPath)
     {
-        assert(m_exists && "File doesn't exist.");
+        always_assert(m_exists && "File doesn't exist.");
         sfs::rename(m_path, newPath);
         m_path = newPath;
     }
@@ -104,9 +115,13 @@ namespace azgra::fs
         return m_path.filename().string();
     }
 
-    bool FileInfo::copy_file(const BasicStringView<char> &destination, bool overwrite)
+    bool FileInfo::copy_file(const BasicStringView<char> &destination, bool overwrite) const
     {
         assert(m_exists && "File doesn't exist.");
+        if (!m_exists)
+        {
+            return false;
+        }
         const sfs::path destinationPath(destination);
         const bool copyStatus = sfs::copy_file(m_path, destinationPath,
                                                overwrite ? sfs::copy_options::overwrite_existing : sfs::copy_options::none);
@@ -119,9 +134,8 @@ namespace azgra::fs
         return sfs::absolute(m_path).string();
     }
 
-//    DirectoryInfo FileInfo::get_directory() const
-//    {
-//        assert(m_exists && "File doesn't exist.");
-//        return DirectoryInfo(m_path);
-//    }
+    sfs::path FileInfo::get_directory_path() const
+    {
+        return m_path.parent_path();
+    }
 }
