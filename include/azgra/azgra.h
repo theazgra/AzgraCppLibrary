@@ -81,6 +81,6 @@ namespace azgra
     template<typename CharType>
     using BasicStringView = std::experimental::basic_string_view<CharType>;
 #endif
-};
+}
 
 #define AZGRA_NAME_OF(var) (#var)

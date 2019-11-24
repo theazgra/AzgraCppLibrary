@@ -5,7 +5,7 @@ project(azgra)
 option(MATPLOTLIB_CPP "Compile with matplotlib-cpp support" OFF)
 
 # Compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC" ) # -Wpedantic
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wpedantic" ) #
 # Linker flags
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS}")
 
