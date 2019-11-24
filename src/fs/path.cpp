@@ -2,7 +2,7 @@
 
 namespace azgra::fs
 {
-    sfs::path Path::concat_path(const std::vector<BasicStringView<char>> &paths)
+    sfs::path Path::concat_path(const VectorOfStringViews &paths)
     {
         if (paths.empty())
             return "";
@@ -34,13 +34,14 @@ namespace azgra::fs
 
     sfs::path Path::get_temporary_file_path()
     {
-        std::mt19937 mtGen(std::random_device());
-        std::uniform_int_distribution<azgra::u16> rd;
+        std::random_device rd;
+        std::mt19937 mtGen(rd());
+        std::uniform_int_distribution<azgra::u16> rand;
         const sfs::path dir = sfs::temp_directory_path();
-        sfs::path tmpFile(dir / ("tmp." + std::to_string(rd(mtGen))));
+        sfs::path tmpFile(dir / ("tmp." + std::to_string(rand(mtGen))));
         while (sfs::exists(tmpFile))
         {
-            tmpFile = (dir / ("tmp." + std::to_string(rd(mtGen))));
+            tmpFile = (dir / ("tmp." + std::to_string(rand(mtGen))));
         }
         return tmpFile;
     }
