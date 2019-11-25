@@ -50,8 +50,7 @@ namespace azgra
             }
 
         public:
-            virtual ~CliOption()
-            = default;;
+            virtual ~CliOption() = default;
 
             bool is_matched() const noexcept
             {
@@ -222,5 +221,5 @@ namespace azgra
                 return false;
             }
         };
-    };
-};
+    }
+}

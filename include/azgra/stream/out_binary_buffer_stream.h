@@ -22,4 +22,4 @@ namespace azgra
 
 		ByteArray get_buffer_data() const;
 	};
-};
+}

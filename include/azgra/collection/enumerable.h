@@ -465,7 +465,7 @@ namespace azgra::collection
         {
             auto exceptData = collection::except(data.begin(), data.end(), exceptSrc.begin(), exceptSrc.end());
             Enumerable<T> result(exceptData);
-            return exceptData;
+            return result;
         }
 
         Enumerable<T> except(const Enumerable<T> &exceptSrc) const noexcept

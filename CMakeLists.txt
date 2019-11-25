@@ -4,8 +4,10 @@ project(azgra)
 
 option(MATPLOTLIB_CPP "Compile with matplotlib-cpp support" OFF)
 
-#set(CMAKE_CXX_FLAGS "-Wall -fPIC")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC")
+# Compiler flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wpedantic" ) #
+# Linker flags
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS}")
 
 
 set(OBJECTS_TO_BUILD src/stream/binary_converter.cpp
@@ -20,7 +22,9 @@ set(OBJECTS_TO_BUILD src/stream/binary_converter.cpp
         src/utilities/z_order.cpp
         src/string/ascii_string.cpp
         src/utilities/guid.cpp
-        src/fs/file_system.cpp
+        src/fs/file_info.cpp
+        src/fs/directory_info.cpp
+        src/fs/path.cpp
         src/cli/cli_arguments.cpp
         include/azgra/utilities/histogram.h
         include/azgra/string/smart_string_view.h
@@ -37,12 +41,11 @@ set(OBJECTS_TO_BUILD src/stream/binary_converter.cpp
 add_library(azgra STATIC ${OBJECTS_TO_BUILD})
 set_property(TARGET azgra PROPERTY CXX_STANDARD 17)
 
-
-# add_library(azgraS SHARED ${OBJECTS_TO_BUILD})
+target_link_libraries(${PROJECT_NAME} stdc++fs)
 
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost REQUIRED COMPONENTS filesystem locale)
+find_package(Boost REQUIRED COMPONENTS locale)
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
@@ -55,7 +58,7 @@ add_library(sub::azgra ALIAS ${PROJECT_NAME})
 target_include_directories(azgra PUBLIC ${PROJECT_SOURCE_DIR}/include)
 # target_include_directories(azgraS PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-if(MATPLOTLIB_CPP)
+if (MATPLOTLIB_CPP)
     message("Configuring MATPLOTLIB_CPP")
     find_package(PythonLibs 2.7 REQUIRED)
 
@@ -64,7 +67,7 @@ if(MATPLOTLIB_CPP)
 
     # Define symbol for C++ code.
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMATPLOTLIB_CPP")
-endif()
+endif ()
 
 add_executable(consoleApp test.cpp)
 target_link_libraries(consoleApp azgra)

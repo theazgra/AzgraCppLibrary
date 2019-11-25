@@ -20,4 +20,4 @@ namespace azgra
 		void write_bytes(const ByteArray& bytes) override;
 		void write_replicated_bytes(const byte& repValue, const size_t repCount) override;
 	};
-};
+}

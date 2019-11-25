@@ -59,5 +59,5 @@ namespace azgra
             void print_help_on_parser_error();
 
         };
-    };
-};
+    }
+}

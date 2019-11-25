@@ -86,4 +86,4 @@ namespace azgra
             va_end(argptr);
         }
     }
-};
+}
