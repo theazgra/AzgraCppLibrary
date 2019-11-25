@@ -46,4 +46,4 @@ namespace azgra
 		always_assert(data.size() == bufferPtr);
 		return data;
 	}
-};
+}

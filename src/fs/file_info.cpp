@@ -138,4 +138,14 @@ namespace azgra::fs
     {
         return m_path.parent_path();
     }
+
+    std::ofstream FileInfo::get_stream_for_writing() const
+    {
+        return std::ofstream(m_path);
+    }
+
+    std::ifstream FileInfo::get_stream_for_reading() const
+    {
+        return std::ifstream(m_path);
+    }
 }

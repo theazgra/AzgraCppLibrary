@@ -46,4 +46,4 @@ namespace azgra
 		fileStream.write(reinterpret_cast<const char*>(buffer), repCount);
 		std::free(buffer);
 	}
-};
+}

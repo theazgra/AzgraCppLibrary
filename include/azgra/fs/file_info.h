@@ -104,12 +104,24 @@ namespace azgra::fs
          * @param overwrite True if overwrite existing file.
          * @return True if file was copied.
          */
-        bool copy_file(const BasicStringView<char> &destination, bool overwrite) const;
+        [[nodiscard]] bool copy_file(const BasicStringView<char> &destination, bool overwrite) const;
 
         /**
          * Get parent directory path.
          * @return Path of the parent directory.
          */
         [[nodiscard]] sfs::path get_directory_path() const;
+
+        /**
+         * Open stream for writing to this file.
+         * @return std::ofstream of this file.
+         */
+        [[nodiscard]] std::ofstream get_stream_for_writing() const;
+
+        /**
+         * Open stream for reading of this file.
+         * @return std::ifstream of this file.
+         */
+        [[nodiscard]] std::ifstream get_stream_for_reading() const;
     };
 }

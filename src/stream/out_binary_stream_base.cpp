@@ -91,4 +91,4 @@ namespace azgra
 			write_byte(repValue);
 		}
 	}
-};
+}
