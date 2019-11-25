@@ -271,10 +271,10 @@ namespace azgra
             /// \param strings Strings to concatenate.
             void multi_append(const std::vector<const char *> &strings);
 
-             /// Replicate the string replicationCount times.
-             /// \param cString String to replicate.
-             /// \param replicationCount Number of replications.
-             /// \return Result of replication.
+            /// Replicate the string replicationCount times.
+            /// \param cString String to replicate.
+            /// \param replicationCount Number of replications.
+            /// \return Result of replication.
             static AsciiString replicate(const char *cString, const azgra::i32 replicationCount);
 
             /// Pad this string from the left to the desired length.
@@ -299,7 +299,7 @@ namespace azgra
 
             /// Get SmartStringView wrapper.
             /// \return SmartStringView wrapper.
-            SmartStringView<char> get_ssw() const noexcept;
+            [[nodiscard]] SmartStringView<char> get_ssw() const noexcept;
         };
-    }; // namespace string
-} // namespace azgra
+    }
+}

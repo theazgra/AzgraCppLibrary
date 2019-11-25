@@ -28,19 +28,21 @@ namespace azgra::fs
 
     std::string DirectoryInfo::get_directory_name() const
     {
-        assert(m_exists);
+        assert(m_exists && "Directory doesn't exist.");
+        if (!m_exists)
+        { return ""; }
         return m_path.filename().string();
     }
 
     std::string DirectoryInfo::get_absolute_path() const
     {
-        assert(m_exists);
+        assert(m_exists && "Directory doesn't exist.");
         return sfs::absolute(m_path).string();
     }
 
     DirectoryInfo DirectoryInfo::get_parent_directory() const
     {
-        assert(m_exists);
+        always_assert(m_exists && "Directory doesn't exist.");
         return DirectoryInfo(m_path.parent_path());
     }
 
@@ -72,25 +74,113 @@ namespace azgra::fs
         return false;
     }
 
-    std::vector<FileInfo> DirectoryInfo::get_directory_files() const
+    std::vector<FileInfo> DirectoryInfo::get_files(const bool followSymlinks) const
     {
-        assert(m_exists);
+        assert(m_exists && "Directory doesn't exist.");
+        std::vector<FileInfo> files;
         if (!m_exists)
         {
-            return std::vector<FileInfo>();
+            return files;
         }
-        always_assert(false && "Missing implementation!");
+
+        for (const sfs::directory_entry &entry : sfs::directory_iterator(m_path, followSymlinks
+                                                                                 ? sfs::directory_options::follow_directory_symlink
+                                                                                 : sfs::directory_options::none))
+        {
+            if (entry.is_regular_file())
+            {
+                files.emplace_back(entry.path());
+            }
+        }
+        return files;
     }
 
-    std::vector<DirectoryInfo> DirectoryInfo::get_subdirectories() const
+    std::vector<DirectoryInfo> DirectoryInfo::get_subdirectories(const bool followSymlinks) const
     {
-        assert(m_exists);
+        assert(m_exists && "Directory doesn't exist.");
+        std::vector<DirectoryInfo> directories;
         if (!m_exists)
         {
-            return std::vector<DirectoryInfo>();
+            return directories;
         }
-        always_assert(false && "Missing implementation!");
+
+        for (const sfs::directory_entry &entry : sfs::directory_iterator(m_path, followSymlinks
+                                                                                 ? sfs::directory_options::follow_directory_symlink
+                                                                                 : sfs::directory_options::none))
+        {
+            if (entry.is_directory())
+            {
+                directories.emplace_back(entry.path());
+            }
+        }
+        return directories;
     }
 
+    void DirectoryInfo::copy(const BasicStringView<char> &destination, const bool overwrite, const bool recursive) const
+    {
+        assert(m_exists && "Directory doesn't exist.");
+        if (!m_exists)
+        {
+            return;
+        }
+        sfs::copy_options copyOptions = sfs::copy_options::none;
+        if (overwrite)
+        {
+            copyOptions |= sfs::copy_options::overwrite_existing;
+        }
+        if (recursive)
+        {
+            copyOptions |= sfs::copy_options::recursive;
+        }
+        const sfs::path destinationPath(destination);
+        sfs::copy(m_path, destinationPath, copyOptions);
+    }
 
+    void DirectoryInfo::internal_move_directory(const sfs::path &newPath)
+    {
+        always_assert(m_exists && "Directory doesn't exist.");
+        sfs::rename(m_path, newPath);
+        m_path = newPath;
+    }
+
+    void DirectoryInfo::rename_directory(const BasicStringView<char> &directoryName)
+    {
+        assert(m_exists && "Directory doesn't exist");
+        if (!m_exists)
+        {
+            return;
+        }
+        const sfs::path parent = m_path.parent_path();
+        const sfs::path newPath = parent / sfs::path(directoryName);
+        internal_move_directory(newPath);
+    }
+
+    void DirectoryInfo::move_directory(const BasicStringView<char> &destinationPath)
+    {
+        assert(m_exists && "Directory doesn't exist");
+        if (!m_exists)
+        {
+            return;
+        }
+        const sfs::path newPath = sfs::path(destinationPath);
+        internal_move_directory(newPath);
+    }
+
+    bool DirectoryInfo::exists() const
+    {
+        return m_exists;
+    }
+
+    bool DirectoryInfo::delete_directory(const bool recursive)
+    {
+        if (recursive)
+        {
+            m_exists = !(sfs::remove_all(m_path) > 0);
+        }
+        else
+        {
+            m_exists = !sfs::remove(m_path);
+        }
+        return !(m_exists);
+    }
 }

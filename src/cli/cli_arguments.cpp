@@ -457,5 +457,5 @@ namespace azgra
         {
             printHelpOnParserError = true;
         }
-    };
-};
+    }
+}

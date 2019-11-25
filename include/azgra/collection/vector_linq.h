@@ -236,5 +236,5 @@ namespace azgra
             return (memcmp(a.data(), b.data(), sizeof(T) * a.size()) == 0);
         }
 
-    }; // namespace collection
-}; // namespace azgra
+    }
+}
