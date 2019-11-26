@@ -43,9 +43,6 @@ namespace azgra::io::stream
         // Write bit to memory stream.
         void write_bit(const bool &bit);
 
-        // Write whole byte to memory stream.
-        //void write_byte(const byte &b);
-
         // Write bit without resizing buffer. Buffer must be allocated using `resize_for_raw_write` !
         void write_bit_no_alloc(const bool &bit);
 

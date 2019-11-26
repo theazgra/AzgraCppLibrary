@@ -32,24 +32,6 @@ namespace azgra::io::stream
         internal_write_bit(bit, true);
     }
 
-//    void OutMemoryBitStream::write_byte(const byte &b)
-//    {
-//        if (bitBufferSize == 0)
-//        {
-//            bitBuffer = b;
-//            bitBufferSize = 8;
-//            internal_flush_bit_buffer(true);
-//        }
-//        else
-//        {
-//            for (unsigned int i = 7; i >= 0; --i)
-//            {
-//                const bool bit = (b & (static_cast<byte>(1) << i));
-//                internal_write_bit(bit, true);
-//            }
-//        }
-//    }
-
     void OutMemoryBitStream::internal_write_bit(const bool &bit, const bool &alloc)
     {
         ++bitBufferSize;
