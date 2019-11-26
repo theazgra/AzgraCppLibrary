@@ -2,18 +2,18 @@
 
 #include <azgra/azgra.h>
 
-namespace azgra
+namespace azgra::io::stream
 {
     constexpr size_t MAX_BIT_COUNT = 255;
 // if MSB_FIRST is true, than MSB is written first to the stream when writing value.
 #define LSB_FIRST 0
 
-/**
- * @brief Class allowing to write invidual bits to memory buffer.
- * It is important to note that now there are two ways how one can read/write from/into those streams.
- * There is bit access and byte access (write_bytes_no_alloc, read_value(byteCount)), one must not mix those.
- * If there would be call to both of those the internal buffer could be mixed and value would be corrupted.
- */
+    /**
+     * @brief Class allowing to write invidual bits to memory buffer.
+     * It is important to note that now there are two ways how one can read/write from/into those streams.
+     * There is bit access and byte access (write_bytes_no_alloc, read_value(byteCount)), one must not mix those.
+     * If there would be call to both of those the internal buffer could be mixed and value would be corrupted.
+     */
     class OutMemoryBitStream
     {
     private:

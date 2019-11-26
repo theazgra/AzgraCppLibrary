@@ -10,14 +10,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wpedantic" ) #
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS}")
 
 
-set(OBJECTS_TO_BUILD src/stream/binary_converter.cpp
-        src/stream/in_binary_stream_base.cpp
-        src/stream/in_binary_file_stream.cpp
-        src/stream/out_binary_stream_base.cpp
-        src/stream/out_binary_file_stream.cpp
-        src/stream/out_binary_buffer_stream.cpp
-        src/stream/in_binary_buffer_stream.cpp
-        src/stream/memory_bit_stream.cpp
+set(OBJECTS_TO_BUILD src/utilities/binary_converter.cpp
+        src/io/stream/in_binary_stream_base.cpp
+        src/io/stream/in_binary_file_stream.cpp
+        src/io/stream/out_binary_stream_base.cpp
+        src/io/stream/out_binary_file_stream.cpp
+        src/io/stream/out_binary_buffer_stream.cpp
+        src/io/stream/in_binary_buffer_stream.cpp
+        src/io/stream/memory_bit_stream.cpp
         src/utilities/stopwatch.cpp
         src/utilities/z_order.cpp
         src/string/ascii_string.cpp
