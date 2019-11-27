@@ -51,8 +51,8 @@ namespace azgra::fs
         bool delete_file();
 
         /**
-         * Get file extension.
-         * @return File extension string.
+         * Get file extension with dot.
+         * @return File extension string with dot.
          */
         [[nodiscard]] std::string get_extension() const;
 

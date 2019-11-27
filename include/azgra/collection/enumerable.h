@@ -1,114 +1,10 @@
 #pragma once
 
-#include <azgra/azgra.h>
-#include <vector>
-#include <set>
-#include <functional>
-#include <algorithm>
-#include <numeric>
-#include <optional>
+#include "enumerable_functions.h"
 
-#define REQUIRE_NUMERIC_TEMPLATE(T) static_assert( \
-    std::is_same<T, int>() ||               \
-        std::is_same<T, long>() ||          \
-        std::is_same<T, size_t>() ||        \
-        std::is_same<T, float>() ||         \
-        std::is_same<T, double>() ||        \
-        std::is_same<T, azgra::byte>() ||   \
-        std::is_same<T, azgra::u16>() ||    \
-        std::is_same<T, azgra::u32>() ||    \
-        std::is_same<T, azgra::u64>() ||    \
-        std::is_same<T, azgra::i16>() ||    \
-        std::is_same<T, azgra::i32>() ||    \
-        std::is_same<T, azgra::i64>(),      \
-    "Type must be numeric.")
 
 namespace azgra::collection
 {
-    template<
-            typename It,
-            typename SelectorFunction,
-            typename T = typename std::iterator_traits<It>::value_type,
-            typename SelectType = typename std::result_of<SelectorFunction &(T)>::type
-    >
-    std::vector<SelectType> select(const It begin, const It end, SelectorFunction selector)
-    {
-        std::vector<SelectType> result;
-        const size_t size = std::distance(begin, end);
-        result.resize(size);
-        std::transform(begin, end, result.begin(), selector);
-        return result;
-    }
-
-    template<
-            typename It,
-            typename SelectorFunction,
-            typename T = typename std::iterator_traits<It>::value_type,
-            typename SelectType = typename std::result_of<SelectorFunction &(T)>::type
-    >
-    auto sum(const It begin, const It end, SelectorFunction selector)
-    {
-        REQUIRE_NUMERIC_TEMPLATE(SelectType);
-        auto sum = 0.0;
-        for (It from = begin; from != end; ++from)
-        {
-            sum += selector(*from);
-        }
-        return sum;
-    }
-
-    template<
-            typename It,
-            typename It2,
-            typename T = typename std::iterator_traits<It>::value_type,
-            typename T2 = typename std::iterator_traits<It2>::value_type
-    >
-    std::vector<T> except(const It begin, const It end, const It2 exceptBegin, const It2 exceptEnd)
-    {
-        static_assert(std::is_same_v<T, T2>);
-        std::vector<T> result;
-
-        std::copy_if(begin, end, std::back_inserter(result), [exceptBegin, exceptEnd](const T &value)
-        {
-            return (std::find(exceptBegin, exceptEnd, value) == exceptEnd);
-        });
-
-        return result;
-    }
-
-    template<
-            typename It,
-            typename T = typename std::iterator_traits<It>::value_type
-    >
-    T max(const It begin, const It end)
-    {
-        const auto maxValue = *std::max_element(begin, end);
-        return maxValue;
-    }
-
-    template<
-            typename It,
-            typename T = typename std::iterator_traits<It>::value_type
-    >
-    T min(const It begin, const It end)
-    {
-        const auto minValue = *std::min_element(begin, end);
-        return minValue;
-    }
-
-    template<
-            typename It,
-            typename T = typename std::iterator_traits<It>::value_type
-    >
-    std::pair<T, T> min_max(const It begin, const It end)
-    {
-
-        const auto minMaxValue = *std::minmax_element(begin, end);
-        return minMaxValue;
-    }
-
-    //min,max,minmax
-
     class EnumerableError : public std::runtime_error
     {
     public:
@@ -145,13 +41,7 @@ namespace azgra::collection
         Enumerable<T> where(const Predicate &predicate) const noexcept
         {
             Enumerable result;
-            for (const T &item : data)
-            {
-                if (predicate(item))
-                {
-                    result.data.push_back(item);
-                }
-            }
+            result.data = azgra::collection::where(data.begin(), data.end(), predicate);
             return result;
         }
 
@@ -362,28 +252,13 @@ namespace azgra::collection
         template<typename Predicate>
         size_t count(const Predicate &predicate) const noexcept
         {
-            size_t result = 0;
-            for (const T &item : data)
-            {
-                if (predicate(item))
-                {
-                    ++result;
-                }
-            }
-            return result;
+            return azgra::collection::count(data.begin(), data.end(), predicate);
         }
 
         template<typename Predicate>
         bool contains(const Predicate &predicate) const noexcept
         {
-            for (const T &item : data)
-            {
-                if (predicate(item))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return azgra::collection::contains(data.begin(), data.end(), predicate);
         }
 
         double average() const noexcept
@@ -475,8 +350,7 @@ namespace azgra::collection
 
         Enumerable<T> distinct() const noexcept
         {
-            std::set<T> distinctSet(data.begin(), data.end());
-            Enumerable<T> result(distinctSet.begin(), distinctSet.end());
+            Enumerable<T> result(azgra::collection::distinct(data.begin(), data.end()));
             return result;
         }
 
