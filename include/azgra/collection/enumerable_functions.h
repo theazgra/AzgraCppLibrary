@@ -57,6 +57,15 @@ namespace azgra::collection
 
     template<
             typename It,
+            typename T
+    >
+    auto sum(const It begin, const It end, const T initialValue)
+    {
+        return std::accumulate(begin, end, initialValue);
+    }
+
+    template<
+            typename It,
             typename SelectorFunction,
             typename T = typename std::iterator_traits<It>::value_type,
             typename SelectType = typename std::result_of<SelectorFunction &(T)>::type
@@ -147,6 +156,30 @@ namespace azgra::collection
 
     template<
             typename It,
+            typename PredicateFunction,
+            typename T = typename std::iterator_traits<It>::value_type,
+            typename PredicateResultType = typename std::result_of<PredicateFunction &(T)>::type
+    >
+    bool all(const It begin, const It end, PredicateFunction predicate)
+    {
+        static_assert(std::is_same_v<PredicateResultType, bool> && "PredicateFunction must return boolean value.");
+        return std::all_of(begin, end, predicate);
+    }
+
+    template<
+            typename It,
+            typename PredicateFunction,
+            typename T = typename std::iterator_traits<It>::value_type,
+            typename PredicateResultType = typename std::result_of<PredicateFunction &(T)>::type
+    >
+    bool any(const It begin, const It end, PredicateFunction predicate)
+    {
+        static_assert(std::is_same_v<PredicateResultType, bool> && "PredicateFunction must return boolean value.");
+        return std::any_of(begin, end, predicate);
+    }
+
+    template<
+            typename It,
             typename T = typename std::iterator_traits<It>::value_type
     >
     bool contains(const It begin, const It end, const T &value)
@@ -168,13 +201,26 @@ namespace azgra::collection
         return (itPos != end);
     }
 
+//    template<
+//            typename It,
+//            typename PredicateFunction,
+//            typename T = typename std::iterator_traits<It>::value_type,
+//            typename PredicateResultType = typename std::result_of<PredicateFunction &(T)>::type
+//    >
+//    bool any(const It begin, const It end, PredicateFunction predicate)
+//    {
+//        static_assert(std::is_same_v<PredicateResultType, bool> && "PredicateFunction must return boolean value.");
+//        const It itPos = std::find(begin, end, predicate);
+//        return (itPos != end);
+//    }
+
     template<
             typename It,
             typename T = typename std::iterator_traits<It>::value_type
     >
     std::vector<T> distinct(const It begin, const It end)
     {
-        std::vector<T> result(begin,end);
+        std::vector<T> result(begin, end);
         std::sort(result);
         const auto lastItPos = std::unique(result.begin(), result.end());
         result.erase(lastItPos, result.end());
