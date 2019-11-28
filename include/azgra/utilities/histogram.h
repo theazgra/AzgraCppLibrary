@@ -21,7 +21,7 @@ struct Bin
 template <typename T>
 std::vector<Bin<T>> create_histogram_from_numbers(const std::vector<T> &numbers, const size_t binCount)
 {
-    std::pair<T, T> minMax = azgra::collection::min_max(numbers);
+    std::pair<T, T> minMax = azgra::collection::min_max(numbers.begin(), numbers.end());
     T min = minMax.first;
     T max = minMax.second;
 

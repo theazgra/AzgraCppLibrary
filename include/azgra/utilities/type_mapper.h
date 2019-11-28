@@ -1,6 +1,5 @@
 #pragma once
-#include <azgra/collection/vector_linq.h>
-#include <azgra/azgra.h>
+#include <azgra/collection/enumerable_functions.h>
 
 namespace azgra
 {
@@ -36,7 +35,8 @@ private:
     {
         always_assert(_mappingType == MappingType_NegativeAfterPositive);
 
-        auto limits = azgra::collection::min_max(data);
+
+        auto limits = azgra::collection::min_max(data.begin(), data.end());
         SourceType min = limits.first;
         SourceType max = limits.second;
 
@@ -101,7 +101,7 @@ private:
 
     std::vector<TargetType> map_negative_to_even(const std::vector<SourceType> &data)
     {
-        auto limits = azgra::collection::min_max(data);
+        auto limits = azgra::collection::min_max(data.begin(), data.end());
         TargetType ttMax = std::numeric_limits<TargetType>::max();
 
         always_assert((limits.second < 0 || (size_t)((limits.second * 2) - 1) <= (size_t)ttMax) &&

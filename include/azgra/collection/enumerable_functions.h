@@ -126,8 +126,8 @@ namespace azgra::collection
     std::pair<T, T> min_max(const It begin, const It end)
     {
 
-        const auto minMaxValue = *std::minmax_element(begin, end);
-        return minMaxValue;
+        const auto minMaxValue = std::minmax_element(begin, end);
+        return std::make_pair(*minMaxValue.first, *minMaxValue.second);
     }
 
     template<
