@@ -5,7 +5,7 @@
 #include <azgra/always_on_assert.h>
 #include <memory>
 #include <limits>
-#include <optional>
+
 #include <azgra/utilities/print_helpers.h>
 #include <azgra/azgra_math.h>
 
@@ -20,9 +20,11 @@
 #ifdef GCC_CXX17
 
 #include <string_view>
+#include <optional>
 
 #else
 #include <experimental/string_view>
+#include <experimental/optional>
 #endif
 
 

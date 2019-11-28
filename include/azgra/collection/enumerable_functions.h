@@ -6,7 +6,6 @@
 #include <functional>
 #include <algorithm>
 #include <numeric>
-#include <optional>
 
 namespace azgra::collection
 {
@@ -49,7 +48,7 @@ namespace azgra::collection
     >
     std::vector<T> where(const It begin, const It end, PredicateFunction selector)
     {
-        static_assert(std::is_same_v<PredicateResultType, bool> && "PredicateFunction must return boolean value.");
+        static_assert(std::is_same<PredicateResultType, bool>::value && "PredicateFunction must return boolean value.");
         std::vector<T> result;
         std::copy_if(begin, end, std::back_inserter(result), selector);
         return result;
@@ -89,7 +88,7 @@ namespace azgra::collection
     >
     std::vector<T> except(const It begin, const It end, const It2 exceptBegin, const It2 exceptEnd)
     {
-        static_assert(std::is_same_v<T, T2>);
+        static_assert(std::is_same<T, T2>::value);
         std::vector<T> result;
 
         std::copy_if(begin, end, std::back_inserter(result), [exceptBegin, exceptEnd](const T &value)
@@ -149,7 +148,7 @@ namespace azgra::collection
     >
     size_t count(const It begin, const It end, PredicateFunction predicate)
     {
-        static_assert(std::is_same_v<PredicateResultType, bool> && "PredicateFunction must return boolean value.");
+        static_assert(std::is_same<PredicateResultType, bool>::value && "PredicateFunction must return boolean value.");
         size_t result = std::count_if(begin, end, predicate);
         return result;
     }
@@ -162,7 +161,7 @@ namespace azgra::collection
     >
     bool all(const It begin, const It end, PredicateFunction predicate)
     {
-        static_assert(std::is_same_v<PredicateResultType, bool> && "PredicateFunction must return boolean value.");
+        static_assert(std::is_same<PredicateResultType, bool>::value && "PredicateFunction must return boolean value.");
         return std::all_of(begin, end, predicate);
     }
 
@@ -174,7 +173,7 @@ namespace azgra::collection
     >
     bool any(const It begin, const It end, PredicateFunction predicate)
     {
-        static_assert(std::is_same_v<PredicateResultType, bool> && "PredicateFunction must return boolean value.");
+        static_assert(std::is_same<PredicateResultType, bool>::value && "PredicateFunction must return boolean value.");
         return std::any_of(begin, end, predicate);
     }
 
@@ -196,7 +195,7 @@ namespace azgra::collection
     >
     bool contains(const It begin, const It end, PredicateFunction predicate)
     {
-        static_assert(std::is_same_v<PredicateResultType, bool> && "PredicateFunction must return boolean value.");
+        static_assert(std::is_same<PredicateResultType, bool>::value && "PredicateFunction must return boolean value.");
         const It itPos = std::find(begin, end, predicate);
         return (itPos != end);
     }
