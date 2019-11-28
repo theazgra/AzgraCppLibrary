@@ -74,6 +74,16 @@ namespace azgra
             return data[((row * this->colCount) + col)];
         }
 
+        auto row_begin(const size_t row) const
+        {
+            return (data.begin() + (row * colCount));
+        }
+
+        auto row_end(const size_t row) const
+        {
+            return (data.begin() + (row * colCount) + colCount);
+        }
+
         const T &at(const size_t &row, const size_t &col) const
         {
             return data[((row * this->colCount) + col)];
