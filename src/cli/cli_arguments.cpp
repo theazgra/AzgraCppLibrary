@@ -148,7 +148,7 @@ namespace azgra
             std::function<bool(CliOption *)> filter = [](CliOption *flag)
             { return !(flag->is_grouped()); };
 
-            std::vector<CliOption *> result = azgra::collection::where(flags, filter);
+            std::vector<CliOption *> result = azgra::collection::where(flags.begin(), flags.end(), filter);
             return result;
         }
 
@@ -272,8 +272,8 @@ namespace azgra
             for (const CliMethod *method : methods)
             {
                 auto methodRequiredFlags = method->get_required_flags();
-                auto requiredGroups = azgra::collection::where(methodRequiredFlags, filter_isGroup);
-                azgra::collection::for_each(requiredGroups, work_markAsRequired);
+                auto requiredGroups = azgra::collection::where(methodRequiredFlags.begin(), methodRequiredFlags.end(), filter_isGroup);
+                std::for_each(requiredGroups.begin(), requiredGroups.end(), work_markAsRequired);
             }
         }
 

@@ -2,7 +2,7 @@
 
 #include <sstream>
 #include <azgra/string/smart_string_view.h>
-#include <azgra/collection/vector_linq.h>
+#include <azgra/collection/enumerable_functions.h>
 
 namespace azgra
 {
@@ -176,7 +176,7 @@ namespace azgra
                 {
                     case CliGroupMatchPolicy_All:
                     {
-                        bool result = azgra::collection::all(options, testCondition);
+                        bool result = azgra::collection::all(options.begin(), options.end(), testCondition);
                         if (!result)
                         {
                             errorStream << '<' << name.string_view()
@@ -188,7 +188,7 @@ namespace azgra
 
                     case CliGroupMatchPolicy_AtLeastOne:
                     {
-                        bool result = azgra::collection::any(options, testCondition);
+                        bool result = azgra::collection::any(options.begin(), options.end(), testCondition);
                         if (!result)
                         {
                             errorStream << '<' << name.string_view()
@@ -200,7 +200,7 @@ namespace azgra
                     {
                         if (isRequired)
                         {
-                            bool result = azgra::collection::any(options, testCondition);
+                            bool result = azgra::collection::any(options.begin(), options.end(), testCondition);
                             if (!result)
                             {
                                 errorStream << '<' << name.string_view() <<
