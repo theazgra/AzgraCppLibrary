@@ -33,7 +33,6 @@ namespace azgra
             data = std::vector<T>(copySrc.data.begin(), copySrc.data.end());
         }
 
-
         explicit Matrix(size_t dimension)
         {
             rowCount = dimension;
