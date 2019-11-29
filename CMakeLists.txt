@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 
 project(azgra)
 
-option(MATPLOTLIB_CPP "Compile with matplotlib-cpp support" OFF)
+option(MATPLOTLIB_CPP "Compile with matplotlib-cpp support" ON)
 
 # Compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -Wpedantic" ) #

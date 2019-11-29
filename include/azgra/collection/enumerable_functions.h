@@ -69,7 +69,7 @@ namespace azgra::collection
             typename T = typename std::iterator_traits<It>::value_type,
             typename SelectType = typename std::result_of<SelectorFunction &(T)>::type
     >
-    auto sum(const It begin, const It end, SelectorFunction selector)
+    auto sum_select(const It begin, const It end, SelectorFunction selector)
     {
         REQUIRE_NUMERIC_TEMPLATE(SelectType);
         auto sum = 0.0;
