@@ -1,7 +1,6 @@
 #pragma once
 
-#include "std_file_sytem.h"
-#include <fstream>
+#include "file.h"
 
 namespace azgra::fs
 {

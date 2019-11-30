@@ -26,17 +26,18 @@ namespace azgra::fs
         {
             return false;
         }
-
-        std::ofstream fileStream(m_path);
-        fileStream.flush();
-        fileStream.close();
+        {
+            auto fileStream = File::create_file(m_path.c_str());
+            fileStream.flush();
+            fileStream.close();
+        }
         m_exists = true;
         return m_exists;
     }
 
     bool FileInfo::delete_file()
     {
-        if (m_exists && sfs::remove(m_path))
+        if (m_exists && File::delete_file(m_path.c_str()))
         {
             m_exists = false;
             return true;

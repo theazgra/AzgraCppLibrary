@@ -22,6 +22,7 @@ set(OBJECTS_TO_BUILD src/utilities/binary_converter.cpp
         src/utilities/z_order.cpp
         src/string/ascii_string.cpp
         src/utilities/guid.cpp
+        src/fs/file.cpp
         src/fs/file_info.cpp
         src/fs/directory_info.cpp
         src/fs/path.cpp
