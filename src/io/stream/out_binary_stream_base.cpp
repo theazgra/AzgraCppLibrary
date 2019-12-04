@@ -83,6 +83,14 @@ namespace azgra::io::stream
         }
     }
 
+    void OutBinaryStreamBase::write_bytes_from_buffer(const char *buffer, const size_t byteCount)
+    {
+        for (int i = 0; i < byteCount; ++i)
+        {
+            write_byte(*(buffer + i));
+        }
+    }
+
     void OutBinaryStreamBase::write_replicated_bytes(const byte &repValue, const size_t repCount)
     {
         always_assert(isOpen);
@@ -91,4 +99,6 @@ namespace azgra::io::stream
             write_byte(repValue);
         }
     }
+
+
 }

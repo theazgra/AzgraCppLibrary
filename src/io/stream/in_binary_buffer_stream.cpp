@@ -8,7 +8,7 @@ namespace azgra::io::stream
         this->underlayingSourceType = BufferSourceType_NoSource;
     }
 
-    InBinaryBufferStream::InBinaryBufferStream(ByteArray *bytes)
+    InBinaryBufferStream::InBinaryBufferStream(const ByteArray *bytes)
     {
         this->streamBufferSize = bytes->size();
         this->isOpen = true;

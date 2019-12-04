@@ -24,6 +24,8 @@ namespace azgra::io::stream
         // Write bytes to the stream.
         void write_bytes(const ByteArray &bytes) override;
 
+        void write_bytes_from_buffer(const char *buffer, const size_t byteCount) override;
+
         void write_replicated_bytes(const byte &repValue, const size_t repCount) override;
     };
 }

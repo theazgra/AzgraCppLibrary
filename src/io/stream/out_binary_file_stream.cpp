@@ -38,6 +38,11 @@ namespace azgra::io::stream
         fileStream.write(reinterpret_cast<const char *>(bytes.data()), bytes.size());
     }
 
+    void OutBinaryFileStream::write_bytes_from_buffer(const char *buffer, const size_t byteCount)
+    {
+        fileStream.write(buffer, byteCount);
+    }
+
     void OutBinaryFileStream::write_replicated_bytes(const byte &repValue, const size_t repCount)
     {
         always_assert(isOpen);
@@ -46,4 +51,6 @@ namespace azgra::io::stream
         fileStream.write(reinterpret_cast<const char *>(buffer), repCount);
         std::free(buffer);
     }
+
+
 }

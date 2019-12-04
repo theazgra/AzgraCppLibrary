@@ -63,6 +63,9 @@ namespace azgra::io::stream
         // Write bytes from buffer to the stream.
         virtual void write_bytes_from_buffer(const ByteArray &buffer, const size_t bufferPos, const size_t byteCount);
 
+        // Write bytes from buffer to the stream.
+        virtual void write_bytes_from_buffer(const char *buffer, const size_t byteCount);
+
         // Write the byte value `repCount` times into the stream.
         virtual void write_replicated_bytes(const byte &repValue, const size_t repCount);
     };

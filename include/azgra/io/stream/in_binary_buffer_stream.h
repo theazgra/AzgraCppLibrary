@@ -18,7 +18,7 @@ namespace azgra::io::stream
         // Type of underlaying structure, from which we pull data into main buffer.
         BufferSourceType underlayingSourceType;
         // Memory buffer.
-        ByteArray *memoryBuffer;
+        const ByteArray *memoryBuffer;
         // Current position in buffer.
         azgra::u64 currentBufferPosition = 0;
         // Number of bytes readed from source.
@@ -29,7 +29,7 @@ namespace azgra::io::stream
     public:
         InBinaryBufferStream();
 
-        InBinaryBufferStream(ByteArray *bytes);
+        InBinaryBufferStream(const ByteArray *bytes);
 
         InBinaryBufferStream(InBinaryStreamBase *stream, const azgra::i64 bufferSize = 500000);
 
