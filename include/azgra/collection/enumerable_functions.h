@@ -146,7 +146,7 @@ namespace azgra::collection
             typename T = typename std::iterator_traits<It>::value_type,
             typename PredicateResultType = typename std::result_of<PredicateFunction &(T)>::type
     >
-    size_t count(const It begin, const It end, PredicateFunction predicate)
+    size_t count_if(const It begin, const It end, PredicateFunction predicate)
     {
         static_assert(std::is_same<PredicateResultType, bool>::value && "PredicateFunction must return boolean value.");
         size_t result = std::count_if(begin, end, predicate);
