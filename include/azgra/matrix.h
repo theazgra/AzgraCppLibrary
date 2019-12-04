@@ -58,6 +58,15 @@ namespace azgra
             }
         }
 
+        explicit Matrix(size_t rowCount, size_t colCount, std::vector<T> &dataToMove)
+        {
+            this->rowCount = rowCount;
+            this->colCount = colCount;
+            data.resize(rowCount * colCount);
+            always_assert((rowCount * colCount) == dataToMove.size());
+            data = std::move(dataToMove);
+        }
+
         [[nodiscard]] size_t rows() const noexcept
         {
             return rowCount;
@@ -176,6 +185,11 @@ namespace azgra
                 colData[row] = at(row, colIndex);
             }
             return colData;
+        }
+
+        std::vector<T> const &get_data() const
+        {
+            return data;
         }
     };
 }
