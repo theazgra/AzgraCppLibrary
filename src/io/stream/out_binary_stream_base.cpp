@@ -85,7 +85,7 @@ namespace azgra::io::stream
 
     void OutBinaryStreamBase::write_bytes_from_buffer(const char *buffer, const size_t byteCount)
     {
-        for (int i = 0; i < byteCount; ++i)
+        for (size_t i = 0; i < byteCount; ++i)
         {
             write_byte(*(buffer + i));
         }

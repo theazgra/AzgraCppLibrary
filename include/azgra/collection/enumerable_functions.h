@@ -69,10 +69,10 @@ namespace azgra::collection
             typename T = typename std::iterator_traits<It>::value_type,
             typename SelectType = typename std::result_of<SelectorFunction &(T)>::type
     >
-    auto sum_select(const It begin, const It end, SelectorFunction selector)
+    auto sum(const It begin, const It end, SelectorFunction selector, const SelectType initialValue)
     {
         REQUIRE_NUMERIC_TEMPLATE(SelectType);
-        auto sum = 0.0;
+        SelectType sum = initialValue;
         for (It from = begin; from != end; ++from)
         {
             sum += selector(*from);
@@ -193,25 +193,12 @@ namespace azgra::collection
             typename T = typename std::iterator_traits<It>::value_type,
             typename PredicateResultType = typename std::result_of<PredicateFunction &(T)>::type
     >
-    bool contains(const It begin, const It end, PredicateFunction predicate)
+    bool contains_if(const It begin, const It end, PredicateFunction predicate)
     {
         static_assert(std::is_same<PredicateResultType, bool>::value && "PredicateFunction must return boolean value.");
         const It itPos = std::find(begin, end, predicate);
         return (itPos != end);
     }
-
-//    template<
-//            typename It,
-//            typename PredicateFunction,
-//            typename T = typename std::iterator_traits<It>::value_type,
-//            typename PredicateResultType = typename std::result_of<PredicateFunction &(T)>::type
-//    >
-//    bool any(const It begin, const It end, PredicateFunction predicate)
-//    {
-//        static_assert(std::is_same_v<PredicateResultType, bool> && "PredicateFunction must return boolean value.");
-//        const It itPos = std::find(begin, end, predicate);
-//        return (itPos != end);
-//    }
 
     template<
             typename It,
