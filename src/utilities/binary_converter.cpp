@@ -213,6 +213,13 @@ namespace azgra
         std::memcpy((buffer.data() + bufferPosition), &x, sizeof(azgra::u16));
     }
 
+    std::vector<azgra::i16> bytes_to_short_array(const ByteArray &data)
+    {
+        std::vector<azgra::i16> result(data.size() / sizeof(azgra::i16));
+        std::memcpy(result.data(), data.data(), data.size());
+        return result;
+    }
+
     std::vector<azgra::u16> bytes_to_ushort_array(const ByteArray &data)
     {
         std::vector<azgra::u16> result(data.size() / sizeof(azgra::u16));
@@ -223,6 +230,41 @@ namespace azgra
     std::vector<azgra::i32> bytes_to_int_array(const ByteArray &data)
     {
         std::vector<azgra::i32> result(data.size() / sizeof(azgra::i32));
+        std::memcpy(result.data(), data.data(), data.size());
+        return result;
+    }
+
+    std::vector<azgra::u32> bytes_to_uint_array(const ByteArray &data)
+    {
+        std::vector<azgra::u32> result(data.size() / sizeof(azgra::u32));
+        std::memcpy(result.data(), data.data(), data.size());
+        return result;
+    }
+
+    std::vector<azgra::i64> bytes_to_long_array(const ByteArray &data)
+    {
+        std::vector<azgra::i64> result(data.size() / sizeof(azgra::i64));
+        std::memcpy(result.data(), data.data(), data.size());
+        return result;
+    }
+
+    std::vector<azgra::u64> bytes_to_ulong_array(const ByteArray &data)
+    {
+        std::vector<azgra::u64> result(data.size() / sizeof(azgra::u64));
+        std::memcpy(result.data(), data.data(), data.size());
+        return result;
+    }
+
+    std::vector<azgra::f32> bytes_to_float_array(const ByteArray &data)
+    {
+        std::vector<azgra::f32> result(data.size() / sizeof(azgra::f32));
+        std::memcpy(result.data(), data.data(), data.size());
+        return result;
+    }
+
+    std::vector<azgra::f64> bytes_to_double_array(const ByteArray &data)
+    {
+        std::vector<azgra::f64> result(data.size() / sizeof(azgra::f64));
         std::memcpy(result.data(), data.data(), data.size());
         return result;
     }
