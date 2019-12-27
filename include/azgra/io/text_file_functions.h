@@ -1,26 +1,36 @@
 #pragma once
 
 #include <azgra/azgra.h>
+#include <azgra/collection/enumerable_functions.h>
 #include <azgra/string/smart_string_view.h>
 #include <fstream>
 #include <functional>
 
 namespace azgra::io
 {
-    namespace
-    {
-        /**
-         * Open file in text mode and check if open was successful.
-         * @param fileName Path to file.
-         * @return Opened input file stream.
-         */
-        static std::ifstream open_text_file(const BasicStringView<char> &fileName)
-        {
-            std::ifstream inputTextStream(fileName.data(), std::ios::in);
-            always_assert(inputTextStream.is_open() && "Failed to open input stream.");
-            return inputTextStream;
-        }
-    }
+    /**
+     * Open file in text mode and check if open was successful.
+     * @param fileName Path to file.
+     * @return Opened input file stream.
+     */
+    std::ifstream open_text_file(const BasicStringView<char> &fileName);
+
+    /**
+     * Read file lines.
+     * @param fileName Path to file.
+     * @return Vector of csv cells.
+     */
+    std::vector<std::string> read_lines(const BasicStringView<char> &fileName);
+
+    /**
+     * Read csv file cells
+     * @param fileName Path to file.
+     * @param separator CSV separator.
+     * @return Vector of file lines.
+     */
+    std::vector<std::vector<std::string>>
+    read_csv_cells(const BasicStringView<char> &fileName, const BasicStringView<char> &separator,
+                   bool skipLineWithMissingValue);
 
 
     template<typename CellType>
@@ -93,17 +103,5 @@ namespace azgra::io
         return lines;
     }
 
-    inline std::vector<std::string> read_lines(const BasicStringView<char> &fileName)
-    {
-        std::ifstream inputTextStream = open_text_file(fileName);
-        std::vector<std::string> lines;
-
-        std::string line;
-        while (std::getline(inputTextStream, line))
-        {
-            lines.push_back(line);
-        }
-        return lines;
-    }
 
 }

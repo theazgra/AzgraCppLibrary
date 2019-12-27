@@ -36,7 +36,7 @@ set(OBJECTS_TO_BUILD src/utilities/binary_converter.cpp
         include/azgra/matrix.h
         include/azgra/collection/enumerable.h
         src/geometry/plot.cpp
-        src/io/binary_file_functions.cpp)
+        src/io/binary_file_functions.cpp src/io/text_file_functions.cpp)
 
 add_library(azgra STATIC ${OBJECTS_TO_BUILD})
 set_property(TARGET azgra PROPERTY CXX_STANDARD 17)
