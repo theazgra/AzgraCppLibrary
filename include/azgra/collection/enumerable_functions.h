@@ -212,4 +212,14 @@ namespace azgra::collection
         result.erase(lastItPos, result.end());
         return result;
     }
+
+    template<
+            typename It,
+            typename T = typename std::iterator_traits<It>::value_type
+    >
+    auto find_index(const It begin, const It end, const T &value)
+    {
+        const auto &valueIt = std::find(begin, end, value);
+        return std::distance(begin, valueIt);
+    }
 }
