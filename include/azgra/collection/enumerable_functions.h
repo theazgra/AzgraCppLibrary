@@ -3,6 +3,7 @@
 #include <azgra/azgra.h>
 #include <vector>
 #include <set>
+#include <unordered_set>
 #include <functional>
 #include <algorithm>
 #include <numeric>
@@ -206,11 +207,13 @@ namespace azgra::collection
     >
     std::vector<T> distinct(const It begin, const It end)
     {
-        std::vector<T> result(begin, end);
-        std::sort(result);
-        const auto lastItPos = std::unique(result.begin(), result.end());
-        result.erase(lastItPos, result.end());
+        std::unordered_set<T> set(begin, end);
+        std::vector<T> result(set.begin(), set.end());
         return result;
+//        std::sort(result);
+//        const auto lastItPos = std::unique(result.begin(), result.end());
+//        result.erase(lastItPos, result.end());
+//        return result;
     }
 
     template<
