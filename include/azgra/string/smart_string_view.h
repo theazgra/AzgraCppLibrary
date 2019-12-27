@@ -226,8 +226,20 @@ namespace azgra
                     searchFrom = index + 1;
                     index = index_of(separatorChar, searchFrom);
                 }
-                result.push_back(
-                        SmartStringView(BasicStringView<CharType>(sw.data() + searchFrom)));
+//                result.push_back(
+//                        SmartStringView(BasicStringView<CharType>(sw.data() + searchFrom)));
+
+                if (sw.length() != searchFrom)
+                {
+                    if (sw.at(sw.length() - 1) == '\r')
+                    {
+                        result.push_back(SmartStringView(BasicStringView<CharType>(sw.data() + searchFrom, sw.length() - searchFrom - 1)));
+                    }
+                    else
+                    {
+                        result.push_back(SmartStringView(BasicStringView<CharType>(sw.data() + searchFrom)));
+                    }
+                }
 
                 return result;
             }
@@ -252,12 +264,18 @@ namespace azgra
                 }
                 if (sw.length() != searchFrom)
                 {
-                    result.push_back(SmartStringView(BasicStringView<CharType>(sw.data() + searchFrom)));
+                    if (sw.at(sw.length() - 1) == '\r')
+                    {
+                        result.push_back(SmartStringView(BasicStringView<CharType>(sw.data() + searchFrom, sw.length() - searchFrom - 1)));
+                    }
+                    else
+                    {
+                        result.push_back(SmartStringView(BasicStringView<CharType>(sw.data() + searchFrom)));
+                    }
                 }
 
                 return result;
             }
-
         };
     }
 }
