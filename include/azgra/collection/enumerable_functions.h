@@ -1,5 +1,6 @@
 #pragma once
 
+#include <type_traits>
 #include <azgra/azgra.h>
 #include <vector>
 #include <set>
@@ -10,21 +11,6 @@
 
 namespace azgra::collection
 {
-#define REQUIRE_NUMERIC_TEMPLATE(T) static_assert( \
-    std::is_same<T, int>() ||               \
-        std::is_same<T, long>() ||          \
-        std::is_same<T, size_t>() ||        \
-        std::is_same<T, float>() ||         \
-        std::is_same<T, double>() ||        \
-        std::is_same<T, azgra::byte>() ||   \
-        std::is_same<T, azgra::u16>() ||    \
-        std::is_same<T, azgra::u32>() ||    \
-        std::is_same<T, azgra::u64>() ||    \
-        std::is_same<T, azgra::i16>() ||    \
-        std::is_same<T, azgra::i32>() ||    \
-        std::is_same<T, azgra::i64>(),      \
-    "Type must be numeric.")
-
     template<
             typename It,
             typename SelectorFunction,
@@ -72,7 +58,7 @@ namespace azgra::collection
     >
     auto sum(const It begin, const It end, SelectorFunction selector, const SelectType initialValue)
     {
-        REQUIRE_NUMERIC_TEMPLATE(SelectType);
+        static_assert(std::is_arithmetic_v<SelectType>, "T must be numeric type");
         SelectType sum = initialValue;
         for (It from = begin; from != end; ++from)
         {

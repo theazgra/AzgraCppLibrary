@@ -263,7 +263,7 @@ namespace azgra::collection
 
         double average() const noexcept
         {
-            REQUIRE_NUMERIC_TEMPLATE(T);
+            static_assert(std::is_arithmetic_v<T>, "T must be numeric type");
             double sum = 0.0;
             size_t count = 0;
             for (const T &item : data)
