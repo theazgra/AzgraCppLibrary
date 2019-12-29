@@ -187,6 +187,15 @@ namespace azgra
             return colData;
         }
 
+        void col(const size_t &colIndex, const std::vector<T> &values)
+        {
+            always_assert(values.size() == rowCount);
+            for (size_t row = 0; row < rowCount; ++row)
+            {
+                at(row, colIndex) = values[row];
+            }
+        }
+
         std::vector<T> const &get_data() const
         {
             return data;

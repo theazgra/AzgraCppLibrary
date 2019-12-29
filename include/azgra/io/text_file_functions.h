@@ -1,6 +1,6 @@
 #pragma once
 
-#include <azgra/azgra.h>
+#include <azgra/matrix.h>
 #include <azgra/collection/enumerable_functions.h>
 #include <azgra/string/smart_string_view.h>
 #include <fstream>
@@ -21,6 +21,22 @@ namespace azgra::io
      * @return Vector of csv cells.
      */
     std::vector<std::string> read_lines(const BasicStringView<char> &fileName);
+
+    template <typename T>
+    void save_matrix_to_csv(const azgra::Matrix<T> &matrix, const char separator, const char *outFile)
+    {
+        std::ofstream out(outFile, std::ios::out);
+        always_assert(out.is_open() && "Failed to open out stream");
+
+        for (size_t r = 0; r < matrix.rows(); ++r)
+        {
+            for (size_t c = 0; c < matrix.cols(); ++c)
+            {
+                out << matrix.at(r,c) << separator;
+            }
+            out << '\n';
+        }
+    }
 
     /**
      * Read csv file cells
