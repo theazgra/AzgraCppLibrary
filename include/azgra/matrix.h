@@ -1,9 +1,12 @@
 #pragma once
 
 #include <azgra/azgra.h>
+#include <azgra/utilities/custom_advancement_iterator.h>
 
 namespace azgra
 {
+
+
     template<typename T>
     class Matrix
     {
@@ -26,7 +29,7 @@ namespace azgra
     public:
         Matrix() = default;
 
-        explicit Matrix(const Matrix<T> &copySrc)
+        Matrix(const Matrix<T> &copySrc)
         {
             rowCount = copySrc.rowCount;
             colCount = copySrc.colCount;
@@ -82,15 +85,54 @@ namespace azgra
             return data[((row * this->colCount) + col)];
         }
 
-        auto row_begin(const size_t row) const
+        // auto = typename std::vector<T>::const_iterator
+        auto row_cbegin(const size_t row) const
         {
             return (data.begin() + (row * colCount));
         }
 
-        auto row_end(const size_t row) const
+        auto row_cend(const size_t row) const
         {
             return (data.begin() + (row * colCount) + colCount);
         }
+
+        // auto = typename std::vector<T>::iterator
+        auto row_begin(const size_t row)
+        {
+            return (data.begin() + (row * colCount));
+        }
+
+        auto row_end(const size_t row)
+        {
+            return (data.begin() + (row * colCount) + colCount);
+        }
+
+        auto col_cbegin(const size_t col) const
+        {
+            const auto start = (data.data() + col);
+            const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
+            return ConstCustomAdvancementIterator(start, end, colCount);
+        }
+
+        auto col_cend(const size_t col) const
+        {
+            const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
+            return ConstCustomAdvancementIterator(end, colCount);
+        }
+
+        auto col_begin(const size_t col)
+        {
+            auto start = (data.data() + col);
+            const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
+            return CustomAdvancementIterator(start, end, colCount);
+        }
+
+        auto col_end(const size_t col)
+        {
+            const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
+            return CustomAdvancementIterator(end, colCount);
+        }
+
 
         const T &at(const size_t &row, const size_t &col) const
         {
