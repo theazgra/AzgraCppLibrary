@@ -91,6 +91,17 @@ namespace azgra
         }
 
         /**
+         * Move constructor, copy the vector data.
+         * @param moveSrc Source matrix.
+         */
+        Matrix(Matrix &&moveSrc)
+        {
+            m_rowCount = std::move(moveSrc.m_rowCount);
+            m_colCount = std::move(moveSrc.m_colCount);
+            m_data = std::move(moveSrc.m_data);
+        }
+
+        /**
          * Initialize matrix by dimension size in every dimension.
          * @param dimensionSize Size of all dimensions.
          */
