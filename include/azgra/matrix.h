@@ -7,9 +7,13 @@ namespace azgra
 {
 
 
-    template<typename T>
+    template<typename T, bool SaveByRow = true>
     class Matrix
     {
+        template<typename U, bool SaveByRow_>
+        friend
+        class Matrix;
+
     private:
         size_t rowCount = 0;
         size_t colCount = 0;
@@ -24,6 +28,19 @@ namespace azgra
         const T &at(const size_t &index) const
         {
             return data[index];
+        }
+
+
+        [[nodiscard]] constexpr size_t index(const size_t row, const size_t col) const
+        {
+            if (SaveByRow)
+            {
+                return ((row * colCount) + col);
+            }
+            else
+            {
+                return ((col * rowCount) + row);
+            }
         }
 
     public:
@@ -54,8 +71,9 @@ namespace azgra
         {
             this->rowCount = rowCount;
             this->colCount = colCount;
-            data.resize(rowCount * colCount);
-            for (size_t i = 0; i < (rowCount * colCount); ++i)
+            const size_t dataCount = rowCount * colCount;
+            data.resize(dataCount);
+            for (size_t i = 0; i < dataCount; ++i)
             {
                 data[i] = initialValue;
             }
@@ -82,70 +100,149 @@ namespace azgra
 
         T &at(const size_t &row, const size_t &col)
         {
-            return data[((row * this->colCount) + col)];
+            return data[index(row, col)];
         }
 
-        // auto = typename std::vector<T>::const_iterator
+        const T &at(const size_t &row, const size_t &col) const
+        {
+            return data[index(row, col)];
+        }
+
         auto row_cbegin(const size_t row) const
         {
-            return (data.begin() + (row * colCount));
+            if (SaveByRow)
+            {
+                //return (data.begin() + (row * colCount));
+                return ConstCustomAdvancementIterator((data.data() + (row * colCount)),
+                                                      (data.data() + (row * colCount) + colCount),
+                                                      1);
+            }
+            else
+            {
+                const auto start = (data.data() + row);
+                const auto end = (data.data() + ((colCount - 1) * rowCount) + row + 1);
+                return ConstCustomAdvancementIterator(start, end, colCount);
+            }
         }
 
         auto row_cend(const size_t row) const
         {
-            return (data.begin() + (row * colCount) + colCount);
+            if (SaveByRow)
+            {
+                //return (data.begin() + (row * colCount) + colCount);
+                return ConstCustomAdvancementIterator((data.data() + (row * colCount) + colCount), 1);
+            }
+            else
+            {
+                const auto end = (data.data() + ((colCount - 1) * rowCount) + row + 1);
+                return ConstCustomAdvancementIterator(end, colCount);
+            }
         }
 
-        // auto = typename std::vector<T>::iterator
         auto row_begin(const size_t row)
         {
-            return (data.begin() + (row * colCount));
+            if (SaveByRow)
+            {
+                //return (data.begin() + (row * colCount));
+                return CustomAdvancementIterator((data.data() + (row * colCount)),
+                                                 (data.data() + (row * colCount) + colCount),
+                                                 1);
+            }
+            else
+            {
+                const auto start = (data.data() + row);
+                const auto end = (data.data() + ((colCount - 1) * rowCount) + row + 1);
+                return CustomAdvancementIterator(start, end, colCount);
+            }
         }
 
         auto row_end(const size_t row)
         {
-            return (data.begin() + (row * colCount) + colCount);
+            if (SaveByRow)
+            {
+                //return (data.begin() + (row * colCount) + colCount);
+                return CustomAdvancementIterator((data.data() + (row * colCount) + colCount), 1);
+            }
+            else
+            {
+                const auto end = (data.data() + ((colCount - 1) * rowCount) + row + 1);
+                return CustomAdvancementIterator(end, colCount);
+            }
         }
 
         auto col_cbegin(const size_t col) const
         {
-            const auto start = (data.data() + col);
-            const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
-            return ConstCustomAdvancementIterator(start, end, colCount);
+            if (SaveByRow)
+            {
+                const auto start = (data.data() + col);
+                const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
+                return ConstCustomAdvancementIterator(start, end, colCount);
+            }
+            else
+            {
+                //return (data.begin() + (col * rowCount));
+                return ConstCustomAdvancementIterator((data.data() + (col * rowCount)),
+                                                      (data.data() + (col * rowCount) + rowCount),
+                                                      1);
+            }
         }
 
         auto col_cend(const size_t col) const
         {
-            const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
-            return ConstCustomAdvancementIterator(end, colCount);
+            if (SaveByRow)
+            {
+                const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
+                return ConstCustomAdvancementIterator(end, colCount);
+            }
+            else
+            {
+                //return (data.begin() + (col * rowCount) + rowCount);
+                return ConstCustomAdvancementIterator((data.data() + (col * rowCount) + rowCount),
+                                                      1);
+            }
         }
 
         auto col_begin(const size_t col)
         {
-            auto start = (data.data() + col);
-            const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
-            return CustomAdvancementIterator(start, end, colCount);
+            if (SaveByRow)
+            {
+                auto start = (data.data() + col);
+                const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
+                return CustomAdvancementIterator(start, end, colCount);
+            }
+            else
+            {
+                //return (data.begin() + (col * rowCount));
+                return CustomAdvancementIterator((data.data() + (col * rowCount)),
+                                                 (data.data() + (col * rowCount) + rowCount),
+                                                 1);
+            }
         }
 
         auto col_end(const size_t col)
         {
-            const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
-            return CustomAdvancementIterator(end, colCount);
+            if (SaveByRow)
+            {
+                const auto end = (data.data() + ((rowCount - 1) * colCount) + col + 1);
+                return CustomAdvancementIterator(end, colCount);
+            }
+            else
+            {
+                //return (data.begin() + (col * rowCount) + rowCount);
+                return CustomAdvancementIterator((data.data() + (col * rowCount) + rowCount),
+                                                 1);
+            }
         }
 
 
-        const T &at(const size_t &row, const size_t &col) const
-        {
-            return data[((row * this->colCount) + col)];
-        }
-
-        bool equals(const Matrix<T> &mat) const
+        bool equals(const Matrix &mat) const
         {
             if (mat.rowCount != rowCount || mat.colCount != colCount)
             {
                 return false;
             }
-            for (size_t i = 0; i < (rowCount * colCount); ++i)
+            const size_t dataCount = (rowCount * colCount);
+            for (size_t i = 0; i < dataCount; ++i)
             {
                 if (data[i] != mat.data[i])
                 {
@@ -155,7 +252,7 @@ namespace azgra
             return true;
         }
 
-        Matrix<T> operator+(const Matrix<T> &other) const
+        Matrix<T> operator+(const Matrix &other) const
         {
             always_assert(rowCount == other.rowCount && colCount == other.colCount);
             Matrix<T> result(rowCount, colCount);
@@ -166,7 +263,7 @@ namespace azgra
             return result;
         }
 
-        Matrix<T> &operator+=(const Matrix<T> &other)
+        Matrix<T> &operator+=(const Matrix &other)
         {
             always_assert(rowCount == other.rowCount && colCount == other.colCount);
             for (size_t i = 0; i < (rowCount * colCount); ++i)
@@ -176,7 +273,7 @@ namespace azgra
             return *this;
         }
 
-        Matrix<T> operator-(const Matrix<T> &other) const
+        Matrix<T> operator-(const Matrix &other) const
         {
             always_assert(rowCount == other.rowCount && colCount == other.colCount);
             Matrix<T> result(rowCount, colCount);
@@ -187,7 +284,7 @@ namespace azgra
             return result;
         }
 
-        Matrix<T> &operator-=(const Matrix<T> &other)
+        Matrix<T> &operator-=(const Matrix &other)
         {
             always_assert(rowCount == other.rowCount && colCount == other.colCount);
             for (size_t i = 0; i < (rowCount * colCount); ++i)
@@ -197,12 +294,12 @@ namespace azgra
             return *this;
         }
 
-        bool operator==(const Matrix<T> &other) const
+        bool operator==(const Matrix &other) const
         {
             return equals(other);
         }
 
-        bool operator!=(const Matrix<T> &other) const
+        bool operator!=(const Matrix &other) const
         {
             return !(equals(other));
         }
