@@ -94,12 +94,14 @@ namespace azgra
          * Move constructor, copy the vector data.
          * @param moveSrc Source matrix.
          */
-        Matrix(Matrix &&moveSrc)
+        Matrix(Matrix &&moveSrc) noexcept
         {
             m_rowCount = std::move(moveSrc.m_rowCount);
             m_colCount = std::move(moveSrc.m_colCount);
             m_data = std::move(moveSrc.m_data);
         }
+
+        Matrix &operator=(Matrix &&other) noexcept = default;
 
         /**
          * Initialize matrix by dimension size in every dimension.
