@@ -424,37 +424,70 @@ namespace azgra
             return !(equals(other));
         }
 
+        /**
+         * Return copy of the row elements.
+         * @param rowIndex Zero based row index.
+         * @return Vector of row elements.
+         */
         std::vector<T> row(const size_t &rowIndex) const
         {
             always_assert(rowIndex < m_rowCount);
             std::vector<T> rowData(m_colCount);
-            for (size_t col = 0; col < m_colCount; ++col)
-            {
-                rowData[col] = at(rowIndex, col);
-            }
+            std::copy(row_cbegin(rowIndex), row_cend(rowIndex), rowData.begin());
             return rowData;
         }
 
+        /**
+         * Return copy of column elements.
+         * @param colIndex Zero based column index.
+         * @return Vector of column elements.
+         */
         std::vector<T> col(const size_t &colIndex) const
         {
             always_assert(colIndex < m_colCount);
             std::vector<T> colData(m_rowCount);
-            for (size_t row = 0; row < m_rowCount; ++row)
-            {
-                colData[row] = at(row, colIndex);
-            }
+            std::copy(col_cbegin(colIndex), col_cend(colIndex), colData.begin());
             return colData;
         }
 
-        void col(const size_t &colIndex, const std::vector<T> &values)
+        /**
+         * Copy values from begin to end iterators to the matrix column.
+         * @tparam It Input iterator with values to copy.
+         * @param colIndex Zero based column index.
+         * @param begin Copy iterator beginning.
+         * @param end Copy iterator end.
+         */
+        template<typename It>
+        void col(const size_t &colIndex, const It begin, const It end)
         {
-            always_assert(values.size() == m_rowCount);
-            for (size_t row = 0; row < m_rowCount; ++row)
-            {
-                at(row, colIndex) = values[row];
-            }
+            static_assert(std::is_same_v<typename std::iterator_traits<It>::value_type, T>);
+
+            always_assert(colIndex < m_colCount);
+            always_assert(static_cast<size_t> (std::distance(begin, end)) == m_rowCount);
+            std::copy(begin, end, col_begin(colIndex));
         }
 
+        /**
+         * Copy values from begin to end iterators to the matrix row.
+         * @tparam It Input iterator with values to copy.
+         * @param rowIndex Zero based row index.
+         * @param begin Copy iterator beginning.
+         * @param end Copy iterator end.
+         */
+        template<typename It>
+        void row(const size_t &rowIndex, const It begin, const It end)
+        {
+            static_assert(std::is_same_v<typename std::iterator_traits<It>::value_type, T>);
+
+            always_assert(rowIndex < m_rowCount);
+            always_assert(static_cast<size_t> (std::distance(begin, end)) == m_colCount);
+            std::copy(begin, end, row_begin(rowIndex));
+        }
+
+        /**
+         * Get constant reference to the matrix data.
+         * @return Constant reference to vector data.
+         */
         std::vector<T> const &get_data() const
         {
             return m_data;
