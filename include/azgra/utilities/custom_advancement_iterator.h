@@ -13,7 +13,7 @@ namespace azgra
 
         // iterator traits
         using difference_type = long;
-        using value_type = const T;
+        using value_type = T;
         using pointer = T const *;
         using reference = long const &;
         using iterator_category = std::input_iterator_tag;
