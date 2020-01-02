@@ -1,7 +1,7 @@
 #pragma once
 
 #include "enumerable_functions.h"
-
+#include <random>
 
 namespace azgra::collection
 {
@@ -354,6 +354,30 @@ namespace azgra::collection
             return result;
         }
 
+
+        Enumerable<T> copy_part(const size_t size) const
+        {
+            if (size > data.size())
+            {
+                throw std::runtime_error("Requested copy of size larger than data size.");
+            }
+
+            Enumerable<T> result(data.begin(), data.begin() + size);
+            return result;
+        }
+
+
+        Enumerable<T> copy_part(const size_t from, const size_t size) const
+        {
+            if ((from > data.size()) || (size > (data.size() - from)))
+            {
+                throw std::runtime_error("Requested copy of size larger than data size.");
+            }
+            const auto fromIt = data.begin() + from;
+            Enumerable<T> result(fromIt, fromIt + size);
+            return result;
+        }
+
         template<typename ResultType, typename MapFunction>
         Enumerable<ResultType> for_each(const MapFunction &fn) const noexcept
         {
@@ -361,6 +385,13 @@ namespace azgra::collection
             result.data.resize(data.size());
             std::transform(data.begin(), data.end(), result.data.begin(), fn);
             return result;
+        }
+
+        void shuffle_in_place()
+        {
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::shuffle(data.begin(), data.end(), gen);
         }
 
         static Enumerable<T> repeat(const size_t count, const T item)
@@ -375,11 +406,10 @@ namespace azgra::collection
 
         static Enumerable<T> range(const T inclusiveFrom, const T exclusiveTo)
         {
-            static_assert(std::is_same<T, int>::value || std::is_same<T, uint>::value || std::is_same<T, size_t>::value
-                          || std::is_same<T, long>::value || std::is_same<T, short>::value);
+            static_assert(std::is_integral_v<T>);
 
             std::vector<T> items(exclusiveTo - inclusiveFrom);
-            for (size_t i = inclusiveFrom; i < exclusiveTo; ++i)
+            for (auto i = inclusiveFrom; i < exclusiveTo; ++i)
             {
                 items[i - inclusiveFrom] = i;
             }
