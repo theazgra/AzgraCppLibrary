@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 
 project(azgra)
 
+option(AZGRA_TEST "Compile tests" ON)
 option(MATPLOTLIB_CPP "Compile with matplotlib-cpp support" ON)
 
 # Compiler flags
@@ -72,3 +73,18 @@ endif ()
 add_executable(consoleApp test.cpp)
 target_link_libraries(consoleApp azgra)
 set_property(TARGET consoleApp PROPERTY CXX_STANDARD 17)
+
+if (AZGRA_TEST)
+    #add_subdirectory(tests)
+
+    add_executable(azgra-test tests/test.cpp)
+    set_property(TARGET azgra-test PROPERTY CXX_STANDARD 17)
+
+    find_package(Catch2 REQUIRED)
+    target_link_libraries(azgra-test Catch2::Catch2)
+    target_link_libraries(azgra-test azgra)
+
+    include(CTest)
+    include(Catch)
+    catch_discover_tests(azgra-test)
+endif()
