@@ -70,14 +70,14 @@ if (MATPLOTLIB_CPP)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMATPLOTLIB_CPP")
 endif ()
 
-add_executable(consoleApp test.cpp)
+add_executable(consoleApp main.cpp)
 target_link_libraries(consoleApp azgra)
 set_property(TARGET consoleApp PROPERTY CXX_STANDARD 17)
 
 if (AZGRA_TEST)
     #add_subdirectory(tests)
 
-    add_executable(azgra-test tests/test.cpp)
+    add_executable(azgra-test tests/test.cpp tests/matrix_test.cpp)
     set_property(TARGET azgra-test PROPERTY CXX_STANDARD 17)
 
     find_package(Catch2 REQUIRED)
