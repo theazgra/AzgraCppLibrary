@@ -18,14 +18,15 @@ namespace azgra
         {
         private:
             const int FIRST_COLUMN_WIDTH = 30;
-            const int SECOND_COLUMN_WIDTH = 60;
-            std::stringstream errorStream;
-            string::SmartStringView<char> appName;
-            string::SmartStringView<char> appDescription;
-            int outputWidth = 80;
-            bool someMethodMatched = false;
-            bool printHelpOnParserError = false;
-            std::vector<CliFlagGroup> groups;
+            const int SECOND_COLUMN_WIDTH = 40;
+            std::stringstream m_errorStream;
+            string::SmartStringView<char> m_appName;
+            string::SmartStringView<char> m_appDescription;
+            bool m_someMethodMatched = false;
+            bool m_printHelpOnParserError = false;
+            std::vector<CliFlagGroup> m_groups;
+            std::vector<CliOption *> m_flags;
+            std::vector<CliMethod *> m_methods;
 
             bool process_matched_flag(const string::SmartStringView<char> &match, bool shortMatch, const char **arguments, int &parseIndex);
 
@@ -39,9 +40,11 @@ namespace azgra
             std::vector<CliOption*> get_flags_not_in_group() const;
             void mark_required_groups();
 
+
+
         public:
-            std::vector<CliMethod *> methods;
-            std::vector<CliOption *> flags;
+
+
 
             CliArguments(const string::SmartStringView<char> &name, const string::SmartStringView<char> &description, int width = 80);
 
@@ -57,6 +60,10 @@ namespace azgra
             bool is_any_method_matched() const;
 
             void print_help_on_parser_error();
+
+            void set_methods(std::vector<CliMethod*> &methods);
+
+            void add_flags(const std::vector<CliOption*> &flags);
 
         };
     }

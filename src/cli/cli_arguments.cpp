@@ -6,9 +6,8 @@ namespace azgra
     {
         CliArguments::CliArguments(const string::SmartStringView<char> &name, const string::SmartStringView<char> &description, int width)
         {
-            appName = name;
-            appDescription = description;
-            outputWidth = width;
+            m_appName = name;
+            m_appDescription = description;
         }
 
         bool CliArguments::process_matched_flag(const string::SmartStringView<char> &match, bool shortMatch, const char **arguments,
@@ -16,7 +15,7 @@ namespace azgra
         {
             CliOption *matchedFlag = nullptr;
             // Find the flag.
-            for (CliOption *flag : flags)
+            for (CliOption *flag : m_flags)
             {
                 if ((!shortMatch && flag->matchString == match.substring(2)) ||
                     (shortMatch && flag->hasMatchCharacter && flag->matchCharacter == match[1]))
@@ -29,7 +28,7 @@ namespace azgra
 
             if (!matchedFlag)
             {
-                errorStream << "Flag " << match.data() << " wasn't specified." << std::endl;
+                m_errorStream << "Flag " << match.data() << " wasn't specified." << std::endl;
                 return false;
             }
             ++parseIndex;
@@ -52,9 +51,16 @@ namespace azgra
 
         bool CliArguments::process_matched_value_flag(CliOption *matchedFlag, const char *rawFlagValue)
         {
+            // TODO(Moravec):   This is really good place for custom parser for custom types.
+            //                  Something like:
+            //                  template<typename T>
+            //                  struct type_parser<T> { T operator(const char* string) const; }
+            //                  ...
+            //                  template <>
+            //                  struct type_parser<int> { T operator(const char* string) const { std::stoi(string); } }
             if (!rawFlagValue)
             {
-                errorStream << "There is no value for '" << matchedFlag->name.string_view() << "' flag.";
+                m_errorStream << "There is no value for '" << matchedFlag->name.string_view() << "' flag.";
                 return false;
             }
 
@@ -101,24 +107,24 @@ namespace azgra
                 return true;
             }
 
-            errorStream << "Unable to match ValueFlag, unsupported type. Supported types:" <<
-                        " int, uint, float, const char*, std::string" << std::endl;
+            m_errorStream << "Unable to match ValueFlag, unsupported type. Supported types:" <<
+                          " int, uint, float, const char*, std::string" << std::endl;
             return false;
         }
 
         bool CliArguments::process_matched_method(const string::SmartStringView<char> &match)
         {
-            for (CliMethod *method : methods)
+            for (CliMethod *method : m_methods)
             {
                 if (method->name == match)
                 {
                     //fprintf(stdout, "Captured method: %s\n", method->name.data());
                     method->mark_as_matched();
-                    someMethodMatched = true;
+                    m_someMethodMatched = true;
                     return true;
                 }
             }
-            errorStream << "Unable to match `possible method` " << match.string_view() << std::endl;
+            m_errorStream << "Unable to match `possible method` " << match.string_view() << std::endl;
             return false;
         }
 
@@ -128,7 +134,7 @@ namespace azgra
             for (size_t i = 1; i < match.length(); ++i)
             {
                 bool found = false;
-                for (CliOption *flag : flags)
+                for (CliOption *flag : m_flags)
                 {
                     if (flag->hasMatchCharacter && flag->matchCharacter == match[i])
                     {
@@ -148,7 +154,7 @@ namespace azgra
             std::function<bool(CliOption *)> filter = [](CliOption *flag)
             { return !(flag->is_grouped()); };
 
-            std::vector<CliOption *> result = azgra::collection::where(flags.begin(), flags.end(), filter);
+            std::vector<CliOption *> result = azgra::collection::where(m_flags.begin(), m_flags.end(), filter);
             return result;
         }
 
@@ -269,7 +275,7 @@ namespace azgra
                 option->isRequired = true;
             };
 
-            for (const CliMethod *method : methods)
+            for (const CliMethod *method : m_methods)
             {
                 auto methodRequiredFlags = method->get_required_flags();
                 auto requiredGroups = azgra::collection::where(methodRequiredFlags.begin(), methodRequiredFlags.end(), filter_isGroup);
@@ -345,7 +351,7 @@ namespace azgra
             if (!failed)
             {
                 // Check if required flags for methods were matched.
-                for (const CliMethod *method : methods)
+                for (const CliMethod *method : m_methods)
                 {
                     if (!method->isMatched)
                         continue;
@@ -353,31 +359,31 @@ namespace azgra
                     {
                         if (!methodOption->isMatched)
                         {
-                            errorStream << "Method " << method->name.string_view() << " require flag " << methodOption->name.string_view()
-                                        <<
-                                        std::endl;
+                            m_errorStream << "Method " << method->name.string_view() << " require flag " << methodOption->name.string_view()
+                                          <<
+                                          std::endl;
                             failed = true;
                         }
                     }
                 }
 
                 // Check if all required flags were matched.
-                for (CliOption *flag : flags)
+                for (CliOption *flag : m_flags)
                 {
                     if (flag->isRequired && !flag->isMatched)
                     {
                         failed = true;
-                        errorStream << "Flag: " << flag->name.data() << " is required, but wasn't matched." << std::endl;
+                        m_errorStream << "Flag: " << flag->name.data() << " is required, but wasn't matched." << std::endl;
                     }
                 }
 
-                for (const CliFlagGroup &group : groups)
+                for (const CliFlagGroup &group : m_groups)
                 {
-                    failed |= !(group.check_group_policy(errorStream));
+                    failed |= !(group.check_group_policy(m_errorStream));
                 }
             }
 
-            if (failed && printHelpOnParserError)
+            if (failed && m_printHelpOnParserError)
             {
                 print_help();
                 print_colorized(azgra::ConsoleColor::ConsoleColor_Yellow, "Parser errors:\n%s\n", get_error().c_str());
@@ -389,13 +395,13 @@ namespace azgra
         void CliArguments::print_help() const
         {
             // This is just stupid print. So we assert this condition.
-            string::AsciiString nameSs(appName.data());
+            string::AsciiString nameSs(m_appName.data());
             nameSs.fill_left(' ', FIRST_COLUMN_WIDTH);
 
             std::stringstream helpStream;
-            helpStream << '\t' << nameSs.get_c_string() << std::endl << appDescription.string_view() << std::endl << std::endl;
+            helpStream << '\t' << nameSs.get_c_string() << std::endl << m_appDescription.string_view() << std::endl << std::endl;
             helpStream << "Methods:" << std::endl;
-            for (const auto &method : methods)
+            for (const auto &method : m_methods)
             {
                 string::AsciiString methodName(method->name.data());
                 string::AsciiString methodDesc(method->description.data());
@@ -423,7 +429,7 @@ namespace azgra
 
             helpStream << "Flags:" << std::endl;
             print_flags(helpStream, get_flags_not_in_group());
-            for (const CliFlagGroup &group : groups)
+            for (const CliFlagGroup &group : m_groups)
             {
                 helpStream << "Flags - " << group.name.string_view() << std::endl;
                 print_flags(helpStream, group.options);
@@ -434,28 +440,50 @@ namespace azgra
 
         std::string CliArguments::get_error() const
         {
-            std::string error = errorStream.str();
+            std::string error = m_errorStream.str();
             return error;
         }
 
         bool CliArguments::is_any_method_matched() const
         {
-            return someMethodMatched;
+            return m_someMethodMatched;
         }
 
         void CliArguments::add_group(CliFlagGroup &flagGroup)
         {
-            groups.push_back(flagGroup);
+            m_groups.push_back(flagGroup);
             for (CliOption *flag : flagGroup.options)
             {
                 flag->group = &flagGroup;
-                flags.push_back(flag);
             }
+            add_flags(flagGroup.options);
         }
 
         void CliArguments::print_help_on_parser_error()
         {
-            printHelpOnParserError = true;
+            m_printHelpOnParserError = true;
+        }
+
+        void CliArguments::set_methods(std::vector<CliMethod *> &methods)
+        {
+            m_methods = std::move(methods);
+
+            for (const auto *m : m_methods)
+            {
+                add_flags(m->get_required_flags());
+                add_flags(m->get_optional_flags());
+            }
+        }
+
+        void CliArguments::add_flags(const std::vector<CliOption *> &flags)
+        {
+            for (CliOption *flag : flags)
+            {
+                if (std::find(m_flags.cbegin(), m_flags.cend(), flag) == m_flags.cend())
+                {
+                    m_flags.push_back(flag);
+                }
+            }
         }
     }
 }
