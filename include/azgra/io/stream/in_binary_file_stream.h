@@ -20,13 +20,16 @@ namespace azgra::io::stream
         InBinaryFileStream();
 
         // Open binary stream to file.
-        InBinaryFileStream(const std::string &file);
+        explicit InBinaryFileStream(const std::string &file);
+
+        // Open binary stream to file.
+        explicit InBinaryFileStream(const char *file);
 
         // Closes file stream.
         ~InBinaryFileStream();
 
         // Open binary stream to file.
-        void open_stream(const std::string &file);
+        void open_stream(const char *file);
 
         // Close binary stream to file.
         void close_stream() override;

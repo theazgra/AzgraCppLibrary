@@ -5,19 +5,23 @@ namespace azgra::io::stream
 
     InBinaryFileStream::InBinaryFileStream()
     {
+        this->fileSize = 0;
         this->isOpen = false;
     }
 
-    InBinaryFileStream::InBinaryFileStream(const std::string &file)
+    InBinaryFileStream::InBinaryFileStream(const char *file) : InBinaryFileStream()
     {
-        this->isOpen = false;
         open_stream(file);
     }
 
-    void InBinaryFileStream::open_stream(const std::string &file)
+    InBinaryFileStream::InBinaryFileStream(const std::string &file) : InBinaryFileStream(file.c_str())
+    {
+    }
+
+
+    void InBinaryFileStream::open_stream(const char *file)
     {
         always_assert(!this->isOpen);
-
         this->fileStream = std::ifstream(file, std::ios::binary | std::ios::in | std::ios::ate);
         always_assert(this->fileStream.is_open());
 
