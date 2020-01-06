@@ -60,7 +60,7 @@ namespace azgra
         std::ofstream outStr(fileName, std::ios::out);
         always_assert(outStr.is_open());
 
-        outStr << "0 0\n";
+        //outStr << "0 0\n";
         for (const Bin<T> &bin : bins)
         {
             outStr << bin.max << ' ' << bin.count << '\n';
