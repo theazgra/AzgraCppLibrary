@@ -55,9 +55,6 @@ if (Boost_FOUND)
     message("[AZGRA]: Linked required Boost libraries")
 endif()
 
-add_library(sub::azgra ALIAS ${PROJECT_NAME})
-
-
 add_executable(consoleApp main.cpp)
 target_link_libraries(consoleApp azgra)
 set_property(TARGET consoleApp PROPERTY CXX_STANDARD 17)
