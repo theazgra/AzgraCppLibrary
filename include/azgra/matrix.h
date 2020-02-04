@@ -406,6 +406,17 @@ namespace azgra
             return *this;
         }
 
+        template<typename FloatType>
+        Matrix<T> &operator*=(const FloatType multiplier)
+        {
+            static_assert(std::is_arithmetic_v<FloatType>);
+            for (size_t i = 0; i < (m_rowCount * m_colCount); ++i)
+            {
+                m_data[i] = (T) (multiplier * m_data[i]);
+            }
+            return *this;
+        }
+
         Matrix<T> operator-(const Matrix &other) const
         {
             always_assert(m_rowCount == other.m_rowCount && m_colCount == other.m_colCount);

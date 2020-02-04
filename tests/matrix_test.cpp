@@ -2,6 +2,12 @@
 #include <azgra/matrix.h>
 #include <algorithm>
 
+template<typename T>
+constexpr bool vector_equal(const std::vector<T> &A, const std::vector<T> &B)
+{
+    return std::equal(std::begin(A), std::end(A), std::begin(B), std::end(B));
+}
+
 TEST_CASE("uniform dimension matrix constructor", "[azgra::matrix]")
 {
     const azgra::Matrix<int> matrix(5);
@@ -9,7 +15,7 @@ TEST_CASE("uniform dimension matrix constructor", "[azgra::matrix]")
     REQUIRE(matrix.rows() == 5);
     REQUIRE(matrix.cols() == 5);
 
-    const auto matrixData = matrix.get_data();
+    const auto &matrixData = matrix.get_data();
     REQUIRE(matrixData.size() == (5 * 5));
 }
 
@@ -20,7 +26,7 @@ TEST_CASE("non-uniform dimension matrix constructor", "[azgra::matrix]")
     REQUIRE(matrix.rows() == 3);
     REQUIRE(matrix.cols() == 2);
 
-    const auto matrixData = matrix.get_data();
+    const auto &matrixData = matrix.get_data();
     REQUIRE(matrixData.size() == (3 * 2));
 }
 
@@ -32,11 +38,12 @@ TEST_CASE("non-uniform dimension matrix constructor with initial value",
     REQUIRE(matrix.rows() == 3);
     REQUIRE(matrix.cols() == 2);
 
-    const auto matrixData = matrix.get_data();
+    const auto &matrixData = matrix.get_data();
     REQUIRE(matrixData.size() == (3 * 2));
 
     REQUIRE(std::all_of(matrixData.begin(), matrixData.end(),
-                        [](const int val) { return val == 99; }));
+                        [](const int val)
+                        { return val == 99; }));
 }
 
 TEST_CASE("non-uniform dimension matrix constructor with data move",
@@ -44,7 +51,7 @@ TEST_CASE("non-uniform dimension matrix constructor with data move",
 {
     std::vector<int> data = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     const azgra::Matrix<int> matrix(3, 3, data);
-    const auto matrixData = matrix.get_data();
+    const auto &matrixData = matrix.get_data();
 
     for (size_t i = 0; i < matrixData.size(); i++)
     {
@@ -238,10 +245,11 @@ TEST_CASE("operator+,operator-",
         REQUIRE(addResult.rows() == 2);
         REQUIRE(addResult.cols() == 2);
 
-        const auto addResultData = addResult.get_data();
+        const auto &addResultData = addResult.get_data();
 
         REQUIRE(std::all_of(addResultData.begin(), addResultData.end(),
-                            [](const int val) { return val == (4 + 2); }));
+                            [](const int val)
+                            { return val == (4 + 2); }));
     }
 
     SECTION("operator-")
@@ -251,10 +259,11 @@ TEST_CASE("operator+,operator-",
         REQUIRE(subResult.rows() == 2);
         REQUIRE(subResult.cols() == 2);
 
-        const auto subResultData = subResult.get_data();
+        const auto &subResultData = subResult.get_data();
 
         REQUIRE(std::all_of(subResultData.begin(), subResultData.end(),
-                            [](const int val) { return val == (4 - 2); }));
+                            [](const int val)
+                            { return val == (4 - 2); }));
     }
 }
 
@@ -293,12 +302,84 @@ TEST_CASE("operator+=,operator-=",
         REQUIRE(matrix.at(1, 1) == (1 - 7));
     }
 }
-// operator*=
-// row copy - row based
-//          - col based
+
+TEST_CASE("operator*=(float)", "[azgra::matrix]")
+{
+    std::vector<int> data = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+    azgra::Matrix matrix(4, 4, data);
+    matrix *= 0.1f;
+    std::vector<int> expected = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1};
+
+    const auto &matrixData = matrix.get_data();
+    REQUIRE(vector_equal(matrixData, expected));
+}
+
+TEST_CASE("operator*=(int)", "[azgra::matrix]")
+{
+    std::vector<int> data = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+    azgra::Matrix matrix(4, 4, data);
+    matrix *= 2;
+    std::vector<int> expected = {2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32};
+
+    const auto &matrixData = matrix.get_data();
+    REQUIRE(vector_equal(matrixData, expected));
+}
+
+TEST_CASE("row()", "[azgra::matrix]")
+{
+    const std::vector expectedFirstRow = {1, 2, 3, 4};
+    const std::vector expected3rdRow = {9, 10, 11, 12};
+    SECTION("row based matrix")
+    {
+        std::vector data = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+        azgra::Matrix<int, true> matrix(4, 4, data);
+        const auto firstRow = matrix.row(0);
+        const auto row3 = matrix.row(2);
+
+        REQUIRE(vector_equal(expectedFirstRow, firstRow));
+        REQUIRE(vector_equal(expected3rdRow, row3));
+    }
+
+    SECTION("column based matrix")
+    {
+        std::vector data = {1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15, 4, 8, 12, 16};
+        azgra::Matrix<int, false> matrix(4, 4, data);
+        const auto firstRow = matrix.row(0);
+        const auto row3 = matrix.row(2);
+
+        REQUIRE(vector_equal(expectedFirstRow, firstRow));
+        REQUIRE(vector_equal(expected3rdRow, row3));
+    }
+}
+
+TEST_CASE("col()", "[azgra::matrix]")
+{
+    const std::vector expectedFirstCol = {1, 5, 9, 13};
+    const std::vector expected3rdCol = {3, 7, 11, 15};
+    SECTION("row based matrix")
+    {
+        std::vector data = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+        azgra::Matrix<int, true> matrix(4, 4, data);
+        const auto firstCol = matrix.col(0);
+        const auto col3 = matrix.col(2);
+
+        REQUIRE(vector_equal(expectedFirstCol, firstCol));
+        REQUIRE(vector_equal(expected3rdCol, col3));
+    }
+
+    SECTION("column based matrix")
+    {
+        std::vector data = {1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15, 4, 8, 12, 16};
+        azgra::Matrix<int, false> matrix(4, 4, data);
+        const auto firstCol = matrix.col(0);
+        const auto col3 = matrix.col(2);
+
+        REQUIRE(vector_equal(expectedFirstCol, firstCol));
+        REQUIRE(vector_equal(expected3rdCol, col3));
+    }
+}
+
 // set row  - row based
-//          - col based
-// col copy - row based
 //          - col based
 // set col  - row based
 //          - col based
