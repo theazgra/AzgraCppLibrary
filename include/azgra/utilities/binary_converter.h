@@ -22,6 +22,7 @@
 #include <boost/locale.hpp>
 #include <locale>
 #include <codecvt>
+#include <bitset>
 
 namespace azgra
 {
@@ -114,5 +115,15 @@ namespace azgra
 
     ByteArray ushort_array_to_bytes(const std::vector<azgra::u16> &data);
 
+
+    template<
+            typename T,
+            typename = std::enable_if_t<std::is_integral<T>::value>
+    >
+    auto to_binary_representation(const T &value)
+    {
+        const auto bits = std::bitset<sizeof(T) * CHAR_BIT>(value);
+        return bits;
+    }
 
 } // namespace azgra
