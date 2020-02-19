@@ -61,6 +61,9 @@ namespace azgra::io::stream
         // Get buffer of written bits, which is flushed. For allocated buffer.
         ByteArray get_flushed_buffer_no_alloc();
 
+        // Write the bit count times to the stream.
+        void write_replicated_bit(const bool &bit, const size_t count);
+
         template<typename T>
         void write_value(const T &value)
         {

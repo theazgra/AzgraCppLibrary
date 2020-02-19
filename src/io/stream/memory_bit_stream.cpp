@@ -97,6 +97,14 @@ namespace azgra::io::stream
         return buffer;
     }
 
+    void OutMemoryBitStream::write_replicated_bit(const bool &bit, const size_t count)
+    {
+        for (size_t i = 0; i < count; ++i)
+        {
+            internal_write_bit(bit, true);
+        }
+    }
+
 
 /******************************************************************************************************************************
   * InMemoryBitStream implementation
