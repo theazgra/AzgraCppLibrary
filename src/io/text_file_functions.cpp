@@ -23,6 +23,23 @@ namespace azgra::io
         return lines;
     }
 
+    std::string read_text_file(const BasicStringView<char> &fileName)
+    {
+        std::ifstream inputTextStream = open_text_file(fileName);
+        inputTextStream.seekg(0, std::ios::end);
+
+        const auto textFileLen = inputTextStream.tellg();
+        std::string result;
+        result.reserve(textFileLen);
+
+        inputTextStream.seekg(0, std::ios::beg);
+
+        result.assign((std::istreambuf_iterator<char>(inputTextStream)),
+                      std::istreambuf_iterator<char>());
+
+        return result;
+    }
+
     std::vector<std::vector<std::string>>
     read_csv_cells(const BasicStringView<char> &fileName, const BasicStringView<char> &separator, bool skipLineWithMissingValue)
     {

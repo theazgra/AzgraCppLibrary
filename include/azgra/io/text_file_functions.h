@@ -4,6 +4,7 @@
 #include <azgra/collection/enumerable_functions.h>
 #include <azgra/string/smart_string_view.h>
 #include <fstream>
+#include <streambuf>
 #include <functional>
 
 namespace azgra::io
@@ -22,7 +23,14 @@ namespace azgra::io
      */
     std::vector<std::string> read_lines(const BasicStringView<char> &fileName);
 
-    template <typename T>
+    /**
+     * Read whole text file into one string.
+     * @param fileName  Path to file
+     * @return String of all text.
+     */
+    std::string read_text_file(const BasicStringView<char> &fileName);
+
+    template<typename T>
     void save_matrix_to_csv(const azgra::Matrix<T> &matrix, const char separator, const char *outFile)
     {
         std::ofstream out(outFile, std::ios::out);
@@ -32,7 +40,7 @@ namespace azgra::io
         {
             for (size_t c = 0; c < matrix.cols(); ++c)
             {
-                out << matrix.at(r,c) << separator;
+                out << matrix.at(r, c) << separator;
             }
             out << '\n';
         }
