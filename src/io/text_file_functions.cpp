@@ -40,6 +40,13 @@ namespace azgra::io
         return result;
     }
 
+    void write_text(const BasicStringView<char> &fileName, const BasicStringView<char> &text)
+    {
+        std::ofstream outStream(fileName.data(), std::ios::out);
+        assert(outStream.is_open());
+        outStream.write(text.data(), text.size());
+    }
+
     std::vector<std::vector<std::string>>
     read_csv_cells(const BasicStringView<char> &fileName, const BasicStringView<char> &separator, bool skipLineWithMissingValue)
     {

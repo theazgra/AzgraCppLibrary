@@ -30,6 +30,13 @@ namespace azgra::io
      */
     std::string read_text_file(const BasicStringView<char> &fileName);
 
+    /**
+     * Write string file.
+     * @param fileName Path to file.
+     * @param text Text to write.
+     */
+    void write_text(const BasicStringView<char> &fileName, const BasicStringView<char> &text);
+
     template<typename T>
     void save_matrix_to_csv(const azgra::Matrix<T> &matrix, const char separator, const char *outFile)
     {
