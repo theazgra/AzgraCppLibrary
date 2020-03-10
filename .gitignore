@@ -14,3 +14,5 @@ build/
 /test/
 venv/
 *.ipynb
+debug-gcc9/
+release-gcc9/

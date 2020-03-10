@@ -88,9 +88,10 @@ namespace azgra::fs
                                                                                  : sfs::directory_options::none))
         {
 #ifdef GCC_CXX17
-            if (entry.is_regular_file())
+
+            if (sfs::is_regular_file(entry))
 #else
-            if (sfs::is_regular_file(entry.path()))
+                if (sfs::is_regular_file(entry.path()))
 #endif
             {
                 files.emplace_back(entry.path());
@@ -113,9 +114,9 @@ namespace azgra::fs
                                                                                  : sfs::directory_options::none))
         {
 #ifdef GCC_CXX17
-            if (entry.is_directory())
+            if (sfs::is_directory(entry))
 #else
-            if (sfs::is_directory(entry.path()))
+                if (sfs::is_directory(entry.path()))
 #endif
             {
                 directories.emplace_back(entry.path());

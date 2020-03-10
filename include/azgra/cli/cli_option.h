@@ -216,7 +216,7 @@ namespace azgra
                         return true;
                     }
                     default:
-                        INVALID_CASE;
+                        always_assert(false && "Invalid code path");
                 }
                 return false;
             }

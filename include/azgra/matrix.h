@@ -207,15 +207,15 @@ namespace azgra
         {
             if (RowBased)
             {
-                return ConstCustomAdvancementIterator((m_data.data() + (row * m_colCount)),
-                                                      (m_data.data() + (row * m_colCount) + m_colCount),
-                                                      1);
+                return ConstCustomAdvancementIterator<T>((m_data.data() + (row * m_colCount)),
+                                                         (m_data.data() + (row * m_colCount) + m_colCount),
+                                                         1);
             }
             else
             {
                 const auto start = (m_data.data() + row);
                 const auto end = (m_data.data() + ((m_colCount - 1) * m_rowCount) + row + 1);
-                return ConstCustomAdvancementIterator(start, end, m_colCount);
+                return ConstCustomAdvancementIterator<T>(start, end, m_colCount);
             }
         }
 
@@ -229,12 +229,12 @@ namespace azgra
             if (RowBased)
             {
                 //return (data.begin() + (row * colCount) + colCount);
-                return ConstCustomAdvancementIterator((m_data.data() + (row * m_colCount) + m_colCount), 1);
+                return ConstCustomAdvancementIterator<T>((m_data.data() + (row * m_colCount) + m_colCount), 1);
             }
             else
             {
                 const auto end = (m_data.data() + ((m_colCount - 1) * m_rowCount) + row + 1);
-                return ConstCustomAdvancementIterator(end, m_colCount);
+                return ConstCustomAdvancementIterator<T>(end, m_colCount);
             }
         }
 
@@ -248,15 +248,15 @@ namespace azgra
             if (RowBased)
             {
                 //return (data.begin() + (row * colCount));
-                return CustomAdvancementIterator((m_data.data() + (row * m_colCount)),
-                                                 (m_data.data() + (row * m_colCount) + m_colCount),
-                                                 1);
+                return CustomAdvancementIterator<T>((m_data.data() + (row * m_colCount)),
+                                                    (m_data.data() + (row * m_colCount) + m_colCount),
+                                                    1);
             }
             else
             {
                 const auto start = (m_data.data() + row);
                 const auto end = (m_data.data() + ((m_colCount - 1) * m_rowCount) + row + 1);
-                return CustomAdvancementIterator(start, end, m_colCount);
+                return CustomAdvancementIterator<T>(start, end, m_colCount);
             }
         }
 
@@ -270,12 +270,12 @@ namespace azgra
             if (RowBased)
             {
                 //return (data.begin() + (row * colCount) + colCount);
-                return CustomAdvancementIterator((m_data.data() + (row * m_colCount) + m_colCount), 1);
+                return CustomAdvancementIterator<T>((m_data.data() + (row * m_colCount) + m_colCount), 1);
             }
             else
             {
                 const auto end = (m_data.data() + ((m_colCount - 1) * m_rowCount) + row + 1);
-                return CustomAdvancementIterator(end, m_colCount);
+                return CustomAdvancementIterator<T>(end, m_colCount);
             }
         }
 
@@ -290,14 +290,13 @@ namespace azgra
             {
                 const auto start = (m_data.data() + col);
                 const auto end = (m_data.data() + ((m_rowCount - 1) * m_colCount) + col + 1);
-                return ConstCustomAdvancementIterator(start, end, m_colCount);
+                return ConstCustomAdvancementIterator<T>(start, end, m_colCount);
             }
             else
             {
-                //return (data.begin() + (col * rowCount));
-                return ConstCustomAdvancementIterator((m_data.data() + (col * m_rowCount)),
-                                                      (m_data.data() + (col * m_rowCount) + m_rowCount),
-                                                      1);
+                return ConstCustomAdvancementIterator<T>((m_data.data() + (col * m_rowCount)),
+                                                         (m_data.data() + (col * m_rowCount) + m_rowCount),
+                                                         1);
             }
         }
 
@@ -311,13 +310,12 @@ namespace azgra
             if (RowBased)
             {
                 const auto end = (m_data.data() + ((m_rowCount - 1) * m_colCount) + col + 1);
-                return ConstCustomAdvancementIterator(end, m_colCount);
+                return ConstCustomAdvancementIterator<T>(end, m_colCount);
             }
             else
             {
-                //return (data.begin() + (col * rowCount) + rowCount);
-                return ConstCustomAdvancementIterator((m_data.data() + (col * m_rowCount) + m_rowCount),
-                                                      1);
+                return ConstCustomAdvancementIterator<T>((m_data.data() + (col * m_rowCount) + m_rowCount),
+                                                         1);
             }
         }
 
@@ -332,14 +330,13 @@ namespace azgra
             {
                 auto start = (m_data.data() + col);
                 const auto end = (m_data.data() + ((m_rowCount - 1) * m_colCount) + col + 1);
-                return CustomAdvancementIterator(start, end, m_colCount);
+                return CustomAdvancementIterator<T>(start, end, m_colCount);
             }
             else
             {
-                //return (data.begin() + (col * rowCount));
-                return CustomAdvancementIterator((m_data.data() + (col * m_rowCount)),
-                                                 (m_data.data() + (col * m_rowCount) + m_rowCount),
-                                                 1);
+                return CustomAdvancementIterator<T>((m_data.data() + (col * m_rowCount)),
+                                                    (m_data.data() + (col * m_rowCount) + m_rowCount),
+                                                    1);
             }
         }
 
@@ -353,13 +350,12 @@ namespace azgra
             if (RowBased)
             {
                 const auto end = (m_data.data() + ((m_rowCount - 1) * m_colCount) + col + 1);
-                return CustomAdvancementIterator(end, m_colCount);
+                return CustomAdvancementIterator<T>(end, m_colCount);
             }
             else
             {
-                //return (data.begin() + (col * rowCount) + rowCount);
-                return CustomAdvancementIterator((m_data.data() + (col * m_rowCount) + m_rowCount),
-                                                 1);
+                return CustomAdvancementIterator<T>((m_data.data() + (col * m_rowCount) + m_rowCount),
+                                                    1);
             }
         }
 
@@ -473,7 +469,7 @@ namespace azgra
         template<typename It>
         void col(const size_t &colIndex, const It begin, const It end)
         {
-            static_assert(std::is_same_v<typename std::iterator_traits<It>::value_type, T>);
+            static_assert(std::is_same<typename std::iterator_traits<It>::value_type, T>::value);
 
             always_assert(colIndex < m_colCount);
             always_assert(static_cast<size_t> (std::distance(begin, end)) == m_rowCount);
@@ -490,7 +486,7 @@ namespace azgra
         template<typename It>
         void row(const size_t &rowIndex, const It begin, const It end)
         {
-            static_assert(std::is_same_v<typename std::iterator_traits<It>::value_type, T>);
+            static_assert(std::is_same<typename std::iterator_traits<It>::value_type, T>::value);
 
             always_assert(rowIndex < m_rowCount);
             always_assert(static_cast<size_t> (std::distance(begin, end)) == m_colCount);

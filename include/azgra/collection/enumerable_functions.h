@@ -58,7 +58,7 @@ namespace azgra::collection
     >
     auto sum(const It begin, const It end, SelectorFunction selector, const SelectType initialValue)
     {
-        static_assert(std::is_arithmetic_v<SelectType>, "T must be numeric type");
+        static_assert(std::is_arithmetic<SelectType>::value, "T must be numeric type");
         SelectType sum = initialValue;
         for (It from = begin; from != end; ++from)
         {

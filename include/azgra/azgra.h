@@ -9,31 +9,26 @@
 #include <azgra/utilities/print_helpers.h>
 #include <azgra/azgra_math.h>
 
-#if __GNUC__ >= 7
-#define GCC_CXX17
-#endif
-
-#if __GNUC__ >= 8
-#define GCC_8
-#endif
-
-#ifdef GCC_CXX17
-
-#include <string_view>
-#include <optional>
-
-#else
-#include <experimental/string_view>
-#include <experimental/optional>
-#endif
-
-
 #ifndef NDEBUG
 #define DEBUG 1
 #endif
 
 
-#define INVALID_CASE always_assert(false && "Wrong/missing case in switch statement.");
+#if (__cplusplus >= 201703L)
+#define AZGRA_CPP17
+#endif
+
+#ifdef AZGRA_CPP17
+
+#include <string_view>
+#include <optional>
+
+#else
+
+#include <experimental/string_view>
+#include <experimental/optional>
+
+#endif
 
 namespace azgra
 {
@@ -61,8 +56,6 @@ namespace azgra
     typedef float f32;
     typedef double f64;
 
-    constexpr size_t int64_t_size = sizeof(int64_t);
-
     static_assert(sizeof(byte) == static_cast<size_t>(1));
     static_assert(sizeof(i16) == static_cast<size_t>(2));
     static_assert(sizeof(u16) == static_cast<size_t>(2));
@@ -76,7 +69,7 @@ namespace azgra
     static_assert(sizeof(f64) == static_cast<size_t>(8));
 
     // Since we are using also older GCC than 7 we have to define this.
-#ifdef GCC_CXX17
+#ifdef AZGRA_CPP17
     template<typename CharType = char>
     using BasicStringView = std::basic_string_view<CharType>;
 #else

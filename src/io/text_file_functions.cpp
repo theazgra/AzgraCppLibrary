@@ -57,7 +57,7 @@ namespace azgra::io
         std::string line;
         while (std::getline(inputTextStream, line))
         {
-            azgra::string::SmartStringView smartLine(line.c_str());
+            azgra::string::SmartStringView<std::string::value_type> smartLine(line.c_str());
             const auto lineCellViews = smartLine.split(separator);
 
             if (skipLineWithMissingValue)

@@ -75,10 +75,11 @@ namespace azgra::io
 
         std::vector<std::vector<CellType>> lines;
 
+
         std::string line;
         while (std::getline(inputTextStream, line))
         {
-            azgra::string::SmartStringView smartLine(line.c_str());
+            azgra::string::SmartStringView<std::string::value_type> smartLine(line.c_str());
             auto cells = smartLine.split(separator);
 
             std::vector<CellType> values(cells.size());
@@ -104,7 +105,7 @@ namespace azgra::io
         std::string line;
         while (std::getline(inputTextStream, line))
         {
-            azgra::string::SmartStringView smartLine(line.c_str());
+            azgra::string::SmartStringView<std::string::value_type> smartLine(line.c_str());
             auto cells = smartLine.split(separator);
 
             std::vector<CellType> values(cells.size());
@@ -128,7 +129,7 @@ namespace azgra::io
         std::string line;
         while (std::getline(inputTextStream, line))
         {
-            azgra::string::SmartStringView smartLine(line.c_str());
+            azgra::string::SmartStringView<std::string::value_type> smartLine(line.c_str());
             lines.push_back(lineParseFunction(smartLine));
         }
         return lines;
