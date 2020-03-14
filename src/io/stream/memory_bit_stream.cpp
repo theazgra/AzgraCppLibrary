@@ -6,12 +6,11 @@ namespace azgra::io::stream
     /******************************************************************************************************************************
     * OutMemoryBitStream implementation
     ****************************************************************************************************************************/
-    OutMemoryBitStream::OutMemoryBitStream(size_t valueEncodeBitCount)
+    OutMemoryBitStream::OutMemoryBitStream()
     {
         bitBuffer = 0;
         bitBufferSize = 0;
         memoryBufferIndex = 0;
-        this->valueEncodeBitCount = valueEncodeBitCount;
     }
 
     OutMemoryBitStream::~OutMemoryBitStream()
@@ -22,7 +21,7 @@ namespace azgra::io::stream
         bitBufferSize = 0;
     }
 
-    void OutMemoryBitStream::resize_for_raw_write(const size_t size)
+    void OutMemoryBitStream::resize_for_raw_write(const std::size_t size)
     {
         buffer.resize(size);
     }
@@ -97,9 +96,9 @@ namespace azgra::io::stream
         return buffer;
     }
 
-    void OutMemoryBitStream::write_replicated_bit(const bool &bit, const size_t count)
+    void OutMemoryBitStream::write_replicated_bit(const bool &bit, const std::size_t count)
     {
-        for (size_t i = 0; i < count; ++i)
+        for (std::size_t i = 0; i < count; ++i)
         {
             internal_write_bit(bit, true);
         }
@@ -110,13 +109,12 @@ namespace azgra::io::stream
   * InMemoryBitStream implementation
   ****************************************************************************************************************************/
 
-    InMemoryBitStream::InMemoryBitStream(const ByteArray *buffer, size_t bufferPosition, size_t valueEncodeBitCount)
+    InMemoryBitStream::InMemoryBitStream(const ByteArray *buffer, std::size_t bufferPosition)
     {
         memoryBuffer = buffer;
         memoryBufferPosition = bufferPosition;
         bitBufferSize = 0;
         bitBuffer = 0;
-        this->valueEncodeBitCount = valueEncodeBitCount;
     }
 
     InMemoryBitStream::~InMemoryBitStream()
@@ -162,13 +160,13 @@ namespace azgra::io::stream
         return ((bitBufferSize > 0) || (memoryBufferPosition < memoryBuffer->size()));
     }
 
-    size_t bits_required(size_t maxValue)
+    std::size_t bits_required(std::size_t maxValue)
     {
-        size_t maxValueForBitCount = 0;
-        for (size_t bitCount = 2; bitCount < MAX_BIT_COUNT; bitCount++)
+        std::size_t maxValueForBitCount = 0;
+        for (std::size_t bitCount = 2; bitCount < MAX_BIT_COUNT; bitCount++)
         {
             maxValueForBitCount = 0;
-            for (size_t i = 0; i < bitCount; i++)
+            for (std::size_t i = 0; i < bitCount; i++)
             {
                 maxValueForBitCount |= 1 << i;
             }
@@ -180,10 +178,10 @@ namespace azgra::io::stream
         return 0;
     }
 
-    size_t bytes_required(size_t maxValue)
+    std::size_t bytes_required(std::size_t maxValue)
     {
-        size_t bits = bits_required(maxValue);
-        size_t bytes = (bits + 7) / 8;
+        std::size_t bits = bits_required(maxValue);
+        std::size_t bytes = (bits + 7) / 8;
         return bytes;
     }
 
