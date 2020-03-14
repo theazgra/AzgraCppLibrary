@@ -31,6 +31,13 @@ namespace azgra::io::stream
         internal_write_bit(bit, true);
     }
 
+    void OutMemoryBitStream::write_aligned_byte(const azgra::byte &byte)
+    {
+        assert((bitBufferSize == 0) && (bitBuffer == 0));
+        buffer.push_back(byte);
+        ++memoryBufferIndex;
+    }
+
     void OutMemoryBitStream::internal_write_bit(const bool &bit, const bool &alloc)
     {
         ++bitBufferSize;
@@ -104,6 +111,28 @@ namespace azgra::io::stream
         }
     }
 
+    void OutMemoryBitStream::copy_aligned_buffer_and_reset(OutMemoryBitStream &stream)
+    {
+        // NOTE(Moravec): Assert that this buffer is aligned.
+        assert((bitBufferSize == 0) && (bitBuffer == 0));
+        // NOTE(Moravec): Assert that receiving buffer is aligned.
+        assert((stream.bitBufferSize == 0) && (stream.bitBuffer == 0));
+
+        // Copy the bytes.
+        stream.copy_bytes(buffer);
+
+        // Reset current buffer.
+        buffer.resize(0);
+        bitBuffer = 0;
+        bitBufferSize = 0;
+        memoryBufferIndex = 0;
+    }
+
+    void OutMemoryBitStream::copy_bytes(const ByteArray &bytes)
+    {
+        assert((bitBufferSize == 0) && (bitBuffer == 0));
+        buffer.insert(buffer.end(), bytes.begin(), bytes.end());
+    }
 
 /******************************************************************************************************************************
   * InMemoryBitStream implementation

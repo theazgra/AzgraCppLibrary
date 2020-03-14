@@ -65,6 +65,7 @@ namespace azgra
         reset_color(stdout);
     }
 
+
     inline void print_if(const bool precondition, const char *format, ...)
     {
         if (precondition)
@@ -74,6 +75,16 @@ namespace azgra
             vfprintf(stdout, format, argptr);
             va_end(argptr);
         }
+    }
+
+    inline void debug_printf(const char *format, ...)
+    {
+#if DEBUG
+        va_list argptr;
+        va_start(argptr, format);
+        vfprintf(stdout, format, argptr);
+        va_end(argptr);
+#endif
     }
 
     inline void print_error_if(const bool precondition, const char *format, ...)

@@ -30,6 +30,12 @@ namespace azgra::io::stream
 
         void internal_flush_bit_buffer(const bool &alloc);
 
+        /**
+         * Copy bytes to aligned buffer.
+         * @param bytes Bytes to copy.
+         */
+        void copy_bytes(const ByteArray &bytes);
+
         template<typename T>
         void internal_write_value(const T &value, const bool alloc)
         {
@@ -77,6 +83,11 @@ namespace azgra::io::stream
         // Write bit to memory stream.
         void write_bit(const bool &bit);
 
+        //TODO(Moravec): Add no-alloc version
+
+        // Write byte to aligned stream.
+        void write_aligned_byte(const azgra::byte &byte);
+
         // Write bit without resizing buffer. Buffer must be allocated using `resize_for_raw_write` !
         void write_bit_no_alloc(const bool &bit);
 
@@ -87,16 +98,23 @@ namespace azgra::io::stream
         void flush_bit_buffer();
 
         // Get buffer of written bits, which may not be flushed.
-        ByteArray get_buffer() const;
+        [[nodiscard]] ByteArray get_buffer() const;
 
         // Get buffer of written bits, which is flushed.
-        ByteArray get_flushed_buffer();
+        [[nodiscard]] ByteArray get_flushed_buffer();
 
         // Get buffer of written bits, which is flushed. For allocated buffer.
         ByteArray get_flushed_buffer_no_alloc();
 
         // Write the bit count times to the stream.
         void write_replicated_bit(const bool &bit, const std::size_t count);
+
+        /**
+         * Copy buffer, which must be aligned, to the receiving stream, which must be aligned.
+         * Current buffer is then reset.
+         * @param stream Receiving stream.
+         */
+        void copy_aligned_buffer_and_reset(OutMemoryBitStream &stream);
 
         template<typename T>
         void write_value(const T &value)
@@ -134,7 +152,7 @@ namespace azgra::io::stream
         }
     };
 
-// Class alowing to read invidual bits from memory buffer.
+    // Class allowing to read individual bits from memory buffer.
     class InMemoryBitStream
     {
     private:
