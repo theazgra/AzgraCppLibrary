@@ -2,7 +2,7 @@
 
 #include <azgra/azgra.h>
 
-#ifdef GCC_8
+#ifdef AZGRA_CPP17
 
 #include <filesystem>
 
@@ -13,7 +13,7 @@
 #endif
 
 
-#ifdef GCC_8
+#ifdef AZGRA_CPP17
 namespace sfs = std::filesystem;
 #else
 namespace sfs = std::experimental::filesystem;
