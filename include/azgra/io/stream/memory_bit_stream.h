@@ -63,7 +63,6 @@ namespace azgra::io::stream
             // Start with MSB.
             for (long bitPos = (valueSize - 1); bitPos >= 0; bitPos--)
             {
-                assert(bitPos >= 0);
                 bit = value & (static_cast<azgra::u32>(1) << static_cast<azgra::u32> (bitPos));
                 if (alloc)
                     write_bit(bit);
@@ -197,13 +196,15 @@ namespace azgra::io::stream
         }
 
         template<typename T>
-        T read_value(const azgra::i32 &byteCount)
+        T read_value(const azgra::byte bitCount)
         {
-            always_assert(memoryBufferPosition + (byteCount - 1) < memoryBuffer->size());
+            bool bit;
             T result = 0;
-            for (azgra::i32 byteIndex = (byteCount - 1); byteIndex >= 0; byteIndex--)
+            const long valueSize = bitCount;
+            for (long bitPos = (valueSize - 1); bitPos >= 0; bitPos--)
             {
-                result |= (memoryBuffer->operator[](memoryBufferPosition++)) << (byteIndex * 8);
+                bit = read_bit();
+                result |= (bit << bitPos);
             }
             return result;
         }
