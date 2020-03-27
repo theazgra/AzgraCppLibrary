@@ -77,7 +77,7 @@ namespace azgra
             return Span<T>(m_ptr + offset, subSpanSize);
         }
 
-        [[nodiscard]] inline T operator[](const std::size_t index) const
+        [[nodiscard]] virtual inline T operator[](const std::size_t index) const
         {
             return m_ptr[index];
         }
@@ -160,8 +160,7 @@ namespace azgra
         [[nodiscard]] std::size_t size() const
         { return m_size; }
 
-    private:
-
+    protected:
         /**
          * Memory pointer.
          */
