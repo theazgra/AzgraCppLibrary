@@ -4,10 +4,10 @@
 
 namespace azgra
 {
-/**
- * Default lexicographic comparer.
- * @tparam T Type of element.
- */
+    /**
+     * Default lexicographic comparer.
+     * @tparam T Type of element.
+     */
     template<typename T>
     struct LexicographicSpanComparer
     {
@@ -24,9 +24,9 @@ namespace azgra
         }
     };
 
-/**
- * Lexicographic comparer for bytes, using memcmp.
- */
+    /**
+     * Lexicographic comparer for bytes, using memcmp.
+     */
     template<>
     struct LexicographicSpanComparer<azgra::byte>
     {
@@ -47,25 +47,13 @@ namespace azgra
  * @tparam T Object in the memory.
  */
     template<typename T>
-    struct Span
+    class Span
     {
-        /**
-         * Memory pointer.
-         */
-        const T *ptr{nullptr};
+    public:
+        using Type = T;
 
         /**
-         * Number of objects.
-         */
-        std::size_t size{0};
-
-        /**
-         * Lexicographic comparer.
-         */
-        LexicographicSpanComparer<T> m_comparer{};
-
-        /**
-         * Default constructor.
+         * Default constructor, creating empty data span.
          */
         Span() = default;
 
@@ -74,7 +62,7 @@ namespace azgra
          * @param data Memory pointer.
          * @param dataSize Number of the objects in the span.
          */
-        explicit Span(const T *data, const std::size_t dataSize) : ptr(data), size(dataSize)
+        explicit Span(const T *data, const std::size_t dataSize) : m_ptr(data), m_size(dataSize)
         {
         }
 
@@ -86,12 +74,12 @@ namespace azgra
          */
         [[nodiscard]] Span<T> sub_span(const std::size_t offset, const std::size_t subSpanSize) const
         {
-            return Span<T>(ptr + offset, subSpanSize);
+            return Span<T>(m_ptr + offset, subSpanSize);
         }
 
         [[nodiscard]] inline T operator[](const std::size_t index) const
         {
-            return ptr[index];
+            return m_ptr[index];
         }
 
         [[nodiscard]] inline bool operator==(const Span<T> &other) const
@@ -121,13 +109,13 @@ namespace azgra
          */
         [[nodiscard]] int lexicographic_compare(const Span<T> &other) const
         {
-            const std::size_t count = std::min(size, other.size);
-            const int compare = m_comparer(ptr, other.ptr, count);
-            if ((compare == 0) && (size != other.size))
+            const std::size_t count = std::min(m_size, other.m_size);
+            const int compare = m_comparer(m_ptr, other.m_ptr, count);
+            if ((compare == 0) && (m_size != other.m_size))
             {
-                if (size < other.size)
+                if (m_size < other.m_size)
                     return -1;
-                else if (other.size < size)
+                else if (other.m_size < m_size)
                     return 1;
             }
             return compare;
@@ -141,7 +129,7 @@ namespace azgra
          */
         [[nodiscard]] int lexicographic_compare(const Span<T> &other, const std::size_t count) const
         {
-            const int compare = m_comparer(ptr, other.ptr, count);
+            const int compare = m_comparer(m_ptr, other.m_ptr, count);
             return compare;
         }
 
@@ -152,12 +140,12 @@ namespace azgra
          */
         [[nodiscard]] std::size_t match_length(const Span<T> &other) const
         {
-            assert(other.size <= size);
+            assert(other.m_size <= m_size);
             std::size_t len = 0;
 
-            for (size_t i = 0; i < other.size; ++i)
+            for (size_t i = 0; i < other.m_size; ++i)
             {
-                if (ptr[i] != other.ptr[i])
+                if (m_ptr[i] != other.m_ptr[i])
                 {
                     return len;
                 }
@@ -166,6 +154,28 @@ namespace azgra
             return len;
         }
 
+        [[nodiscard]] const T *data() const
+        { return m_ptr; }
+
+        [[nodiscard]] std::size_t size() const
+        { return m_size; }
+
+    private:
+
+        /**
+         * Memory pointer.
+         */
+        const T *m_ptr{nullptr};
+
+        /**
+         * Number of objects.
+         */
+        std::size_t m_size{0};
+
+        /**
+         * Lexicographic comparer.
+         */
+        LexicographicSpanComparer<T> m_comparer{};
     };
 
 /**
