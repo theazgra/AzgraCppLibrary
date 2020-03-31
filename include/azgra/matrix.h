@@ -83,7 +83,7 @@ namespace azgra
          * Copy constructor, copy the vector data.
          * @param copySrc Source matrix.
          */
-        Matrix(const Matrix<T> &copySrc)
+        explicit Matrix(const Matrix<T> &copySrc)
         {
             m_rowCount = copySrc.m_rowCount;
             m_colCount = copySrc.m_colCount;
@@ -132,16 +132,21 @@ namespace azgra
          * @param colCount Matrix column count.
          * @param initialValue Value set for all elements.
          */
-        explicit Matrix(size_t rowCount, size_t colCount, const T &initialValue)
+        explicit Matrix(size_t rowCount, size_t colCount, const T &initialValue) : Matrix(rowCount, colCount)
         {
-            this->m_rowCount = rowCount;
-            this->m_colCount = colCount;
             const size_t dataCount = rowCount * colCount;
-            m_data.resize(dataCount);
             for (size_t i = 0; i < dataCount; ++i)
             {
                 m_data[i] = initialValue;
             }
+        }
+
+        explicit Matrix(size_t rowCount, size_t colCount, std::initializer_list<T> initializerList)
+        {
+            this->m_rowCount = rowCount;
+            this->m_colCount = colCount;
+            always_assert((rowCount * colCount) == initializerList.size());
+            m_data = std::vector<T>(initializerList.begin(), initializerList.end());
         }
 
         /**

@@ -6,7 +6,6 @@ namespace azgra
 {
     namespace string
     {
-        //TODO: Add asserts.
         size_t AsciiString::c_string_length(const char *cString)
         {
             size_t len = 0;

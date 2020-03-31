@@ -82,13 +82,16 @@ namespace azgra::io::stream
         // Write bit to memory stream.
         void write_bit(const bool &bit);
 
-        //TODO(Moravec): Add no-alloc version
+        // Write bit without resizing buffer. Buffer must be allocated using `resize_for_raw_write` !
+        void write_bit_no_alloc(const bool &bit);
 
         // Write byte to aligned stream.
         void write_aligned_byte(const azgra::byte &byte);
 
-        // Write bit without resizing buffer. Buffer must be allocated using `resize_for_raw_write` !
-        void write_bit_no_alloc(const bool &bit);
+        // Write byte to aligned stream without resizing buffer.
+        void write_aligned_byte_no_alloc(const azgra::byte &byte);
+
+
 
         // Write bit to memory stream.
         void operator<<(const bool &bit);

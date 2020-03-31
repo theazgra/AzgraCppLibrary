@@ -38,6 +38,12 @@ namespace azgra::io::stream
         ++memoryBufferIndex;
     }
 
+    void OutMemoryBitStream::write_aligned_byte_no_alloc(const azgra::byte &byte)
+    {
+        assert((bitBufferSize == 0) && (bitBuffer == 0));
+        buffer[memoryBufferIndex++] = byte;
+    }
+
     void OutMemoryBitStream::internal_write_bit(const bool &bit, const bool &alloc)
     {
         ++bitBufferSize;

@@ -109,27 +109,6 @@ namespace azgra::io::stream
 
     ByteArray InBinaryFileStream::consume_bytes(const azgra::u64 byteCount)
     {
-        /*
-        always_assert(this->isOpen);
-
-        //TODO: Can this be made faster?
-        ByteArray result;
-
-        if (byteCount == 0)
-            return result;
-
-        auto readIterator = std::istream_iterator<byte>(fileStream);
-
-        result.resize(byteCount);
-
-        for (size_t i = 0; i < byteCount - 1; i++)
-        {
-            result[i] = *readIterator++;
-        }
-        // This is done, so we don't move stream one position too far.
-        result[byteCount - 1] = *readIterator;
-        return result;
-        */
         always_assert(this->isOpen);
 
         ByteArray result(byteCount);
