@@ -211,6 +211,11 @@ namespace azgra
                 return result;
             }
 
+            constexpr std::vector<SmartStringView<CharType>> split_to_words() const noexcept
+            {
+                return split(' ');
+            }
+
             constexpr std::vector<SmartStringView<CharType>> split(const CharType &separatorChar) const noexcept
             {
                 std::vector<SmartStringView<CharType>> result;
