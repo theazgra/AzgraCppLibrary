@@ -47,6 +47,7 @@
 #include <string>
 #include <type_traits>
 #include <utility>
+#include <azgra/azgra_types.h>
 
 // #define ROBIN_HOOD_LOG_ENABLED
 #ifdef ROBIN_HOOD_LOG_ENABLED
@@ -770,6 +771,13 @@ template <>
 struct hash<std::string> {
     size_t operator()(std::string const& str) const noexcept {
         return hash_bytes(str.data(), str.size());
+    }
+};
+
+template <>
+struct hash<azgra::StringView> {
+    size_t operator()(const azgra::StringView &sw) const noexcept {
+        return hash_bytes(sw.data(), sw.size());
     }
 };
 
