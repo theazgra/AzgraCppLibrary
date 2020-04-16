@@ -455,7 +455,7 @@ namespace azgra::cli
         m_printHelpOnParserError = true;
     }
 
-    void CliArguments::set_methods(std::vector<CliMethod *> &methods)
+    void CliArguments::set_methods(std::vector<CliMethod *> &&methods)
     {
         m_methods = std::move(methods);
 

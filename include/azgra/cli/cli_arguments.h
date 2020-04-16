@@ -56,7 +56,7 @@ namespace azgra::cli
 
         void print_help_on_parser_error();
 
-        void set_methods(std::vector<CliMethod *> &methods);
+        void set_methods(std::vector<CliMethod *> &&methods);
 
         void add_flags(const std::vector<CliOption *> &flags);
 
